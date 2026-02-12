@@ -21,7 +21,7 @@ public class StickyHand : EnemyBase
 
     private SlamPhase _slamPhase;
     private float _phaseTimer;
-    private Vector3 _spriteBaseLocalPos;
+    private float _currentBobOffsetY;
     private Vector3 _slamTarget;
 
     protected override void Awake()
@@ -37,8 +37,6 @@ public class StickyHand : EnemyBase
         _knockbackForce = 1.5f;
         _gravityScale = 0.4f;
         _dustParticleScale = 0.015f;
-
-        _spriteBaseLocalPos = _spriteRenderer.transform.localPosition;
 
         if (_slamDustVFX != null)
         {
@@ -64,6 +62,7 @@ public class StickyHand : EnemyBase
     {
         _slamPhase = SlamPhase.WindUp;
         _phaseTimer = _windUpDuration;
+        _currentBobOffsetY = 0f;
 
         // Lock slam target at the moment attack begins
         if (_player != null)
@@ -101,9 +100,12 @@ public class StickyHand : EnemyBase
 
         // Accelerating bob — frequency increases as slam approaches
         float urgency = 1f + (elapsed / _windUpDuration) * 2f;
-        float bobY = Mathf.Sin(elapsed * _bobFrequency * urgency) * _bobAmplitude;
+        float newBobY = Mathf.Sin(elapsed * _bobFrequency * urgency) * _bobAmplitude;
 
-        _spriteRenderer.transform.localPosition = _spriteBaseLocalPos + new Vector3(0f, bobY, 0f);
+        // Apply delta offset so we don't overwrite NavMeshAgent position
+        float deltaY = newBobY - _currentBobOffsetY;
+        transform.position += new Vector3(0f, deltaY, 0f);
+        _currentBobOffsetY = newBobY;
     }
 
     // --- Slam ---
@@ -113,8 +115,9 @@ public class StickyHand : EnemyBase
         _slamPhase = SlamPhase.Slam;
         _phaseTimer = _slamDuration;
 
-        // Reset bob offset
-        _spriteRenderer.transform.localPosition = _spriteBaseLocalPos;
+        // Remove remaining bob offset
+        transform.position -= new Vector3(0f, _currentBobOffsetY, 0f);
+        _currentBobOffsetY = 0f;
 
         // Damage check
         Collider[] hits = Physics.OverlapSphere(transform.position, _slamRadius, _playerLayer);
@@ -162,8 +165,9 @@ public class StickyHand : EnemyBase
     {
         base.OnEnterDie();
 
-        // Reset sprite position on death
-        _spriteRenderer.transform.localPosition = _spriteBaseLocalPos;
+        // Remove any remaining bob offset
+        transform.position -= new Vector3(0f, _currentBobOffsetY, 0f);
+        _currentBobOffsetY = 0f;
 
         // TODO: drop parts / play death animation / return to pool
         Destroy(gameObject, 1f);

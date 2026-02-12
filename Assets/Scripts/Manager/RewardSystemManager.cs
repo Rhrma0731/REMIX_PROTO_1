@@ -82,6 +82,8 @@ public class RewardSystemManager : MonoBehaviour
 
     private void HidePopupImmediate()
     {
+        if (_chainPopupRoot == null) return;
+
         _chainPopupRoot.anchoredPosition = new Vector2(
             _chainPopupRoot.anchoredPosition.x,
             _chainHiddenY

@@ -43,6 +43,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected NavMeshAgent _agent;
     protected Rigidbody _rb;
+    [SerializeField]
     protected Transform _player;
     protected Camera _mainCamera;
 
@@ -71,14 +72,30 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            _player = playerObj.transform;
-        }
+        FindPlayer();
 
         _currentHp = _maxHp;
         TransitionTo(EnemyState.Chase);
+
+        // Initialize health bar if present
+        var healthBar = GetComponentInChildren<EnemyHealthBar>(true);
+        if (healthBar != null) healthBar.Init(this);
+
+    }
+
+    private void FindPlayer()
+    {
+        GameObject playerObj = GameObject.FindWithTag("Player");
+        if (playerObj != null)
+        {
+            _player = playerObj.transform;
+            return;
+        }
+
+        if (PlayerStats.Instance != null)
+        {
+            _player = PlayerStats.Instance.transform;
+        }
     }
 
     protected virtual void Update()
@@ -132,22 +149,27 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void EnterState(EnemyState state)
     {
+        bool canControlAgent = _agent != null && _agent.enabled && _agent.isOnNavMesh;
         switch (state)
         {
             case EnemyState.Chase:
-                _agent.isStopped = false;
+                if (canControlAgent) _agent.isStopped = false;
                 break;
+            
             case EnemyState.Attack:
-                _agent.isStopped = true;
+                if (canControlAgent) _agent.isStopped = true;
                 OnEnterAttack();
                 break;
+            
             case EnemyState.Stun:
-                _agent.isStopped = true;
+               
+                if (canControlAgent) _agent.isStopped = true;
                 _stunTimer = _stunDuration;
                 break;
+            
             case EnemyState.Die:
-                _agent.isStopped = true;
-                _agent.enabled = false;
+                if (canControlAgent) _agent.isStopped = true;
+                _agent.enabled = false; 
                 OnEnterDie();
                 break;
         }
@@ -157,9 +179,18 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected virtual void UpdateChase()
     {
-        if (_player == null) return;
+        if (_player == null)
+        {
+            FindPlayer();
+            if (_player == null) return;
+        }
 
-        _agent.SetDestination(_player.position);
+        
+        if (_agent.isActiveAndEnabled && _agent.isOnNavMesh)
+        {
+            _agent.SetDestination(_player.position);
+        }
+
         UpdateFacingDirection();
 
         if (GetDistanceToPlayer() <= _attackRange)
@@ -208,11 +239,17 @@ public abstract class EnemyBase : MonoBehaviour
         }
     }
 
+    private float _groundY;
+
     private void ApplyToyKnockback(Vector3 hitDirection, float damage)
     {
+        // Remember ground level before leaving NavMesh
+        _groundY = transform.position.y;
+
         // Disable NavMesh during knockback so physics can take over
         _agent.enabled = false;
         _rb.isKinematic = false;
+        _rb.useGravity = true;
 
         // Lightweight plastic/tin can launch — strong initial pop with upward arc
         float damageMult = Mathf.Clamp(damage / 20f, 0.8f, 2.5f);
@@ -239,7 +276,7 @@ public abstract class EnemyBase : MonoBehaviour
         {
             // Wait until falling and close to ground
             yield return new WaitUntil(() => _rb.linearVelocity.y < -0.1f);
-            yield return new WaitUntil(() => transform.position.y <= 0.05f);
+            yield return new WaitUntil(() => transform.position.y <= _groundY + 0.05f);
 
             // Bounce: reflect Y velocity with damping
             Vector3 vel = _rb.linearVelocity;
@@ -258,8 +295,9 @@ public abstract class EnemyBase : MonoBehaviour
 
         // Settle: snap to ground, re-enable NavMesh
         _rb.linearVelocity = Vector3.zero;
+        _rb.useGravity = false;
         Vector3 pos = transform.position;
-        pos.y = 0f;
+        pos.y = _groundY;
         transform.position = pos;
 
         _rb.isKinematic = true;

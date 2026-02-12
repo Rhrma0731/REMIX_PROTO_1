@@ -63,13 +63,16 @@ public class StageManager : MonoBehaviour
         if (_mainCamera == null)
             _mainCamera = Camera.main;
 
-        _baseCameraSize = _mainCamera.orthographicSize;
+        _baseCameraSize = _mainCamera.orthographic ? _mainCamera.orthographicSize : 5f;
     }
 
     private void Start()
     {
-        RewardSystemManager.Instance.OnRewardSequenceComplete += OnRewardComplete;
-        BeginStage(0);
+        if (RewardSystemManager.Instance != null)
+            RewardSystemManager.Instance.OnRewardSequenceComplete += OnRewardComplete;
+
+        if (_stages != null && _stages.Count > 0)
+            BeginStage(0);
     }
 
     private void OnDestroy()
@@ -148,6 +151,14 @@ public class StageManager : MonoBehaviour
         // Minimal delay — keep dopamine loop tight
         yield return new WaitForSeconds(_delayBeforeReward);
 
+        // Skip reward phase if RewardSystemManager is unavailable or no reward pool
+        if (RewardSystemManager.Instance == null || _rewardPool == null || _rewardPool.Count < 3)
+        {
+            _waitingForReward = false;
+            AdvanceWave();
+            yield break;
+        }
+
         // Pick 3 random rewards
         List<ItemData> choices = PickRandomRewards(3);
         RewardSystemManager.Instance.ShowRewards(choices);
@@ -211,6 +222,8 @@ public class StageManager : MonoBehaviour
 
     private IEnumerator AnimateCameraZoom(float from, float to, float duration)
     {
+        if (!_mainCamera.orthographic) yield break;
+
         float elapsed = 0f;
 
         while (elapsed < duration)

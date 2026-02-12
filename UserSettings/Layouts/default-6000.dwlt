@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 2560
     height: 1349
   m_ShowMode: 4
-  m_Title: Inspector
+  m_Title: Project
   m_RootView: {fileID: 4}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 56}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 56
+  controlID: 97
   draggingID: 0
 --- !u!114 &4
 MonoBehaviour:
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 53
+  controlID: 121
   draggingID: 0
 --- !u!114 &8
 MonoBehaviour:
@@ -196,7 +196,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 112}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 54
+  controlID: 122
   draggingID: 0
 --- !u!114 &9
 MonoBehaviour:
@@ -222,7 +222,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 112}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 55
+  controlID: 96
   draggingID: 0
 --- !u!114 &10
 MonoBehaviour:
@@ -379,7 +379,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 43
+    y: 0
     width: 2560
     height: 36
   m_SerializedDataModeController:
@@ -466,6 +466,20 @@ MonoBehaviour:
       displayed: 0
       id: Services/AI
       index: 5
+      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":0.0,"y":0.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
+      floating: 0
+      collapsed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      layout: 4
+      size: {x: 0, y: 0}
+      sizeOverridden: 0
+    - dockPosition: 0
+      containerId: overlay-toolbar__top
+      displayed: 1
+      id: Services/Unity Version Control
+      index: 6
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Folded":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":0.0,"y":0.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
       floating: 0
       collapsed: 0
@@ -630,8 +644,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Game\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1135
-    y: 799
+    x: 1136
+    y: 24
     width: 705
     height: 547
   m_SerializedDataModeController:
@@ -736,7 +750,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 79
+    y: 24
     width: 1307
     height: 694
   m_SerializedDataModeController:
@@ -1435,7 +1449,7 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 2.3146641, y: -7.3499947, z: -4.74}
+    m_Target: {x: 2.31466, y: -6.79, z: -4.74}
     speed: 2
     m_Value: {x: 2.3146641, y: -7.3499947, z: -4.74}
   m_RenderMode: 0
@@ -1487,7 +1501,7 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: -0.24945353, y: -0.35366282, z: 0.098449364, w: -0.8961094}
   m_Size:
-    m_Target: 1.050842
+    m_Target: 1.768474
     speed: 2
     m_Value: 1.050842
   m_Ortho:
@@ -1640,8 +1654,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Hierarchy\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1308
-    y: 79
+    x: 1309
+    y: 24
     width: 532
     height: 694
   m_SerializedDataModeController:
@@ -1664,7 +1678,8 @@ MonoBehaviour:
       m_LastClickedID:
         m_Data: 0
       m_ExpandedIDs:
-      - m_Data: -1274
+      - m_Data: -10440
+      - m_Data: -9796
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1750,7 +1765,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 799
+    y: 24
     width: 1134
     height: 547
   m_SerializedDataModeController:
@@ -1777,7 +1792,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Settings
+    - Assets/Scripts/Combat
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -1787,28 +1802,21 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 96
   m_LastFolders:
-  - Assets/Settings
+  - Assets/Scripts/Combat
   m_LastFoldersGridSize: 96
-  m_LastProjectPath: C:\Users\admin\Desktop\REMIX
+  m_LastProjectPath: C:\Users\PC\RiderProjects\REMIX_PROTO_1
   m_LockTracker:
     m_IsLocked: 0
   m_LastLocalAssetsSearchArea: 1
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs:
-    - m_Data: 23640
+    - m_Data: 25088
     m_LastClickedID:
-      m_Data: 23640
+      m_Data: 25088
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 23514
-    - m_Data: 23516
-    - m_Data: 23518
-    - m_Data: 23520
-    - m_Data: 23522
-    - m_Data: 23524
-    - m_Data: 23526
-    - m_Data: 1000000000
+    - m_Data: 26438
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1841,13 +1849,7 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 23514
-    - m_Data: 23516
-    - m_Data: 23518
-    - m_Data: 23520
-    - m_Data: 23522
-    - m_Data: 23524
-    - m_Data: 23526
+    - m_Data: 26438
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1874,9 +1876,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: []
-    m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_SelectedInstanceIDs:
+    - m_Data: 23084
+    m_LastClickedInstanceID: 23084
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: []
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1928,8 +1931,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1842
-    y: 79
+    x: 1843
+    y: 24
     width: 717
     height: 1267
   m_SerializedDataModeController:
@@ -1951,7 +1954,7 @@ MonoBehaviour:
     m_CachedPref: 160
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
-  m_LastInspectedObjectInstanceID: -1
+  m_LastInspectedObjectInstanceID: 23084
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
   m_InspectorMode: 0
