@@ -193,8 +193,10 @@ public abstract class EnemyBase : MonoBehaviour
 
         UpdateFacingDirection();
 
-        if (GetDistanceToPlayer() <= _attackRange)
+        float dist = GetDistanceToPlayer();
+        if (dist <= _attackRange)
         {
+            Debug.Log($"[EnemyBase] Distance={dist:F2}, transitioning to Attack");
             TransitionTo(EnemyState.Attack);
         }
     }
@@ -268,43 +270,50 @@ public abstract class EnemyBase : MonoBehaviour
     private IEnumerator BounceRoutine()
     {
         int bounces = 0;
+        float timeout = 0.5f; // 최대 2초만 대기 (안전 장치)
+        float startTime = Time.time;
 
-        // Wait until airborne phase ends (moving downward and near ground)
         yield return new WaitForSeconds(0.05f);
 
-        while (bounces < _bounceCount)
+        while (bounces < _bounceCount && Time.time - startTime < timeout)
         {
-            // Wait until falling and close to ground
-            yield return new WaitUntil(() => _rb.linearVelocity.y < -0.1f);
-            yield return new WaitUntil(() => transform.position.y <= _groundY + 0.05f);
+            // 낙하 시작을 기다리되, 너무 오래 걸리면 넘어감
+            while (_rb.linearVelocity.y >= -0.1f && Time.time - startTime < timeout)
+                yield return null;
 
-            // Bounce: reflect Y velocity with damping
+            // 바닥에 닿을 때까지 기다림
+            while (transform.position.y > _groundY + 0.05f && Time.time - startTime < timeout)
+                yield return null;
+
+            if (Time.time - startTime >= timeout) break;
+
+            // Bounce 로직
             Vector3 vel = _rb.linearVelocity;
             float bounceY = Mathf.Abs(vel.y) * _bounceDamping;
 
             if (bounceY < 0.2f) break;
 
-            _rb.linearVelocity = new Vector3(
-                vel.x * _bounceDamping,
-                bounceY,
-                vel.z * _bounceDamping
-            );
-
+            _rb.linearVelocity = new Vector3(vel.x * _bounceDamping, bounceY, vel.z * _bounceDamping);
             bounces++;
+            yield return null; 
         }
 
-        // Settle: snap to ground, re-enable NavMesh
+        // --- 복귀 로직 보강 ---
         _rb.linearVelocity = Vector3.zero;
         _rb.useGravity = false;
-        Vector3 pos = transform.position;
-        pos.y = _groundY;
-        transform.position = pos;
-
         _rb.isKinematic = true;
+
+        Vector3 finalPos = transform.position;
+        finalPos.y = _groundY;
+        transform.position = finalPos;
+
         if (!_isDead)
         {
             _agent.enabled = true;
             _agent.Warp(transform.position);
+        
+            // 중요: 에이전트를 깨우고 다시 추적 상태로 강제 전환
+            TransitionTo(EnemyState.Chase); 
         }
 
         _bounceCoroutine = null;

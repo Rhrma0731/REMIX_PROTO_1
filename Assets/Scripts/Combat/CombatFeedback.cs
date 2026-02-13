@@ -110,14 +110,25 @@ public class CombatFeedback : MonoBehaviour
     private void PlayHitStop(float duration)
     {
         if (_hitStopCoroutine != null)
+        {
             StopCoroutine(_hitStopCoroutine);
+            // 이미 정지 중이라면 _savedTimeScale을 갱신하지 않고 유지합니다.
+        }
+        else
+        {
+            // 처음 정지하는 경우에만 현재의 정상적인 TimeScale을 저장합니다.
+            _savedTimeScale = Time.timeScale;
+        }
 
         _hitStopCoroutine = StartCoroutine(HitStopRoutine(duration));
     }
 
     private IEnumerator HitStopRoutine(float duration)
     {
-        _savedTimeScale = Time.timeScale;
+        if (Time.timeScale > 0.001f)
+        {
+            _savedTimeScale = Time.timeScale;
+        }
         Time.timeScale = 0f;
 
         float elapsed = 0f;
@@ -132,6 +143,11 @@ public class CombatFeedback : MonoBehaviour
     }
 
     // --- 2. Directional Camera Shake ---
+
+    public void PlayShake(float intensityMult)
+    {
+        PlayDirectionalShake(UnityEngine.Random.onUnitSphere, intensityMult);
+    }
 
     private void PlayDirectionalShake(Vector3 hitDirection, float intensityMult)
     {

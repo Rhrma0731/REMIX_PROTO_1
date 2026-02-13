@@ -68,11 +68,15 @@ public class StageManager : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log($"[StageManager] Start — stages={(_stages != null ? _stages.Count : 0)}");
+
         if (RewardSystemManager.Instance != null)
             RewardSystemManager.Instance.OnRewardSequenceComplete += OnRewardComplete;
 
         if (_stages != null && _stages.Count > 0)
             BeginStage(0);
+        else
+            Debug.LogWarning("[StageManager] No stages configured!");
     }
 
     private void OnDestroy()
@@ -111,11 +115,14 @@ public class StageManager : MonoBehaviour
         StageData stage = _stages[_currentStageIndex];
         WaveData wave = stage.Waves[_currentWaveIndex];
 
+        Debug.Log($"[StageManager] SpawnCurrentWave — stage={_currentStageIndex}, wave={_currentWaveIndex}, enemies={wave.EnemyPrefabs.Count}, spawnPoints={wave.SpawnPoints.Count}");
+
         _activeEnemies.Clear();
 
         foreach (GameObject prefab in wave.EnemyPrefabs)
         {
             Transform point = wave.SpawnPoints[UnityEngine.Random.Range(0, wave.SpawnPoints.Count)];
+            Debug.Log($"[StageManager] Spawning {prefab.name} at {point.position}");
             GameObject spawned = Instantiate(prefab, point.position, Quaternion.identity);
 
             EnemyBase enemy = spawned.GetComponent<EnemyBase>();

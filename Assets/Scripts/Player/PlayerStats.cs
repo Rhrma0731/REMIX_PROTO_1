@@ -40,9 +40,13 @@ public class PlayerStats : MonoBehaviour
     // Events
     public event Action<StatBlock> OnStatsChanged;
     public event Action<float, float> OnHpChanged; // current, max
+    public event Action OnPlayerDeath;
 
     private StatBlock _bonusStats;
     private float _currentHp;
+    private bool _isDead;
+
+    public bool IsDead => _isDead;
 
     // Computed totals
     public float MaxHp => _baseMaxHp + _bonusStats.MaxHp;
@@ -84,8 +88,16 @@ public class PlayerStats : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        if (_isDead) return;
+
         _currentHp = Mathf.Max(0f, _currentHp - damage);
         OnHpChanged?.Invoke(_currentHp, MaxHp);
+
+        if (_currentHp <= 0f)
+        {
+            _isDead = true;
+            OnPlayerDeath?.Invoke();
+        }
     }
 
     public void Heal(float amount)

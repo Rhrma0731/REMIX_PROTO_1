@@ -60,6 +60,7 @@ public class StickyHand : EnemyBase
 
     protected override void OnEnterAttack()
     {
+        Debug.Log("[StickyHand] OnEnterAttack — WindUp started");
         _slamPhase = SlamPhase.WindUp;
         _phaseTimer = _windUpDuration;
         _currentBobOffsetY = 0f;
@@ -121,14 +122,13 @@ public class StickyHand : EnemyBase
 
         // Damage check
         Collider[] hits = Physics.OverlapSphere(transform.position, _slamRadius, _playerLayer);
+        Debug.Log($"[StickyHand] BeginSlam — pos={transform.position}, radius={_slamRadius}, layerMask={_playerLayer.value}, hits={hits.Length}");
         foreach (Collider hit in hits)
         {
-            PlayerMovement player = hit.GetComponent<PlayerMovement>();
-            if (player != null)
+            Debug.Log($"[StickyHand] Hit: {hit.name}, PlayerStats.Instance={PlayerStats.Instance != null}");
+            if (PlayerStats.Instance != null)
             {
-                Vector3 knockDir = hit.transform.position - transform.position;
-                // TODO: call player damage interface when implemented
-                Debug.Log($"[StickyHand] Slam hit player for {_slamDamage} damage");
+                PlayerStats.Instance.TakeDamage(_slamDamage);
             }
         }
 
