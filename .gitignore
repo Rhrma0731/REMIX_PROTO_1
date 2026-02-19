@@ -1,0 +1,34 @@
+# Unity generated
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+
+# IDE
+/.idea/
+/.vs/
+/.vscode/
+*.csproj
+*.sln
+*.suo
+*.user
+*.pidb
+*.booproj
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Claude Code
+/.claude/
+
+# Unity meta files for directories (keep these tracked)
+# but ignore memory artifacts
+/MemoryCaptures/
+
+# Crashlytics
+crashlytics-build.properties
