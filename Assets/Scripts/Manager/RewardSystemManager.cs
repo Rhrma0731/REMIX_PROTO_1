@@ -67,6 +67,12 @@ public class RewardSystemManager : MonoBehaviour
     {
         if (_isActive || choices == null || choices.Count < 3) return;
 
+        if (_rewardSlots == null || _rewardSlots.Count < 3)
+        {
+            Debug.LogError("[RewardSystemManager] _rewardSlots가 Inspector에 3개 이상 연결되지 않았습니다.");
+            return;
+        }
+
         _isActive = true;
         Time.timeScale = 0f;
 
@@ -161,7 +167,10 @@ public class RewardSystemManager : MonoBehaviour
         yield return StartCoroutine(AbsorbWithBondThread(worldItem.transform, item));
 
         // 4. Apply to player
-        _playerAppearance.EquipItem(item);
+        if (_playerAppearance != null)
+            _playerAppearance.EquipItem(item);
+        else
+            Debug.LogError("[RewardSystemManager] _playerAppearance가 null입니다. GlitchDuck에 PlayerAppearance 컴포넌트가 있는지 확인하세요.");
 
         // 5. Feedback
         OnScreenShakeRequested?.Invoke();

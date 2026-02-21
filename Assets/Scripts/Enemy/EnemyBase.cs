@@ -29,6 +29,11 @@ public abstract class EnemyBase : MonoBehaviour
     [SerializeField] protected float _gravityScale = 0.5f;
     [SerializeField] protected float _dustParticleScale = 0.02f;
 
+    [Header("Coin Drop")]
+    [SerializeField] protected GameObject _coinPrefab;
+    [SerializeField] protected int _minCoinDrop = 1;
+    [SerializeField] protected int _maxCoinDrop = 3;
+
     [Header("Stun")]
     [SerializeField] protected float _stunDuration = 0.5f;
 
@@ -52,6 +57,8 @@ public abstract class EnemyBase : MonoBehaviour
     protected float _stunTimer;
     protected bool _isDead;
     private Coroutine _bounceCoroutine;
+    private bool _isExternallyStunned;
+    private Coroutine _externalStunCoroutine;
 
     // --- Lifecycle ---
 
@@ -153,7 +160,7 @@ public abstract class EnemyBase : MonoBehaviour
         switch (state)
         {
             case EnemyState.Chase:
-                if (canControlAgent) _agent.isStopped = false;
+                if (canControlAgent && !_isExternallyStunned) _agent.isStopped = false;
                 break;
             
             case EnemyState.Attack:
@@ -217,6 +224,18 @@ public abstract class EnemyBase : MonoBehaviour
     {
         _isDead = true;
         OnDeath?.Invoke();
+        SpawnCoins();
+    }
+
+    private void SpawnCoins()
+    {
+        if (_coinPrefab == null) return;
+
+        int count = UnityEngine.Random.Range(_minCoinDrop, _maxCoinDrop + 1);
+        for (int i = 0; i < count; i++)
+        {
+            Instantiate(_coinPrefab, transform.position, Quaternion.identity);
+        }
     }
 
     // --- Damage + Toy Knockback ---
@@ -255,7 +274,9 @@ public abstract class EnemyBase : MonoBehaviour
 
         // Lightweight plastic/tin can launch — strong initial pop with upward arc
         float damageMult = Mathf.Clamp(damage / 20f, 0.8f, 2.5f);
-        Vector3 force = hitDirection.normalized * _knockbackForce * damageMult;
+        float knockback = _knockbackForce +
+            (PlayerStats.Instance != null ? PlayerStats.Instance.BonusKnockbackForce : 0f);
+        Vector3 force = hitDirection.normalized * knockback * damageMult;
         force.y = _knockbackUpForce * damageMult;
 
         _rb.linearVelocity = Vector3.zero;
@@ -350,4 +371,35 @@ public abstract class EnemyBase : MonoBehaviour
     public float GetHpRatio() => _currentHp / _maxHp;
     public EnemyState GetCurrentState() => _currentState;
     public float GetDustParticleScale() => _dustParticleScale;
+    public NavMeshAgent GetAgent() => _agent;
+    public float GetMoveSpeed() => _moveSpeed;
+    public bool IsDead => _isDead;
+
+    // --- External Stun (ST_STUN) ---
+
+    public void ApplyExternalStun(float duration)
+    {
+        if (_isDead) return;
+        if (_externalStunCoroutine != null)
+            StopCoroutine(_externalStunCoroutine);
+        _externalStunCoroutine = StartCoroutine(ExternalStunRoutine(duration));
+    }
+
+    private IEnumerator ExternalStunRoutine(float duration)
+    {
+        _isExternallyStunned = true;
+        bool canControl = _agent != null && _agent.enabled && _agent.isOnNavMesh;
+        if (canControl) _agent.isStopped = true;
+
+        yield return new WaitForSeconds(duration);
+
+        _isExternallyStunned = false;
+        _externalStunCoroutine = null;
+
+        if (!_isDead)
+        {
+            bool canResume = _agent != null && _agent.enabled && _agent.isOnNavMesh;
+            if (canResume) _agent.isStopped = false;
+        }
+    }
 }

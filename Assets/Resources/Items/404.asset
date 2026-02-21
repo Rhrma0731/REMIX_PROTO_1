@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 937800f1fa7c1934bb59b795a16362cb, type: 3}
+  m_Name: 404
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  ItemID: 404
+  KR_Name: "\uBB34\uC9C0\uAC1C \uC561\uAD34"
+  Keyword: "\uBB34\uC801\uC758"
+  Description: 
+  Category: 1
+  Rarity: 3
+  Priority: 5
+  Status_ID: 
+  StatusTriggerChance: 1
+  StatBonuses:
+  - Type: 2
+    Value: 1.3
+  PowerScore: 85
+  Icon: {fileID: 0}
+  TargetBodyPart: 0
+  AppearanceSprite: {fileID: 0}
+  SortingOrderOffset: 1
+  PartScale: {x: 1, y: 1}
+  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  FormWeaponSprite: {fileID: 0}
+  FormHitRadius: 0
+  PedestalSprite: {fileID: 0}

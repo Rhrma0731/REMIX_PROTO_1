@@ -140,8 +140,12 @@ public class WeaponController : MonoBehaviour
 
     private void PerformHitDetection()
     {
-        Vector3 hitCenter = transform.position + _aimDirection * _hitRadius;
-        Collider[] hits = Physics.OverlapSphere(hitCenter, _hitRadius, _enemyLayer);
+        float damage = PlayerStats.Instance != null ? PlayerStats.Instance.AttackDamage : _hitDamage;
+
+        float effectiveRadius = _hitRadius +
+            (PlayerStats.Instance != null ? PlayerStats.Instance.BonusRange : 0f);
+        Vector3 hitCenter = transform.position + _aimDirection * effectiveRadius;
+        Collider[] hits = Physics.OverlapSphere(hitCenter, effectiveRadius, _enemyLayer);
 
         CombatFeedback feedback = CombatFeedback.Instance;
 
@@ -151,8 +155,8 @@ public class WeaponController : MonoBehaviour
             if (enemy == null) continue;
 
             HitResult result = feedback != null
-                ? feedback.ProcessHit(_hitDamage)
-                : new HitResult { Damage = _hitDamage, IsCritical = false };
+                ? feedback.ProcessHit(damage)
+                : new HitResult { Damage = damage, IsCritical = false };
 
             Vector3 hitPoint = col.ClosestPoint(hitCenter);
             Vector3 hitDirection = (enemy.transform.position - transform.position).normalized;
@@ -163,6 +167,8 @@ public class WeaponController : MonoBehaviour
             {
                 feedback.PlayHitFeedback(enemy, hitPoint, hitDirection, result);
             }
+
+            StatusEffectManager.Instance?.ApplyEffects(enemy);
         }
     }
 
@@ -260,6 +266,9 @@ public class WeaponController : MonoBehaviour
     }
 
     // --- Public API ---
+
+    public SpriteRenderer WeaponSpriteRenderer => _weaponSprite;
+    public float HitRadius { get => _hitRadius; set => _hitRadius = value; }
 
     public Vector3 GetAimDirection() => _aimDirection;
     public bool IsAttacking() => _isAttacking;

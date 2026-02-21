@@ -52,6 +52,7 @@ public class StageManager : MonoBehaviour
     private List<EnemyBase> _activeEnemies = new List<EnemyBase>();
     private float _baseCameraSize;
     private bool _waitingForReward;
+    private bool _waitingForDifficulty;
 
     // --- Lifecycle ---
 
@@ -64,25 +65,55 @@ public class StageManager : MonoBehaviour
             _mainCamera = Camera.main;
 
         _baseCameraSize = _mainCamera.orthographic ? _mainCamera.orthographicSize : 5f;
+
+        // ItemDatabase가 있으면 항상 우선 로드 (Inspector 수동 연결보다 우선)
+        var db = Resources.Load<ItemDatabase>("ItemDatabase");
+        if (db != null && db.Count > 0)
+        {
+            _rewardPool = new List<ItemData>(db.Items);
+            Debug.Log($"[StageManager] ItemDatabase에서 보상 풀 로드 완료 ({_rewardPool.Count}개)");
+        }
+        else if (_rewardPool == null || _rewardPool.Count == 0)
+        {
+            Debug.LogWarning("[StageManager] ItemDatabase를 찾을 수 없고 보상 풀도 비어있습니다. Assets/Resources/ItemDatabase.asset 경로를 확인하세요.");
+        }
     }
 
     private void Start()
     {
-        Debug.Log($"[StageManager] Start — stages={(_stages != null ? _stages.Count : 0)}");
+        Debug.Log($"[StageManager] Start — stages={(_stages != null ? _stages.Count : 0)}, rewardPool={(_rewardPool != null ? _rewardPool.Count : 0)}");
 
         if (RewardSystemManager.Instance != null)
             RewardSystemManager.Instance.OnRewardSequenceComplete += OnRewardComplete;
 
+        if (DifficultySelectManager.Instance != null)
+            DifficultySelectManager.Instance.OnDifficultySelected += OnDifficultySelected;
+
         if (_stages != null && _stages.Count > 0)
-            BeginStage(0);
+        {
+            if (DifficultySelectManager.Instance != null)
+            {
+                _waitingForDifficulty = true;
+                DifficultySelectManager.Instance.ShowSelection();
+            }
+            else
+            {
+                BeginStage(0);
+            }
+        }
         else
+        {
             Debug.LogWarning("[StageManager] No stages configured!");
+        }
     }
 
     private void OnDestroy()
     {
         if (RewardSystemManager.Instance != null)
             RewardSystemManager.Instance.OnRewardSequenceComplete -= OnRewardComplete;
+
+        if (DifficultySelectManager.Instance != null)
+            DifficultySelectManager.Instance.OnDifficultySelected -= OnDifficultySelected;
     }
 
     // --- Public API ---
@@ -103,6 +134,12 @@ public class StageManager : MonoBehaviour
         StartCoroutine(StageTransitionThenSpawn());
     }
 
+    private void OnDifficultySelected(DifficultyLevel level)
+    {
+        _waitingForDifficulty = false;
+        BeginStage(_currentStageIndex);
+    }
+
     public string GetStageLabel()
     {
         return $"{_currentStageIndex + 1}-{_currentWaveIndex + 1}";
@@ -115,12 +152,20 @@ public class StageManager : MonoBehaviour
         StageData stage = _stages[_currentStageIndex];
         WaveData wave = stage.Waves[_currentWaveIndex];
 
-        Debug.Log($"[StageManager] SpawnCurrentWave — stage={_currentStageIndex}, wave={_currentWaveIndex}, enemies={wave.EnemyPrefabs.Count}, spawnPoints={wave.SpawnPoints.Count}");
+        int baseCount = wave.EnemyPrefabs.Count;
+        float multiplier = DifficultySelectManager.Instance != null
+            ? DifficultySelectManager.Instance.EnemyCountMultiplier
+            : 1f;
+        int totalCount = Mathf.RoundToInt(baseCount * multiplier);
+        totalCount = Mathf.Max(1, totalCount);
+
+        Debug.Log($"[StageManager] SpawnCurrentWave — stage={_currentStageIndex}, wave={_currentWaveIndex}, base={baseCount}, multiplier={multiplier}, total={totalCount}");
 
         _activeEnemies.Clear();
 
-        foreach (GameObject prefab in wave.EnemyPrefabs)
+        for (int i = 0; i < totalCount; i++)
         {
+            GameObject prefab = wave.EnemyPrefabs[i % baseCount];
             Transform point = wave.SpawnPoints[UnityEngine.Random.Range(0, wave.SpawnPoints.Count)];
             Debug.Log($"[StageManager] Spawning {prefab.name} at {point.position}");
             GameObject spawned = Instantiate(prefab, point.position, Quaternion.identity);
@@ -149,7 +194,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
-    // --- Core Loop: Kill → Reward → Next Wave ---
+    // --- Core Loop: Kill → Next Wave / (Last Wave) → Reward → Next Stage ---
 
     private IEnumerator WaveClearedSequence()
     {
@@ -158,15 +203,18 @@ public class StageManager : MonoBehaviour
         // Minimal delay — keep dopamine loop tight
         yield return new WaitForSeconds(_delayBeforeReward);
 
-        // Skip reward phase if RewardSystemManager is unavailable or no reward pool
-        if (RewardSystemManager.Instance == null || _rewardPool == null || _rewardPool.Count < 3)
+        // 마지막 웨이브가 아니면 보상 없이 즉시 다음 웨이브로
+        StageData stage = _stages[_currentStageIndex];
+        bool isLastWave = _currentWaveIndex >= stage.Waves.Count - 1;
+
+        if (!isLastWave || RewardSystemManager.Instance == null || _rewardPool == null || _rewardPool.Count < 3)
         {
             _waitingForReward = false;
             AdvanceWave();
             yield break;
         }
 
-        // Pick 3 random rewards
+        // 스테이지 마지막 웨이브 클리어 → 보상 선택 후 다음 스테이지로
         List<ItemData> choices = PickRandomRewards(3);
         RewardSystemManager.Instance.ShowRewards(choices);
 
@@ -186,9 +234,25 @@ public class StageManager : MonoBehaviour
 
         if (_currentWaveIndex >= stage.Waves.Count)
         {
-            // Stage complete → next stage
+            // Stage complete → show difficulty selection before next stage
             OnStageCleared?.Invoke(_currentStageIndex);
-            BeginStage(_currentStageIndex + 1);
+            _currentStageIndex++;
+
+            if (_currentStageIndex >= _stages.Count)
+            {
+                OnAllStagesComplete?.Invoke();
+                return;
+            }
+
+            if (DifficultySelectManager.Instance != null)
+            {
+                _waitingForDifficulty = true;
+                DifficultySelectManager.Instance.ShowSelection();
+            }
+            else
+            {
+                BeginStage(_currentStageIndex);
+            }
         }
         else
         {
@@ -251,14 +315,104 @@ public class StageManager : MonoBehaviour
 
     private List<ItemData> PickRandomRewards(int count)
     {
-        List<ItemData> pool = new List<ItemData>(_rewardPool);
-        List<ItemData> picked = new List<ItemData>();
+        // Get difficulty constraints
+        ItemRarity minRarity = ItemRarity.Normal;
+        ItemRarity maxRarity = ItemRarity.Legend;
+        int minPower = 3;
+        int maxPower = 20;
 
-        for (int i = 0; i < count && pool.Count > 0; i++)
+        if (DifficultySelectManager.Instance != null)
         {
-            int index = UnityEngine.Random.Range(0, pool.Count);
-            picked.Add(pool[index]);
-            pool.RemoveAt(index);
+            minRarity = DifficultySelectManager.Instance.MinRarity;
+            maxRarity = DifficultySelectManager.Instance.MaxRarity;
+            minPower = DifficultySelectManager.Instance.MinPowerScore;
+            maxPower = DifficultySelectManager.Instance.MaxPowerScore;
+        }
+
+        // Filter by rarity range
+        List<ItemData> filtered = _rewardPool.FindAll(item =>
+            item.Rarity >= minRarity && item.Rarity <= maxRarity);
+
+        if (filtered.Count < count)
+            filtered = new List<ItemData>(_rewardPool);
+
+        // Try to find a combination within PowerScore range (max 50 attempts)
+        for (int attempt = 0; attempt < 50; attempt++)
+        {
+            List<ItemData> pool = new List<ItemData>(filtered);
+            List<ItemData> picked = new List<ItemData>();
+
+            for (int i = 0; i < count && pool.Count > 0; i++)
+            {
+                int index = UnityEngine.Random.Range(0, pool.Count);
+                picked.Add(pool[index]);
+                pool.RemoveAt(index);
+            }
+
+            if (picked.Count < count) break;
+
+            int totalPower = 0;
+            foreach (var item in picked)
+                totalPower += item.PowerScore;
+
+            if (totalPower >= minPower && totalPower <= maxPower)
+                return picked;
+        }
+
+        // Fallback: greedy pick within budget
+        return PickRewardsGreedy(filtered, count, minPower, maxPower);
+    }
+
+    private List<ItemData> PickRewardsGreedy(List<ItemData> candidates, int count, int minPower, int maxPower)
+    {
+        // Shuffle candidates
+        List<ItemData> shuffled = new List<ItemData>(candidates);
+        for (int i = shuffled.Count - 1; i > 0; i--)
+        {
+            int j = UnityEngine.Random.Range(0, i + 1);
+            (shuffled[i], shuffled[j]) = (shuffled[j], shuffled[i]);
+        }
+
+        List<ItemData> picked = new List<ItemData>();
+        int currentPower = 0;
+        int remaining = count;
+
+        foreach (var item in shuffled)
+        {
+            if (picked.Count >= count) break;
+
+            int afterAdd = currentPower + item.PowerScore;
+            int slotsLeft = remaining - 1;
+
+            // Check if adding this item still allows reaching minPower with remaining slots
+            // and doesn't overshoot maxPower even with minimum-score items in remaining slots
+            if (slotsLeft > 0)
+            {
+                if (afterAdd > maxPower) continue;
+            }
+            else
+            {
+                // Last slot: total must be within range
+                if (afterAdd < minPower || afterAdd > maxPower) continue;
+            }
+
+            picked.Add(item);
+            currentPower = afterAdd;
+            remaining--;
+        }
+
+        // If greedy couldn't fill all slots, fill remaining with random items
+        if (picked.Count < count)
+        {
+            List<ItemData> pool = new List<ItemData>(candidates);
+            foreach (var p in picked) pool.Remove(p);
+
+            while (picked.Count < count && pool.Count > 0)
+            {
+                int idx = UnityEngine.Random.Range(0, pool.Count);
+                picked.Add(pool[idx]);
+                pool.RemoveAt(idx);
+            }
         }
 
         return picked;

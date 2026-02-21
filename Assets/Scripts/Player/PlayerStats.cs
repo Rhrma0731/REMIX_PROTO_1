@@ -8,8 +8,11 @@ public struct StatBlock
     public float MoveSpeed;
     public float AttackDamage;
     public float AttackSpeed;
+    public float Range;
+    public float KnockbackForce;
     public float CritChance;
     public float CritMultiplier;
+    public float CollectionRange;
 
     public static StatBlock operator +(StatBlock a, StatBlock b)
     {
@@ -19,8 +22,11 @@ public struct StatBlock
             MoveSpeed = a.MoveSpeed + b.MoveSpeed,
             AttackDamage = a.AttackDamage + b.AttackDamage,
             AttackSpeed = a.AttackSpeed + b.AttackSpeed,
+            Range = a.Range + b.Range,
+            KnockbackForce = a.KnockbackForce + b.KnockbackForce,
             CritChance = a.CritChance + b.CritChance,
             CritMultiplier = a.CritMultiplier + b.CritMultiplier,
+            CollectionRange = a.CollectionRange + b.CollectionRange,
         };
     }
 }
@@ -57,6 +63,11 @@ public class PlayerStats : MonoBehaviour
     public float CritMultiplier => Mathf.Max(1f, _baseCritMultiplier + _bonusStats.CritMultiplier);
     public float CurrentHp => _currentHp;
 
+    // Additive bonus accessors (no base — these start at 0 and grow from items)
+    public float BonusRange => _bonusStats.Range;
+    public float BonusKnockbackForce => _bonusStats.KnockbackForce;
+    public float BonusCollectionRange => _bonusStats.CollectionRange;
+
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
@@ -75,6 +86,11 @@ public class PlayerStats : MonoBehaviour
         _bonusStats.MoveSpeed += item.BonusMoveSpeed;
         _bonusStats.AttackDamage += item.BonusAttackDamage;
         _bonusStats.AttackSpeed += item.BonusAttackSpeed;
+        _bonusStats.Range += item.BonusRange;
+        _bonusStats.KnockbackForce += item.BonusKnockbackForce;
+        _bonusStats.CritChance += item.BonusCritChance;
+        _bonusStats.CritMultiplier += item.BonusCritMultiplier;
+        _bonusStats.CollectionRange += item.BonusCollectionRange;
 
         // Heal proportional to HP bonus
         if (item.BonusHp > 0f)

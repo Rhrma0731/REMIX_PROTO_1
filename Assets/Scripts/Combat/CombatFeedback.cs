@@ -224,6 +224,8 @@ public class CombatFeedback : MonoBehaviour
         float fadeDuration = _flashDuration * 0.5f;
         while (fadeElapsed < fadeDuration)
         {
+            if (sr == null) yield break;
+
             fadeElapsed += Time.unscaledDeltaTime;
             float t = Mathf.Clamp01(fadeElapsed / fadeDuration);
 
@@ -234,6 +236,7 @@ public class CombatFeedback : MonoBehaviour
             yield return null;
         }
 
+        if (sr == null) yield break;
         sr.GetPropertyBlock(mpb);
         mpb.SetFloat(FLASH_AMOUNT, 0f);
         sr.SetPropertyBlock(mpb);
@@ -251,11 +254,15 @@ public class CombatFeedback : MonoBehaviour
 
     private IEnumerator GlitchRoutine(SpriteRenderer sr)
     {
+        if (sr == null) yield break;
+
         MaterialPropertyBlock mpb = new MaterialPropertyBlock();
         float elapsed = 0f;
 
         while (elapsed < _glitchDuration)
         {
+            if (sr == null) yield break;
+
             elapsed += Time.unscaledDeltaTime;
             float t = elapsed / _glitchDuration;
 
@@ -264,25 +271,27 @@ public class CombatFeedback : MonoBehaviour
             float decay = 1f - t;
             float glitchValue = pulse * _glitchSliceIntensity * decay;
 
-            // Random horizontal slice offset for distortion feel
-            float sliceOffset = (Mathf.PerlinNoise(elapsed * 80f, 0f) * 2f - 1f) * glitchValue;
-
-            sr.GetPropertyBlock(mpb);
-            mpb.SetFloat(GLITCH_INTENSITY, glitchValue);
-            sr.SetPropertyBlock(mpb);
-
-            // Physical jitter — sprite shakes in local space
-            sr.transform.localPosition += new Vector3(sliceOffset, 0f, 0f);
+            try
+            {
+                sr.GetPropertyBlock(mpb);
+                mpb.SetFloat(GLITCH_INTENSITY, glitchValue);
+                sr.SetPropertyBlock(mpb);
+            }
+            catch (MissingReferenceException) { yield break; }
 
             yield return null;
-
-            // Reset position each frame
-            sr.transform.localPosition -= new Vector3(sliceOffset, 0f, 0f);
         }
 
-        sr.GetPropertyBlock(mpb);
-        mpb.SetFloat(GLITCH_INTENSITY, 0f);
-        sr.SetPropertyBlock(mpb);
+        try
+        {
+            if (sr != null)
+            {
+                sr.GetPropertyBlock(mpb);
+                mpb.SetFloat(GLITCH_INTENSITY, 0f);
+                sr.SetPropertyBlock(mpb);
+            }
+        }
+        catch (MissingReferenceException) { }
     }
 
     // --- 5. Hit Particles (Miniature Scale) ---

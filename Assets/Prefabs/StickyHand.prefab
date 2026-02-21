@@ -106,7 +106,7 @@ Transform:
   m_GameObject: {fileID: 4831552387699801218}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: -7.19, z: -4.74}
+  m_LocalPosition: {x: 100, y: 100, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -266,6 +266,9 @@ MonoBehaviour:
   _mass: 0.3
   _gravityScale: 2
   _dustParticleScale: 0.02
+  _coinPrefab: {fileID: 512007319366854141, guid: 0b34a3f12366a2647a8e1b6e111d403b, type: 3}
+  _minCoinDrop: 1
+  _maxCoinDrop: 3
   _stunDuration: 0.5
   _flashMaterial: {fileID: 0}
   _spriteRenderer: {fileID: 6576204252188984426}
