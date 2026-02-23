@@ -25,6 +25,7 @@ public class DifficultySelectManager : MonoBehaviour
             MaxRarity = ItemRarity.Rare,
             MinPowerScore = 3,
             MaxPowerScore = 8,
+            ObstacleBaseCount = 2,
             MonsterCountHint = "적 수 감소",
             RewardGradeHint = "일반 보상"
         },
@@ -36,6 +37,7 @@ public class DifficultySelectManager : MonoBehaviour
             MaxRarity = ItemRarity.Rare,
             MinPowerScore = 6,
             MaxPowerScore = 14,
+            ObstacleBaseCount = 4,
             MonsterCountHint = "기본 적 수",
             RewardGradeHint = "희귀 보상 가능"
         },
@@ -47,6 +49,7 @@ public class DifficultySelectManager : MonoBehaviour
             MaxRarity = ItemRarity.Legend,
             MinPowerScore = 12,
             MaxPowerScore = 20,
+            ObstacleBaseCount = 6,
             MonsterCountHint = "적 수 증가",
             RewardGradeHint = "전설 보상 가능"
         }
@@ -61,6 +64,7 @@ public class DifficultySelectManager : MonoBehaviour
     public ItemRarity MaxRarity { get; private set; } = ItemRarity.Legend;
     public int MinPowerScore { get; private set; } = 3;
     public int MaxPowerScore { get; private set; } = 20;
+    public int ObstacleBaseCount { get; private set; } = 3;
 
     private CanvasGroup _canvasGroup;
 
@@ -108,6 +112,7 @@ public class DifficultySelectManager : MonoBehaviour
             MaxRarity = settings.MaxRarity;
             MinPowerScore = settings.MinPowerScore;
             MaxPowerScore = settings.MaxPowerScore;
+            ObstacleBaseCount = settings.ObstacleBaseCount;
         }
 
         StartCoroutine(FadeOutThenNotify(level));

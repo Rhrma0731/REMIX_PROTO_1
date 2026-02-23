@@ -21,6 +21,9 @@ public class DifficultySettings
     [Tooltip("보상 3개의 PowerScore 합계 최댓값")]
     public int MaxPowerScore = 10;
 
+    [Tooltip("이 난이도에서 스폰될 장애물 기본 개수")]
+    public int ObstacleBaseCount = 3;
+
     [Tooltip("UI hint text for monster count")]
     public string MonsterCountHint;
 

@@ -27,6 +27,10 @@ public class StageManager : MonoBehaviour
     [Header("Stage Definitions")]
     [SerializeField] private List<StageData> _stages;
 
+    [Header("Capsule Spawner")]
+    [SerializeField] private GachaCapsuleSpawner _capsuleSpawner;
+    [SerializeField] private List<GameObject> _obstaclePrefabs;
+
     [Header("Reward Item Pool")]
     [SerializeField] private List<ItemData> _rewardPool;
 
@@ -273,6 +277,9 @@ public class StageManager : MonoBehaviour
 
     private IEnumerator StageTransitionThenSpawn()
     {
+        // 이전 웨이브 장애물 초기화
+        _capsuleSpawner?.ClearObstacles();
+
         // Zoom out
         yield return StartCoroutine(AnimateCameraZoom(
             _baseCameraSize,
@@ -280,8 +287,11 @@ public class StageManager : MonoBehaviour
             _zoomOutDuration
         ));
 
-        // Spawn at the peak of zoom-out
-        SpawnCurrentWave();
+        // 캡슐 스폰 연출 (캡슐 스포너 없으면 즉시 스폰 폴백)
+        if (_capsuleSpawner != null)
+            yield return StartCoroutine(SpawnViaCapsule());
+        else
+            SpawnCurrentWave();
 
         // Zoom back in
         yield return StartCoroutine(AnimateCameraZoom(
@@ -289,6 +299,44 @@ public class StageManager : MonoBehaviour
             _baseCameraSize,
             _zoomInDuration
         ));
+    }
+
+    private IEnumerator SpawnViaCapsule()
+    {
+        StageData stage = _stages[_currentStageIndex];
+        WaveData wave = stage.Waves[_currentWaveIndex];
+
+        int baseCount = wave.EnemyPrefabs.Count;
+        float multiplier = DifficultySelectManager.Instance != null
+            ? DifficultySelectManager.Instance.EnemyCountMultiplier
+            : 1f;
+        int totalCount = Mathf.Max(1, Mathf.RoundToInt(baseCount * multiplier));
+        int obstacleCount = DifficultySelectManager.Instance != null
+            ? DifficultySelectManager.Instance.ObstacleBaseCount
+            : 3;
+
+        Debug.Log($"[StageManager] SpawnViaCapsule — stage={_currentStageIndex}, wave={_currentWaveIndex}, enemies={totalCount}, obstacles={obstacleCount}");
+
+        bool done = false;
+        List<EnemyBase> spawnedEnemies = null;
+
+        _capsuleSpawner.SpawnWave(wave, totalCount, obstacleCount, _obstaclePrefabs, (enemies) =>
+        {
+            spawnedEnemies = enemies;
+            done = true;
+        });
+
+        yield return new WaitUntil(() => done);
+
+        _activeEnemies.Clear();
+        foreach (var enemy in spawnedEnemies)
+        {
+            EnemyBase e = enemy;
+            e.OnDeath += () => OnEnemyDied(e);
+            _activeEnemies.Add(e);
+        }
+
+        OnWaveStarted?.Invoke(_currentStageIndex, _currentWaveIndex);
     }
 
     private IEnumerator AnimateCameraZoom(float from, float to, float duration)
