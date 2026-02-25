@@ -97,6 +97,11 @@ public class ItemData : ScriptableObject
     [Header("월드 표시")]
     public Sprite PedestalSprite;
 
+    [Header("T-M-A 이펙트 파이프라인")]
+    [Tooltip("Trigger → Modifier → Action 순서로 배치. 비어있으면 기존 스탯/상태이상만 사용")]
+    [SerializeReference]
+    public List<IItemEffect> Effects = new List<IItemEffect>();
+
     // --- Stat helpers ---
     private float GetBonus(StatType type)
     {

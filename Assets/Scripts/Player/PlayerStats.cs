@@ -107,6 +107,7 @@ public class PlayerStats : MonoBehaviour
         if (_isDead) return;
 
         _currentHp = Mathf.Max(0f, _currentHp - damage);
+        PlayerEventManager.Instance?.BroadcastTakeDamage(damage);
         OnHpChanged?.Invoke(_currentHp, MaxHp);
 
         if (_currentHp <= 0f)
@@ -119,6 +120,7 @@ public class PlayerStats : MonoBehaviour
     public void Heal(float amount)
     {
         _currentHp = Mathf.Min(_currentHp + amount, MaxHp);
+        PlayerEventManager.Instance?.BroadcastHeal(amount);
         OnHpChanged?.Invoke(_currentHp, MaxHp);
     }
 

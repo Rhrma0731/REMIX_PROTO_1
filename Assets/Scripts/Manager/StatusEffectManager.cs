@@ -69,6 +69,38 @@ public class StatusEffectManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// T-M-A 시스템에서 개별 상태이상을 직접 적용할 수 있는 공개 API.
+    /// 기존 ApplyEffects()는 등록된 아이템 전체를 순회하지만,
+    /// 이 메서드는 단일 상태이상 ID를 지정하여 적용한다.
+    /// </summary>
+    public void ApplySingleEffect(EnemyBase enemy, string statusID)
+    {
+        if (enemy == null || enemy.IsDead) return;
+
+        switch (statusID)
+        {
+            case "ST_BURN":
+                enemy.StartCoroutine(BurnRoutine(enemy));
+                break;
+            case "ST_SLOW":
+                enemy.StartCoroutine(SlowRoutine(enemy));
+                break;
+            case "ST_STUN":
+                enemy.ApplyExternalStun(_stunDuration);
+                break;
+            case "ST_GLITCH":
+                StartCoroutine(GlitchEffectRoutine(enemy));
+                break;
+            case "ST_DEATH":
+                enemy.TakeDamage(99999f, Vector3.zero);
+                break;
+            case "ST_CHAIN":
+                StartCoroutine(ChainRoutine(enemy));
+                break;
+        }
+    }
+
     // --- ST_BURN ---
 
     private IEnumerator BurnRoutine(EnemyBase enemy)

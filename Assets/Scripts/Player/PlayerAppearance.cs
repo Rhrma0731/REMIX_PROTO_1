@@ -152,6 +152,9 @@ public class PlayerAppearance : MonoBehaviour
             StatusEffectManager.Instance?.RegisterItem(item);
         }
 
+        // T-M-A 이펙트 파이프라인 등록
+        ItemEffectRunner.Instance?.RegisterItem(item);
+
         // Update weapon name
         string weaponName = WeaponNameBuilder.BuildName(_allEquippedItems);
         OnWeaponNameChanged?.Invoke(weaponName);
@@ -186,6 +189,9 @@ public class PlayerAppearance : MonoBehaviour
         }
         _equippedItems.Clear();
         _allEquippedItems.Clear();
+
+        // T-M-A 이펙트 정리
+        ItemEffectRunner.Instance?.ClearAll();
     }
 
     public bool HasEquipped(BodyPart part) => _equippedItems.ContainsKey(part);

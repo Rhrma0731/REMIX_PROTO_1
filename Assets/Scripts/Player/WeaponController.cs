@@ -134,6 +134,7 @@ public class WeaponController : MonoBehaviour
         _animTimer = 0f;
 
         OnGlitchStart?.Invoke();
+        PlayerEventManager.Instance?.BroadcastAttack();
 
         PerformHitDetection();
     }
@@ -162,6 +163,9 @@ public class WeaponController : MonoBehaviour
             Vector3 hitDirection = (enemy.transform.position - transform.position).normalized;
 
             enemy.TakeDamage(result.Damage, hitDirection);
+            PlayerEventManager.Instance?.BroadcastDealDamage(enemy, result.Damage);
+            if (enemy.IsDead)
+                PlayerEventManager.Instance?.BroadcastKillEnemy(enemy);
 
             if (feedback != null)
             {
