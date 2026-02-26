@@ -1,6 +1,6 @@
 # RE:MIX PROTO_1 — 작업 인수인계 가이드라인
 
-> 마지막 업데이트: 2026-02-21
+> 마지막 업데이트: 2026-02-26
 > 목적: 다음 세션에서 컨텍스트 없이도 즉시 작업을 이어받을 수 있도록 작성된 문서입니다.
 
 ---
@@ -21,6 +21,7 @@
 |--------|------|-----------|
 | 플레이어 이동 / 조준 | ✅ | `PlayerMovement.cs` |
 | 플레이어 스탯 + 아이템 적용 | ✅ | `PlayerStats.cs` |
+| 플레이어 부활 + 무적 시스템 | ✅ | `PlayerStats.cs` (Revive, SetInvincible) |
 | 무기 공격 (사거리, 크리티컬) | ✅ | `WeaponController.cs` |
 | 플레이어 외형 — 스프라이트 교체 + Scale + Color Tint | ✅ | `PlayerAppearance.cs` |
 | 아이템 장착 시각 이펙트 (Flash + Shake + ScalePunch + Glitch 동시) | ✅ | `PlayerAppearance.cs` |
@@ -45,7 +46,56 @@
 | ST_DEATH | 즉사 (99999 피해) — StatusTriggerChance로 확률 제어 | ✅ |
 | ST_CHAIN | 주 타격 후 반경 3.5m 내 최대 3개 적에게 공격력 50% 연쇄 피해 | ✅ |
 
-### 2-3. 아이템 데이터 인프라
+### 2-3. T-M-A 이펙트 파이프라인
+
+아이작 스타일의 수백 가지 아이템 효과를 조합할 수 있는 모듈형 시스템.
+`ItemData.Effects` 리스트에 `[SerializeReference]`로 블록을 배치하면 자동 작동.
+
+#### 2-3-1. 코어 인프라
+| 항목 | 상태 | 주요 파일 |
+|------|------|-----------|
+| IItemEffect 인터페이스 + ItemEffectRole enum | ✅ | `IItemEffect.cs` |
+| ItemEffectBase (ICD 안전장치, sealed Execute) | ✅ | `ItemEffectBase.cs` |
+| ItemEffectContext (파이프라인 데이터 컨테이너) | ✅ | `ItemEffectContext.cs` |
+| PlayerEventManager (이벤트 허브 — 방송국) | ✅ | `PlayerEventManager.cs` |
+| ItemEffectRunner + ActiveItemPipeline (T→M→A 오케스트레이터) | ✅ | `ItemEffectRunner.cs` |
+| ItemEffectVFX (컬러 플래시, 파티클 버스트/상승) | ✅ | `ItemEffectVFX.cs` |
+
+#### 2-3-2. Trigger 모듈 (언제 발동?)
+| 클래스 | 발동 조건 | 상태 |
+|--------|-----------|------|
+| OnAttackTrigger | 플레이어가 공격을 시도할 때 | ✅ |
+| OnMeleeHitTrigger | 공격이 적에게 실제로 적중할 때 | ✅ |
+| OnTakeDamageTrigger | 플레이어가 피해를 받을 때 | ✅ |
+| OnKillTrigger | 적을 처치할 때 | ✅ |
+| OnDashTrigger | 대시할 때 | ✅ |
+| OnTimerTrigger | 매 N초마다 | ✅ |
+| PassiveTrigger | 장착 즉시 (또는 매 1초) | ✅ |
+| **OnFatalDamageTrigger** | **HP 0 직전 (사망 가로채기, 횟수 제한)** | ✅ NEW |
+| **OnRoomClearTrigger** | **웨이브/방 클리어 시** | ✅ NEW |
+
+#### 2-3-3. Modifier 모듈 (어떻게 변형?)
+| 클래스 | 변형 내용 | 상태 |
+|--------|-----------|------|
+| StatModifier | 데미지 배율, 범위 추가 | ✅ |
+| ChanceGateModifier | 확률 실패 시 파이프라인 차단 | ✅ |
+| AddTagModifier | 원소 속성 부여 (Fire→ST_BURN 등) | ✅ |
+| RadiusModifier | 광역 범위 설정 | ✅ |
+| **BounceModifier** | **반사 횟수 + 감쇄율 설정** | ✅ NEW |
+| **HomingModifier** | **유도 속성 + 가장 가까운 적 자동 탐지** | ✅ NEW |
+
+#### 2-3-4. Action 모듈 (무엇을 실행?)
+| 클래스 | 실행 내용 | 상태 |
+|--------|-----------|------|
+| DealDamageAction | 단일/광역/자해 피해 | ✅ |
+| ApplyStatusAction | StatusEffectManager 브릿지 | ✅ |
+| HealSelfAction | 플레이어 체력 회복 | ✅ |
+| NullifyDamageAction | 피해 무효화 (즉시 회복 근사) | ✅ |
+| **ReviveAction** | **부활 (HP% 회복 + 무적 시간)** | ✅ NEW |
+| **SpawnFamiliarAction** | **패밀리어 프리팹 소환 (인스턴스 제한)** | ✅ NEW |
+| **DropPickupAction** | **픽업 아이템 N개 랜덤 드롭** | ✅ NEW |
+
+### 2-4. 아이템 데이터 인프라
 | 항목 | 상태 |
 |------|------|
 | ItemData ScriptableObject 구조 | ✅ |
@@ -73,22 +123,34 @@
 
 아이템 시트에 다음 공격 유형이 정의되어 있으나 코드가 없음:
 
-| 아이템 ID | 이름 | 필요한 시스템 |
-|-----------|------|---------------|
-| 103 | 뭉툭한 팔 | 관통(Pierce) 공격 |
-| 104 | 접착제 팔 | 적 달라붙기 (ST_BOND 특수) |
-| 105 | 고무 팔 | 반사 투사체 |
-| 203 | 돌멩이 주먹 | 충격파 (OverlapSphere 즉시 피해) |
-| 204 | 드릴 팔 | 지속 관통 |
-| 205 | 집게 팔 | 잡기 + 투척 |
-| 206 | 유압 팔 | 범위 넓은 후방 넉백 |
-| 207 | 독 분사기 | 독 도트 (ST_POISON — 미정의) |
-| 303 | 레이저 포 | 레이저 빔 (선형 히트스캔) |
-| 304 | 미사일 발사기 | 유도 미사일 |
-| 305 | 냉동 포 | 즉시 동결 (ST_FREEZE — 미정의) |
-| 401~405 | 전설 아이템들 | 각각 고유 메카닉 필요 |
+| 아이템 ID | 이름 | 필요한 시스템 | T-M-A 블록으로 가능? |
+|-----------|------|---------------|---------------------|
+| 103 | 뭉툭한 팔 | 관통(Pierce) 공격 | 투사체 Action 필요 |
+| 104 | 접착제 팔 | 적 달라붙기 (ST_BOND 특수) | 신규 Status 필요 |
+| 105 | 고무 팔 | 반사 투사체 | ✅ BounceModifier 활용 |
+| 203 | 돌멩이 주먹 | 충격파 (OverlapSphere 즉시 피해) | ✅ DealDamageAction(AoE) |
+| 204 | 드릴 팔 | 지속 관통 | 투사체 Action 필요 |
+| 205 | 집게 팔 | 잡기 + 투척 | 전용 Action 필요 |
+| 206 | 유압 팔 | 범위 넓은 후방 넉백 | 넉백 Action 필요 |
+| 207 | 독 분사기 | 독 도트 (ST_POISON — 미정의) | ApplyStatusAction + 신규 Status |
+| 303 | 레이저 포 | 레이저 빔 (선형 히트스캔) | 히트스캔 Action 필요 |
+| 304 | 미사일 발사기 | 유도 미사일 | ✅ HomingModifier 활용 |
+| 305 | 냉동 포 | 즉시 동결 (ST_FREEZE — 미정의) | ApplyStatusAction + 신규 Status |
+| 401~405 | 전설 아이템들 | 각각 고유 메카닉 필요 | 개별 검토 필요 |
 
 **권장 구현 순서**: 스탯 아이템(102, 201~202, 301~302) 먼저 → 단순 Status 아이템 → 복잡한 공격 메카닉 순
+
+### 다음 단계로 필요한 T-M-A 블록
+
+현재 범용 블록으로 커버되지 않는 영역:
+
+| 필요한 블록 | 용도 | 우선순위 |
+|-------------|------|----------|
+| **ProjectileAction** | 투사체 발사 (BounceCount/IsHoming을 읽어 반사·유도 처리) | 높음 |
+| **KnockbackAction** | 넉백 방향·힘 적용 (유압 팔, 충격파 등) | 중간 |
+| **HitscanAction** | 레이저 빔 (Raycast 선형 히트) | 중간 |
+| **ST_POISON / ST_FREEZE** | 신규 상태이상 정의 (StatusEffectManager 확장) | 중간 |
+| **OnHealthThresholdTrigger** | HP가 N% 이하일 때 발동 (분노/위기 아이템) | 낮음 |
 
 ---
 
@@ -107,36 +169,72 @@
 ```
 Assets/
 ├── Editor/
-│   └── ItemCSVImporter.cs          ← CSV → ItemData 에셋 변환 도구
+│   └── ItemCSVImporter.cs              ← CSV → ItemData 에셋 변환 도구
 ├── Resources/
-│   ├── ItemTable.csv               ← ✅ 생성됨 (35개 아이템)
-│   ├── ItemDatabase.asset          ← ✅ 자동 생성됨
-│   └── Items/                      ← ✅ 35개 .asset 파일
+│   ├── ItemTable.csv                   ← ✅ 생성됨 (35개 아이템)
+│   ├── ItemDatabase.asset              ← ✅ 자동 생성됨
+│   └── Items/                          ← ✅ 35개 .asset 파일
 ├── Scripts/
 │   ├── Enemy/
-│   │   └── EnemyBase.cs            ← 적 FSM, 넉백, ApplyExternalStun
+│   │   └── EnemyBase.cs                ← 적 FSM, 넉백, ApplyExternalStun
 │   ├── Item/
-│   │   ├── ItemData.cs             ← ScriptableObject, StatType enum, PartScale/PartColor
-│   │   ├── ItemDatabase.cs         ← 전체 아이템 목록 컨테이너
-│   │   ├── CoinPickup.cs           ← 코인 자석, CollectionRange 적용
-│   │   ├── RewardSlotUI.cs         ← 보상 슬롯 단일 UI
-│   │   └── WeaponNameBuilder.cs    ← Keyword → 무기 이름 조합
+│   │   ├── ItemData.cs                 ← ScriptableObject, StatType enum, PartScale/PartColor
+│   │   ├── ItemDatabase.cs             ← 전체 아이템 목록 컨테이너
+│   │   ├── CoinPickup.cs               ← 코인 자석, CollectionRange 적용
+│   │   ├── RewardSlotUI.cs             ← 보상 슬롯 단일 UI
+│   │   ├── WeaponNameBuilder.cs        ← Keyword → 무기 이름 조합
+│   │   └── Effects/                    ← T-M-A 이펙트 파이프라인
+│   │       ├── Core/
+│   │       │   ├── IItemEffect.cs          ← 인터페이스 + ItemEffectRole enum
+│   │       │   ├── ItemEffectBase.cs       ← 추상 베이스 (ICD 강제)
+│   │       │   ├── ItemEffectContext.cs     ← 파이프라인 데이터 컨테이너
+│   │       │   ├── PlayerEventManager.cs   ← 이벤트 허브 (싱글턴)
+│   │       │   └── ItemEffectRunner.cs     ← 파이프라인 오케스트레이터
+│   │       ├── Triggers/
+│   │       │   ├── TriggerBase.cs          ← Trigger 추상 베이스
+│   │       │   ├── OnAttackTrigger.cs
+│   │       │   ├── OnMeleeHitTrigger.cs
+│   │       │   ├── OnTakeDamageTrigger.cs
+│   │       │   ├── OnKillTrigger.cs
+│   │       │   ├── OnDashTrigger.cs
+│   │       │   ├── OnTimerTrigger.cs
+│   │       │   ├── PassiveTrigger.cs
+│   │       │   ├── OnFatalDamageTrigger.cs ← ✅ NEW 사망 가로채기
+│   │       │   └── OnRoomClearTrigger.cs   ← ✅ NEW 웨이브 클리어
+│   │       ├── Modifiers/
+│   │       │   ├── ModifierBase.cs         ← Modifier 추상 베이스
+│   │       │   ├── StatModifier.cs
+│   │       │   ├── ChanceGateModifier.cs
+│   │       │   ├── AddTagModifier.cs
+│   │       │   ├── RadiusModifier.cs
+│   │       │   ├── BounceModifier.cs       ← ✅ NEW 반사 속성
+│   │       │   └── HomingModifier.cs       ← ✅ NEW 유도 속성
+│   │       └── Actions/
+│   │           ├── ActionBase.cs           ← Action 추상 베이스
+│   │           ├── DealDamageAction.cs
+│   │           ├── ApplyStatusAction.cs
+│   │           ├── HealSelfAction.cs
+│   │           ├── NullifyDamageAction.cs
+│   │           ├── ReviveAction.cs         ← ✅ NEW 부활
+│   │           ├── SpawnFamiliarAction.cs  ← ✅ NEW 패밀리어 소환
+│   │           └── DropPickupAction.cs     ← ✅ NEW 픽업 드롭
 │   ├── Manager/
-│   │   ├── StageManager.cs         ← 스테이지/웨이브/보상 흐름 제어
-│   │   ├── RewardSystemManager.cs  ← 보상 UI 애니메이션 + 아이템 흡수
-│   │   ├── StatusEffectManager.cs  ← 6종 상태 이상 적용
-│   │   ├── CurrencyManager.cs      ← 코인 수집/관리
-│   │   ├── DifficultySelectManager.cs ← 난이도 선택 UI
-│   │   ├── DifficultyData.cs       ← DifficultySettings 데이터 클래스
-│   │   └── GameOverManager.cs      ← 게임 오버 처리
+│   │   ├── StageManager.cs             ← 스테이지/웨이브/보상 흐름 제어
+│   │   ├── RewardSystemManager.cs      ← 보상 UI 애니메이션 + 아이템 흡수
+│   │   ├── StatusEffectManager.cs      ← 6종 상태 이상 적용
+│   │   ├── CurrencyManager.cs          ← 코인 수집/관리
+│   │   ├── DifficultySelectManager.cs  ← 난이도 선택 UI
+│   │   ├── DifficultyData.cs           ← DifficultySettings 데이터 클래스
+│   │   └── GameOverManager.cs          ← 게임 오버 처리
 │   ├── Player/
-│   │   ├── PlayerStats.cs          ← 스탯 계산, 아이템 적용
-│   │   ├── PlayerMovement.cs       ← 이동 + 조준
-│   │   ├── WeaponController.cs     ← 공격, 크리티컬, 사거리
-│   │   └── PlayerAppearance.cs     ← 스프라이트 장착, PartScale/Color, 이펙트
+│   │   ├── PlayerStats.cs              ← 스탯, 아이템, 부활, 무적
+│   │   ├── PlayerMovement.cs           ← 이동 + 조준
+│   │   ├── WeaponController.cs         ← 공격, 크리티컬, 사거리
+│   │   └── PlayerAppearance.cs         ← 스프라이트 장착, PartScale/Color, 이펙트
 │   ├── Combat/
-│   │   ├── CombatFeedback.cs       ← 글리치 셰이더, 히트스탑
-│   │   └── PlayerHitFeedback.cs    ← 플레이어 피격 피드백
+│   │   ├── CombatFeedback.cs           ← 글리치 셰이더, 히트스탑
+│   │   ├── PlayerHitFeedback.cs        ← 플레이어 피격 피드백
+│   │   └── ItemEffectVFX.cs            ← T-M-A 전용 VFX (컬러 플래시, 파티클)
 │   └── UI/
 │       ├── PlayerHealthUI.cs
 │       ├── EnemyHealthBar.cs
@@ -170,6 +268,34 @@ ItemData.StatBonuses (List<StatEntry>)
 ### 보상 시스템 타이밍
 마지막 웨이브 클리어 → `RewardSystemManager.ShowRewards()` → `Time.timeScale = 0` → 아이템 선택 → `OnRewardSequenceComplete` 이벤트 → `StageManager.OnRewardComplete()` → 다음 스테이지. 중간에 이벤트 구독이 끊기면 게임이 멈춤.
 
+### T-M-A 파이프라인 실행 흐름
+```
+PlayerAppearance.EquipItem() → ItemEffectRunner.RegisterItem(item)
+    → ActiveItemPipeline 생성 → Effects를 Role별 분류
+    → Trigger.SetPipelineCallback() + Initialize()
+    → Trigger가 PlayerEventManager 이벤트 구독
+
+(게임 중)
+PlayerEventManager.BroadcastXxx()
+    → Trigger.HandleXxx() → FireTrigger(context.Clone())
+    → ActiveItemPipeline.ExecutePipeline()
+        → PipelineDepth 체크 (MAX=3, 무한 루프 방지)
+        → Modifier 순서대로 context 변형
+        → Action 순서대로 실행
+```
+
+### 부활 시스템 (OnFatalDamage)
+```
+PlayerStats.TakeDamage() → HP ≤ 0
+    → BroadcastFatalDamage() (사망 판정 전!)
+    → OnFatalDamageTrigger 발동 → ReviveAction.Revive(HP%) + SetInvincible()
+    → PlayerStats: HP > 0이면 _isDead 설정 안 함 (사망 취소)
+```
+**핵심**: T-M-A 파이프라인이 동기 실행되므로 BroadcastFatalDamage()가 리턴될 때 이미 HP가 회복된 상태.
+
+### ItemEffectContext 궤적 필드
+`BounceCount`, `BounceDecay`, `IsHoming`, `HomingStrength` — Modifier가 설정하고 향후 ProjectileAction 등이 소비. 현재는 필드만 존재하며, 이를 읽는 투사체 Action은 미구현.
+
 ---
 
 ## 7. 작업 재개 시 첫 번째 할 일
@@ -178,7 +304,9 @@ ItemData.StatBonuses (List<StatEntry>)
 2. `Assets/Scripts/` 전체를 훑어 현재 컴파일 오류 없는지 확인
 3. 플레이 테스트: 아레나 진입 → 전투 → 보상 선택 → 파츠 색상/크기 변화 확인
 4. 스프라이트 에셋 준비 → `Icon`, `AppearanceSprite` 연결 (우선순위 높음)
-5. 특수 공격 시스템 구현 시작 (원하는 아이템 ID 선택)
+5. **T-M-A 블록 테스트**: ItemData .asset에 Effects 리스트 배치 → 인게임 발동 확인
+6. **ProjectileAction 구현** — BounceCount/IsHoming을 실제로 소비하는 투사체 Action (최우선)
+7. 특수 공격 시스템 구현 시작 (원하는 아이템 ID 선택)
 
 ---
 
@@ -195,6 +323,12 @@ ItemData.StatBonuses (List<StatEntry>)
 | 2026-02-21 | BondImpactRoutine 재설계 — Flash + Shake + ScalePunch + Glitch 동시 진행 |
 | 2026-02-21 | 시각 이펙트 버그 3종 수정 (AppearanceSprite null 가드, TargetBodyPart 기본값 수정, _playerAppearance null 체크) |
 | 2026-02-21 | CSV 재임포트 — Form 아이템 8종 ArmRight 배정 확인 |
+| 2026-02-26 | T-M-A 범용 모듈 7종 추가 (OnFatalDamageTrigger, ReviveAction, SpawnFamiliarAction, OnRoomClearTrigger, DropPickupAction, BounceModifier, HomingModifier) |
+| 2026-02-26 | PlayerEventManager에 OnFatalDamage, OnRoomClear 이벤트 추가 |
+| 2026-02-26 | PlayerStats에 Revive(), SetInvincible(), 무적 체크, Fatal→부활 가로채기 추가 |
+| 2026-02-26 | ItemEffectContext에 BounceCount, BounceDecay, IsHoming, HomingStrength 필드 추가 |
+| 2026-02-26 | StageManager 웨이브 클리어 시 BroadcastRoomClear() 호출 추가 |
+| 2026-02-26 | ItemEffectVFX에 PlayReviveEffect() (금색 파티클) 추가 |
 
 ---
 

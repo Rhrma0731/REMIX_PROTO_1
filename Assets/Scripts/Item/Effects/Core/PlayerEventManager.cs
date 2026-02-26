@@ -35,6 +35,15 @@ public class PlayerEventManager : MonoBehaviour
     /// <summary>매 1초마다 발동. OnTimerTrigger 등이 구독한다.</summary>
     public event Action OnSecondTick;
 
+    // ── 생존 이벤트 ──────────────────────────────────────────────
+    /// <summary>플레이어 체력이 0 이하가 된 직후, 사망 판정 전에 발동.
+    /// ReviveAction 등이 이 시점에 체력을 회복하면 사망이 취소된다.</summary>
+    public event Action OnFatalDamage;
+
+    // ── 방(Room)/웨이브 이벤트 ─────────────────────────────────────
+    /// <summary>웨이브(또는 방)를 클리어했을 때</summary>
+    public event Action OnRoomClear;
+
     // ── 아이템 이벤트 ────────────────────────────────────────────
     /// <summary>아이템이 장착되었을 때</summary>
     public event Action<ItemData> OnItemEquipped;
@@ -67,5 +76,7 @@ public class PlayerEventManager : MonoBehaviour
     public void BroadcastTakeDamage(float damage) => OnTakeDamage?.Invoke(damage);
     public void BroadcastDash() => OnDash?.Invoke();
     public void BroadcastHeal(float amount) => OnHeal?.Invoke(amount);
+    public void BroadcastFatalDamage() => OnFatalDamage?.Invoke();
+    public void BroadcastRoomClear() => OnRoomClear?.Invoke();
     public void BroadcastItemEquipped(ItemData item) => OnItemEquipped?.Invoke(item);
 }

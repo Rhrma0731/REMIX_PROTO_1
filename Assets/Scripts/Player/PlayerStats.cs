@@ -51,6 +51,7 @@ public class PlayerStats : MonoBehaviour
     private StatBlock _bonusStats;
     private float _currentHp;
     private bool _isDead;
+    private float _invincibleUntil = -1f;
 
     public bool IsDead => _isDead;
 
@@ -102,9 +103,18 @@ public class PlayerStats : MonoBehaviour
         OnStatsChanged?.Invoke(GetTotalStats());
     }
 
+    public bool IsInvincible => Time.time < _invincibleUntil;
+
+    /// <summary>지정 시간(초) 동안 무적 상태를 부여한다.</summary>
+    public void SetInvincible(float duration)
+    {
+        _invincibleUntil = Mathf.Max(_invincibleUntil, Time.time + duration);
+    }
+
     public void TakeDamage(float damage)
     {
         if (_isDead) return;
+        if (IsInvincible) return;
 
         _currentHp = Mathf.Max(0f, _currentHp - damage);
         PlayerEventManager.Instance?.BroadcastTakeDamage(damage);
@@ -112,9 +122,25 @@ public class PlayerStats : MonoBehaviour
 
         if (_currentHp <= 0f)
         {
+            // 사망 판정 전 OnFatalDamage 방송 — ReviveAction 등이 체력을 회복할 기회
+            PlayerEventManager.Instance?.BroadcastFatalDamage();
+
+            // 부활 효과가 체력을 회복했으면 사망 취소
+            if (_currentHp > 0f) return;
+
             _isDead = true;
             OnPlayerDeath?.Invoke();
         }
+    }
+
+    /// <summary>
+    /// 사망 상태를 해제하고 체력을 회복한다. OnFatalDamage 핸들러에서 호출.
+    /// </summary>
+    public void Revive(float hp)
+    {
+        _isDead = false;
+        _currentHp = Mathf.Min(hp, MaxHp);
+        OnHpChanged?.Invoke(_currentHp, MaxHp);
     }
 
     public void Heal(float amount)

@@ -41,6 +41,16 @@ public class ItemEffectContext
     /// <summary>원소/속성 태그 (Fire, Electric, Poison 등)</summary>
     public string ElementTag;
 
+    // ── 궤적/형태 변형 (Modifier가 설정, Action이 소비) ────────────
+    /// <summary>남은 반사(바운스) 횟수. 0이면 반사 없음</summary>
+    public int BounceCount;
+    /// <summary>반사 시 데미지 감쇄 배율. 1.0 = 감쇄 없음</summary>
+    public float BounceDecay = 1f;
+    /// <summary>유도 여부. true면 가장 가까운 적을 향해 방향 전환</summary>
+    public bool IsHoming;
+    /// <summary>유도 강도 (도/초). 값이 클수록 빠르게 추적</summary>
+    public float HomingStrength;
+
     // ── 무한 루프 방지 ────────────────────────────────────────────
     /// <summary>현재 파이프라인 연쇄 깊이. MAX_PIPELINE_DEPTH 초과 시 실행 중단</summary>
     public int PipelineDepth;
@@ -74,6 +84,10 @@ public class ItemEffectContext
             AreaRadius = AreaRadius,
             IsCritical = IsCritical,
             ElementTag = ElementTag,
+            BounceCount = BounceCount,
+            BounceDecay = BounceDecay,
+            IsHoming = IsHoming,
+            HomingStrength = HomingStrength,
             PipelineDepth = PipelineDepth,
             TriggerTime = TriggerTime,
         };

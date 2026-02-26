@@ -190,6 +190,7 @@ public class StageManager : MonoBehaviour
         if (_activeEnemies.Count <= 0 && !_waitingForReward)
         {
             OnWaveCleared?.Invoke(_currentStageIndex, _currentWaveIndex);
+            PlayerEventManager.Instance?.BroadcastRoomClear();
             StartCoroutine(WaveClearedSequence());
         }
     }
