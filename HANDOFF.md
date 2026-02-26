@@ -1,6 +1,6 @@
 # RE:MIX PROTO_1 — 작업 인수인계 가이드라인
 
-> 마지막 업데이트: 2026-02-26
+> 마지막 업데이트: 2026-02-27
 > 목적: 다음 세션에서 컨텍스트 없이도 즉시 작업을 이어받을 수 있도록 작성된 문서입니다.
 
 ---
@@ -174,7 +174,10 @@
 ```
 Assets/
 ├── Editor/
-│   └── ItemCSVImporter.cs              ← CSV → ItemData 에셋 변환 도구
+│   ├── ItemCSVImporter.cs              ← CSV → ItemData 에셋 변환 도구
+│   └── ItemDataTMAGenerator.cs         ← T-M-A 블록 에셋 생성 보조 도구
+├── MCPForUnity/                        ← [개발 도구] Claude Code ↔ Unity MCP 브릿지 플러그인
+├── Screenshots/                        ← 플레이테스트 참고 스크린샷 (5장)
 ├── Prefabs/
 │   ├── GachaCapsule.prefab             ← 캡슐 낙하 비주얼 (교체 예정)
 │   └── Obstacle.prefab                 ← 장애물 (Rigidbody + NavMeshObstacle + ObstacleController)
@@ -377,6 +380,9 @@ PlayerStats.TakeDamage() → HP ≤ 0
 | 2026-02-26 | ItemEffectContext에 BounceCount, BounceDecay, IsHoming, HomingStrength 필드 추가 |
 | 2026-02-26 | StageManager 웨이브 클리어 시 BroadcastRoomClear() 호출 추가 |
 | 2026-02-26 | ItemEffectVFX에 PlayReviveEffect() (금색 파티클) 추가 |
+| 2026-02-27 | git 병합 완료 — 로컬 작업(캡슐/장애물) + 원격 T-M-A 시스템 충돌 없이 통합 |
+| 2026-02-27 | MCPForUnity 플러그인 추가 (`Assets/MCPForUnity/`) — Claude Code ↔ Unity Editor 직접 연동 |
+| 2026-02-27 | 플레이테스트 스크린샷 5장 추가 (`Assets/Screenshots/`) — navmesh, 매니저, 시작 화면 등 |
 
 ---
 
