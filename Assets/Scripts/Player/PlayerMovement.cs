@@ -13,8 +13,8 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
-        _rb.useGravity = true;
-        _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        _rb.useGravity = false;
+        _rb.constraints = RigidbodyConstraints.FreezeRotation | RigidbodyConstraints.FreezePositionY;
 
         var playerMap = _inputActions.FindActionMap("Player");
         _moveAction = playerMap.FindAction("Move");
@@ -40,11 +40,11 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_moveDirection.sqrMagnitude < 0.01f)
         {
-            _rb.linearVelocity = new Vector3(0f, _rb.linearVelocity.y, 0f);
+            _rb.linearVelocity = new Vector3(0f, 0f, 0f);
             return;
         }
 
         Vector3 velocity = _moveDirection * _moveSpeed;
-        _rb.linearVelocity = new Vector3(velocity.x, _rb.linearVelocity.y, velocity.z);
+        _rb.linearVelocity = new Vector3(velocity.x, 0f, velocity.z);
     }
 }

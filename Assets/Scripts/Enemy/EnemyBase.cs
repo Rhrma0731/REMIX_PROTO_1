@@ -375,6 +375,27 @@ public abstract class EnemyBase : MonoBehaviour
     public float GetMoveSpeed() => _moveSpeed;
     public bool IsDead => _isDead;
 
+    // --- Capsule Scatter Spawn ---
+
+    /// <summary>캡슐에서 산개 스폰될 때 GachaCapsuleSpawner가 호출.</summary>
+    public void LaunchFromCapsule(Vector3 scatterDirection, float launchForce)
+    {
+        _groundY = transform.position.y;
+
+        _agent.enabled = false;
+        _rb.isKinematic = false;
+        _rb.useGravity = true;
+
+        Vector3 force = scatterDirection.normalized * launchForce;
+        force.y = _knockbackUpForce;
+
+        _rb.linearVelocity = Vector3.zero;
+        _rb.AddForce(force, ForceMode.Impulse);
+
+        if (_bounceCoroutine != null) StopCoroutine(_bounceCoroutine);
+        _bounceCoroutine = StartCoroutine(BounceRoutine());
+    }
+
     // --- External Stun (ST_STUN) ---
 
     public void ApplyExternalStun(float duration)

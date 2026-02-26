@@ -27,6 +27,8 @@
 | 아이템 장착 시각 이펙트 (Flash + Shake + ScalePunch + Glitch 동시) | ✅ | `PlayerAppearance.cs` |
 | 적 기본 FSM (Chase / Attack / Stun / Die) | ✅ | `EnemyBase.cs` |
 | 적 장난감 물리 넉백 + 바운스 | ✅ | `EnemyBase.cs` |
+| **캡슐 낙하 스폰 연출** | ✅ | `GachaCapsuleSpawner.cs` |
+| **지형 장애물 (NavMesh Carving)** | ✅ | `ObstacleController.cs` |
 | 스테이지 / 웨이브 진행 | ✅ | `StageManager.cs` |
 | 보상 UI (체인 드롭 애니메이션) | ✅ | `RewardSystemManager.cs`, `RewardSlotUI.cs` |
 | 난이도 선택 (Easy/Normal/Hard) | ✅ | `DifficultySelectManager.cs`, `DifficultyData.cs` |
@@ -114,8 +116,10 @@
 
 ### 우선순위 목록
 
-- [ ] **ItemData 스프라이트 연결** — `Icon`, `AppearanceSprite`, `PedestalSprite` 모두 null 상태. 스프라이트 에셋 준비 후 각 .asset 파일에 수동 연결 (또는 CSV에 경로 컬럼 추가 후 임포터 확장)
-- [ ] **TargetBodyPart 기획 확정** — 현재 Form 아이템은 `ArmRight`(테스트값), Modifier 아이템은 `Head`(기본값). 실제 기획서 기준으로 배정 필요
+- [ ] **캡슐/장애물 비주얼 개선** — 현재 GachaCapsule=캡슐 메시, Obstacle=큐브 메시 기본 에셋. 아트 에셋 교체 필요
+- [ ] **오픈 파티클 이펙트** — `GachaCapsuleSpawner._openParticlePrefab` 미연결. 파티클 에셋 제작 후 Inspector 연결
+- [ ] **ItemData 스프라이트 연결** — `Icon`, `AppearanceSprite`, `PedestalSprite` 모두 null 상태. 스프라이트 에셋 준비 후 연결
+- [ ] **TargetBodyPart 기획 확정** — 현재 Form 아이템은 `ArmRight`(테스트값), Modifier 아이템은 `Head`(기본값)
 - [ ] **게임 클리어 화면** — `StageManager.OnAllStagesComplete` 이벤트를 구독하는 UI 없음
 - [ ] **특수 공격 시스템** — 아래 표 참조
 
@@ -161,6 +165,7 @@
 | AppearanceSprite 없음 | 모든 아이템 null → 파츠 스프라이트 교체 안 됨 (Scale/Color/이펙트는 작동) | 낮음 |
 | 306 ST_STUN vs ST_FREEZE 불일치 | 기획 확인 전까지 ST_STUN으로 처리됨 | 중간 |
 | CombatFeedback GlitchRoutine | MissingReferenceException 방어 코드 적용 완료, 재발 시 확인 필요 | 낮음 |
+| 캡슐 스폰 — `_openParticlePrefab` null | 파티클 없이 동작은 하지만 착지 연출이 밋밋함 | 낮음 |
 
 ---
 
@@ -170,13 +175,17 @@
 Assets/
 ├── Editor/
 │   └── ItemCSVImporter.cs              ← CSV → ItemData 에셋 변환 도구
+├── Prefabs/
+│   ├── GachaCapsule.prefab             ← 캡슐 낙하 비주얼 (교체 예정)
+│   └── Obstacle.prefab                 ← 장애물 (Rigidbody + NavMeshObstacle + ObstacleController)
 ├── Resources/
 │   ├── ItemTable.csv                   ← ✅ 생성됨 (35개 아이템)
 │   ├── ItemDatabase.asset              ← ✅ 자동 생성됨
 │   └── Items/                          ← ✅ 35개 .asset 파일
 ├── Scripts/
 │   ├── Enemy/
-│   │   └── EnemyBase.cs                ← 적 FSM, 넉백, ApplyExternalStun
+│   │   ├── EnemyBase.cs                ← 적 FSM, 넉백, LaunchFromCapsule, ApplyExternalStun
+│   │   └── ObstacleController.cs       ← 장애물 물리 산개 + NavMeshObstacle Carving
 │   ├── Item/
 │   │   ├── ItemData.cs                 ← ScriptableObject, StatType enum, PartScale/PartColor
 │   │   ├── ItemDatabase.cs             ← 전체 아이템 목록 컨테이너
@@ -219,16 +228,17 @@ Assets/
 │   │           ├── SpawnFamiliarAction.cs  ← ✅ NEW 패밀리어 소환
 │   │           └── DropPickupAction.cs     ← ✅ NEW 픽업 드롭
 │   ├── Manager/
-│   │   ├── StageManager.cs             ← 스테이지/웨이브/보상 흐름 제어
+│   │   ├── StageManager.cs             ← 스테이지/웨이브/보상 흐름, SpawnViaCapsule()
+│   │   ├── GachaCapsuleSpawner.cs      ← 캡슐 낙하 연출 + 적/장애물 산개 전담
 │   │   ├── RewardSystemManager.cs      ← 보상 UI 애니메이션 + 아이템 흡수
 │   │   ├── StatusEffectManager.cs      ← 6종 상태 이상 적용
 │   │   ├── CurrencyManager.cs          ← 코인 수집/관리
-│   │   ├── DifficultySelectManager.cs  ← 난이도 선택 UI
-│   │   ├── DifficultyData.cs           ← DifficultySettings 데이터 클래스
+│   │   ├── DifficultySelectManager.cs  ← 난이도 선택 UI + ObstacleBaseCount 프로퍼티
+│   │   ├── DifficultyData.cs           ← DifficultySettings (ObstacleBaseCount 포함)
 │   │   └── GameOverManager.cs          ← 게임 오버 처리
 │   ├── Player/
 │   │   ├── PlayerStats.cs              ← 스탯, 아이템, 부활, 무적
-│   │   ├── PlayerMovement.cs           ← 이동 + 조준
+│   │   ├── PlayerMovement.cs           ← 이동 + 조준 (useGravity=false, FreezePositionY)
 │   │   ├── WeaponController.cs         ← 공격, 크리티컬, 사거리
 │   │   └── PlayerAppearance.cs         ← 스프라이트 장착, PartScale/Color, 이펙트
 │   ├── Combat/
@@ -253,6 +263,35 @@ ItemData.StatBonuses (List<StatEntry>)
     → PlayerStats.BonusXxx 프로퍼티 → WeaponController / CoinPickup 등에서 읽음
 ```
 새 StatType 추가 시: **ItemData enum → StatBlock 필드 → operator+ → ApplyItem → 접근자 → 사용처** 순으로 모두 수정 필요.
+
+### 캡슐 스폰 흐름
+```
+StageManager.StageTransitionThenSpawn()
+    → _capsuleSpawner.ClearObstacles()     ← 이전 웨이브 장애물 제거
+    → SpawnViaCapsule()
+        → GachaCapsuleSpawner.SpawnWave()  ← 낙하 연출 코루틴
+            → 캡슐 낙하 (SmoothStep, 0.7초)
+            → 착지 → Destroy(capsule) → ParticleSystem 재생
+            → EnemyBase.LaunchFromCapsule() × N  ← 적 산개
+            → ObstacleController.Launch() × N    ← 장애물 산개
+            → WaitForSeconds(1.2초)
+            → onComplete(spawnedEnemies) 콜백
+    → 사망 콜백 등록 (_activeEnemies)
+```
+
+### ObstacleController 착지 후 NavMesh Carving
+- `Awake()`: `carving=true`, `enabled=false` (물리 정지, carving 비활성)
+- `Launch()`: Rigidbody 활성화 → AddForce → `SettleRoutine()` 시작
+- `SettleRoutine()` 완료 후: isKinematic=true, `navObstacle.enabled=true` → NavMesh에 구멍 뚫림
+- **웨이브 클리어 시 `ClearObstacles()`로 전부 Destroy → 다음 웨이브에 재생성**
+
+### 난이도별 장애물 수
+| 난이도 | ObstacleBaseCount |
+|--------|-------------------|
+| 쉬움 | 2 |
+| 보통 | 4 |
+| 어려움 | 6 |
+`DifficultySelectManager.ObstacleBaseCount` 프로퍼티로 읽음.
 
 ### 외형 시스템 (PlayerAppearance.cs)
 - `BodyPartSlot`에 `OriginalScale`, `OriginalColor` 저장 → `ResetPart()`/`ResetAllParts()` 시 복원
@@ -302,11 +341,13 @@ PlayerStats.TakeDamage() → HP ≤ 0
 
 1. **이 문서 먼저 읽기**
 2. `Assets/Scripts/` 전체를 훑어 현재 컴파일 오류 없는지 확인
-3. 플레이 테스트: 아레나 진입 → 전투 → 보상 선택 → 파츠 색상/크기 변화 확인
-4. 스프라이트 에셋 준비 → `Icon`, `AppearanceSprite` 연결 (우선순위 높음)
-5. **T-M-A 블록 테스트**: ItemData .asset에 Effects 리스트 배치 → 인게임 발동 확인
-6. **ProjectileAction 구현** — BounceCount/IsHoming을 실제로 소비하는 투사체 Action (최우선)
-7. 특수 공격 시스템 구현 시작 (원하는 아이템 ID 선택)
+3. 플레이 테스트: 난이도 선택 → 캡슐 낙하 → 적/장애물 산개 → 전투 → 보상 선택 → 파츠 색상/크기 변화 확인
+4. `GachaCapsuleSpawner._openParticlePrefab` 파티클 에셋 제작 및 연결
+5. 캡슐/장애물 아트 에셋 교체 (현재 기본 Capsule/Cube 메시)
+6. 스프라이트 에셋 준비 → `Icon`, `AppearanceSprite` 연결 (우선순위 높음)
+7. **T-M-A 블록 테스트**: ItemData .asset에 Effects 리스트 배치 → 인게임 발동 확인
+8. **ProjectileAction 구현** — BounceCount/IsHoming을 실제로 소비하는 투사체 Action (최우선)
+9. 특수 공격 시스템 구현 시작 (원하는 아이템 ID 선택)
 
 ---
 
@@ -314,6 +355,13 @@ PlayerStats.TakeDamage() → HP ≤ 0
 
 | 날짜 | 작업 내용 |
 |------|----------|
+| 2026-02-23 | 캡슐 강하 스폰 시스템 구현 (GachaCapsuleSpawner.cs 신규) |
+| 2026-02-23 | 지형 장애물 시스템 구현 (ObstacleController.cs 신규, NavMesh Carving) |
+| 2026-02-23 | EnemyBase.LaunchFromCapsule() 추가 — 캡슐 산개 스폰 전용 진입점 |
+| 2026-02-23 | DifficultyData/SelectManager에 ObstacleBaseCount 추가 (Easy=2, Normal=4, Hard=6) |
+| 2026-02-23 | StageManager SpawnCurrentWave → SpawnViaCapsule() 대체 (폴백 유지) |
+| 2026-02-23 | GachaCapsule.prefab / Obstacle.prefab 생성 및 씬 Inspector 연결 완료 |
+| 2026-02-23 | PlayerMovement useGravity=false, FreezePositionY 추가 (플로팅 방지) |
 | 2026-02-21 | StatusEffectManager 씬 배치 확인 (GameManagers 오브젝트) |
 | 2026-02-21 | CSV 임포터 수정 (별칭 추가, NULL 처리) 및 35개 아이템 임포트 |
 | 2026-02-21 | StageManager _rewardPool → ItemDatabase 자동 로드로 변경 |
