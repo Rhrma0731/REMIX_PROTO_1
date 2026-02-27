@@ -34,3 +34,35 @@ MonoBehaviour:
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
+  Effects:
+  - rid: 8060512650618994822
+  - rid: 8060512650618994823
+  - rid: 8060512650618994824
+  - rid: 8060512650618994886
+  references:
+    version: 2
+    RefIds:
+    - rid: 8060512650618994822
+      type: {class: OnDashTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+    - rid: 8060512650618994823
+      type: {class: RadiusModifier, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _radius: 4
+    - rid: 8060512650618994824
+      type: {class: ApplyStatusAction, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _statusID: ST_STUN
+        _chance: 1
+    - rid: 8060512650618994886
+      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _popupText: "T-M-A \uBC1C\uB3D9!"
+        _displayDuration: 1
+        _sphereSize: 0.4
+        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
+        _textHeightOffset: 1.5

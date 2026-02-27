@@ -44,15 +44,29 @@ public class SpawnFamiliarAction : ActionBase
 
     protected override void OnExecute(ItemEffectContext context)
     {
-        if (context.Player == null) return;
+        Debug.Log("[TMA] SpawnFamiliarAction 실행됨!");
+
+        if (context.Player == null)
+        {
+            Debug.LogError("[TMA 오류] context.Player가 null — PlayerStats가 씬에 없거나 초기화되지 않음");
+            return;
+        }
 
         // 최대 소환 수 체크
-        if (_maxInstances > 0 && _currentInstances >= _maxInstances) return;
+        if (_maxInstances > 0 && _currentInstances >= _maxInstances)
+        {
+            Debug.LogWarning($"[TMA] 소환 차단: 현재 인스턴스({_currentInstances}) >= 최대({_maxInstances}). 기존 패밀리어가 살아있으면 추가 소환 안 됨");
+            return;
+        }
 
         // 프리팹 결정
         GameObject prefab = _familiarPrefab;
         if (prefab == null && !string.IsNullOrEmpty(_familiarResourcePath))
+        {
             prefab = Resources.Load<GameObject>(_familiarResourcePath);
+            if (prefab == null)
+                Debug.LogError($"[TMA 오류] 프리팹 로드 실패! 경로: {_familiarResourcePath}");
+        }
 
         if (prefab == null)
         {
@@ -61,13 +75,24 @@ public class SpawnFamiliarAction : ActionBase
         }
 
         // 플레이어 주변 랜덤 위치에 소환
+        // Z축은 플레이어와 동일하게 고정 — 2D 스프라이트가 카메라 뒤로 밀리는 것을 방지
         Vector3 playerPos = context.Player.transform.position;
         float angle = UnityEngine.Random.Range(0f, 360f) * Mathf.Deg2Rad;
-        Vector3 offset = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * _spawnDistance;
-        Vector3 spawnPos = playerPos + offset;
+        Vector3 offset = new Vector3(Mathf.Cos(angle), 0f, 0f) * _spawnDistance;
+        Vector3 spawnPos = new Vector3(playerPos.x + offset.x, playerPos.y, playerPos.z);
 
         GameObject instance = UnityEngine.Object.Instantiate(prefab, spawnPos, Quaternion.identity);
+        Debug.Log($"[TMA] 패밀리어 생성 완료! 위치: {instance.transform.position}");
+
+        // 스프라이트 할당 여부 경고
+        var sr = instance.GetComponent<SpriteRenderer>();
+        if (sr != null && sr.sprite == null)
+            Debug.LogWarning("[TMA] SpriteRenderer에 스프라이트가 할당되지 않아 패밀리어가 보이지 않을 수 있음! 프리팹에서 Sprite를 설정하세요.");
         _currentInstances++;
+
+        // FamiliarController에 컨텍스트 정보 주입 (IsHoming, TargetEnemy 등)
+        var familiar = instance.GetComponent<FamiliarController>();
+        familiar?.Configure(context);
 
         // Familiar이 파괴될 때 카운트 감소
         var tracker = instance.AddComponent<FamiliarDestroyTracker>();

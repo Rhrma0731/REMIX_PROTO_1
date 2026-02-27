@@ -34,3 +34,37 @@ MonoBehaviour:
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
+  Effects:
+  - rid: 8060512650618994835
+  - rid: 8060512650618994836
+  - rid: 8060512650618994837
+  - rid: 8060512650618994891
+  references:
+    version: 2
+    RefIds:
+    - rid: 8060512650618994835
+      type: {class: OnAttackTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+    - rid: 8060512650618994836
+      type: {class: StatModifier, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _damageMultiplier: 1.5
+        _areaRadiusAdd: 0
+    - rid: 8060512650618994837
+      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _baseDamage: 10
+        _usePlayerDamage: 1
+        _targetSelf: 0
+    - rid: 8060512650618994891
+      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _popupText: "T-M-A \uBC1C\uB3D9!"
+        _displayDuration: 1
+        _sphereSize: 0.4
+        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
+        _textHeightOffset: 1.5

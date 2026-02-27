@@ -34,3 +34,35 @@ MonoBehaviour:
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
+  Effects:
+  - rid: 8060512650618994811
+  - rid: 8060512650618994812
+  - rid: 8060512650618994813
+  - rid: 8060512650618994882
+  references:
+    version: 2
+    RefIds:
+    - rid: 8060512650618994811
+      type: {class: OnMeleeHitTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+    - rid: 8060512650618994812
+      type: {class: AddTagModifier, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _tag: Electric
+    - rid: 8060512650618994813
+      type: {class: ApplyStatusAction, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _statusID: ST_CHAIN
+        _chance: 1
+    - rid: 8060512650618994882
+      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _popupText: "T-M-A \uBC1C\uB3D9!"
+        _displayDuration: 1
+        _sphereSize: 0.4
+        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
+        _textHeightOffset: 1.5

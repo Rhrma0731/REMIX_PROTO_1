@@ -60,6 +60,8 @@ public class ItemEffectContext
     // ── 메타 ──────────────────────────────────────────────────────
     /// <summary>트리거가 발동된 Time.time</summary>
     public float TriggerTime;
+    /// <summary>발동한 Trigger의 클래스명 (TriggerBase.FireTrigger에서 자동 기록)</summary>
+    public string TriggerName;
 
     /// <summary>
     /// 현재 컨텍스트를 복제한다.
@@ -90,6 +92,7 @@ public class ItemEffectContext
             HomingStrength = HomingStrength,
             PipelineDepth = PipelineDepth,
             TriggerTime = TriggerTime,
+            TriggerName = TriggerName,
         };
     }
 }

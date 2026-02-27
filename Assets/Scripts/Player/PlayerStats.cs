@@ -164,6 +164,37 @@ public class PlayerStats : MonoBehaviour
     }
 
     /// <summary>
+    /// 런타임에 스탯 보너스를 동적으로 추가한다.
+    /// (BloodOath 등 이벤트 기반 스탯 증가에 사용)
+    /// </summary>
+    public void AddDynamicBonus(StatType type, float value)
+    {
+        switch (type)
+        {
+            case StatType.MaxHealth:       _bonusStats.MaxHp           += value; break;
+            case StatType.AttackDamage:    _bonusStats.AttackDamage    += value; break;
+            case StatType.AttackSpeed:     _bonusStats.AttackSpeed     += value; break;
+            case StatType.MoveSpeed:       _bonusStats.MoveSpeed       += value; break;
+            case StatType.Range:           _bonusStats.Range           += value; break;
+            case StatType.KnockbackForce:  _bonusStats.KnockbackForce  += value; break;
+            case StatType.CritChance:      _bonusStats.CritChance      += value; break;
+            case StatType.CritMultiplier:  _bonusStats.CritMultiplier  += value; break;
+            case StatType.CollectionRange: _bonusStats.CollectionRange += value; break;
+        }
+        OnStatsChanged?.Invoke(GetTotalStats());
+    }
+
+    /// <summary>
+    /// 체력을 직접 지정된 값으로 설정한다.
+    /// TakeDamage와 달리 무적/사망 체크를 우회한다. (BloodOath HP 조작에 사용)
+    /// </summary>
+    public void SetHpDirect(float hp)
+    {
+        _currentHp = Mathf.Clamp(hp, 1f, MaxHp);
+        OnHpChanged?.Invoke(_currentHp, MaxHp);
+    }
+
+    /// <summary>
     /// Reset all bonus stats (new run).
     /// </summary>
     public void ResetStats()

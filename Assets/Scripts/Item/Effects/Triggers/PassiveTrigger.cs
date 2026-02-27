@@ -24,6 +24,7 @@ public class PassiveTrigger : TriggerBase
 
         // 장착 즉시 1회 발동
         var ctx = _cachedContext.Clone();
+        Debug.Log($"[TMA] PassiveTrigger 발동됨! 연속발동: {_continuous}");
         FireTrigger(ctx);
 
         // 연속 모드: 매초 재실행

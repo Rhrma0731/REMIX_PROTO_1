@@ -1,6 +1,6 @@
 # RE:MIX PROTO_1 — 작업 인수인계 가이드라인
 
-> 마지막 업데이트: 2026-02-27
+> 마지막 업데이트: 2026-02-27 (2차)
 > 목적: 다음 세션에서 컨텍스트 없이도 즉시 작업을 이어받을 수 있도록 작성된 문서입니다.
 
 ---
@@ -37,6 +37,7 @@
 | 체력 UI (플레이어 / 적) | ✅ | `PlayerHealthUI.cs`, `EnemyHealthBar.cs` |
 | 게임 오버 | ✅ | `GameOverManager.cs` |
 | 무기 이름 자동 조합 | ✅ | `WeaponNameBuilder.cs` |
+| **인게임 아이템 즉시 장착 디버그 도구** | ✅ | `DebugItemEquipper.cs` (F1~F8) |
 
 ### 2-2. 상태 이상 (StatusEffectManager.cs)
 | Status_ID | 효과 | 상태 |
@@ -73,8 +74,8 @@
 | OnDashTrigger | 대시할 때 | ✅ |
 | OnTimerTrigger | 매 N초마다 | ✅ |
 | PassiveTrigger | 장착 즉시 (또는 매 1초) | ✅ |
-| **OnFatalDamageTrigger** | **HP 0 직전 (사망 가로채기, 횟수 제한)** | ✅ NEW |
-| **OnRoomClearTrigger** | **웨이브/방 클리어 시** | ✅ NEW |
+| OnFatalDamageTrigger | HP 0 직전 (사망 가로채기, 횟수 제한) | ✅ |
+| OnRoomClearTrigger | 웨이브/방 클리어 시 | ✅ |
 
 #### 2-3-3. Modifier 모듈 (어떻게 변형?)
 | 클래스 | 변형 내용 | 상태 |
@@ -83,8 +84,8 @@
 | ChanceGateModifier | 확률 실패 시 파이프라인 차단 | ✅ |
 | AddTagModifier | 원소 속성 부여 (Fire→ST_BURN 등) | ✅ |
 | RadiusModifier | 광역 범위 설정 | ✅ |
-| **BounceModifier** | **반사 횟수 + 감쇄율 설정** | ✅ NEW |
-| **HomingModifier** | **유도 속성 + 가장 가까운 적 자동 탐지** | ✅ NEW |
+| BounceModifier | 반사 횟수 + 감쇄율 설정 | ✅ |
+| HomingModifier | 유도 속성 + 가장 가까운 적 자동 탐지 | ✅ |
 
 #### 2-3-4. Action 모듈 (무엇을 실행?)
 | 클래스 | 실행 내용 | 상태 |
@@ -93,9 +94,10 @@
 | ApplyStatusAction | StatusEffectManager 브릿지 | ✅ |
 | HealSelfAction | 플레이어 체력 회복 | ✅ |
 | NullifyDamageAction | 피해 무효화 (즉시 회복 근사) | ✅ |
-| **ReviveAction** | **부활 (HP% 회복 + 무적 시간)** | ✅ NEW |
-| **SpawnFamiliarAction** | **패밀리어 프리팹 소환 (인스턴스 제한)** | ✅ NEW |
-| **DropPickupAction** | **픽업 아이템 N개 랜덤 드롭** | ✅ NEW |
+| ReviveAction | 부활 (HP% 회복 + 무적 시간) | ✅ |
+| SpawnFamiliarAction | 패밀리어 프리팹 소환 (인스턴스 제한) + Configure() 연결 | ✅ |
+| DropPickupAction | 픽업 아이템 N개 랜덤 드롭 | ✅ |
+| **BloodOathAction** | **방 클리어 시 HP→1 소모, 비율 비례 공격력/이속 영구 증가** | ✅ |
 
 ### 2-4. 아이템 데이터 인프라
 | 항목 | 상태 |
@@ -107,8 +109,51 @@
 | ItemDatabase ScriptableObject | ✅ |
 | ItemCSVImporter (Tools > Import Items from CSV) | ✅ |
 | CSV 별칭 시스템 (DetectionRange→Range, Grade→Rarity, 조합 키워드→Keyword 등) | ✅ |
-| **아이템 에셋 실제 데이터** | ✅ 35개 임포트 완료 (`Assets/Resources/Items/`) |
+| **아이템 에셋 실제 데이터 35개** | ✅ 임포트 완료 (`Assets/Resources/Items/101~405`) |
+| **신규 아이템 501~503** | ✅ `Tools > Create New Items (501-503)` 메뉴로 생성 |
+| **패밀리어 아이템 601~610** | ✅ `Tools > Create Familiar Items (601-610)` 메뉴로 생성 |
 | **ItemDatabase 자동 로드** | ✅ StageManager Awake에서 Resources.Load로 자동 연결 |
+| **PlayerStats.AddDynamicBonus()** | ✅ 런타임 스탯 영구 증가 (스택 가능) |
+| **PlayerStats.SetHpDirect()** | ✅ 사망 판정 우회 HP 강제 설정 |
+
+### 2-5. 아이템 ID 범위 체계
+| 범위 | 분류 | 상태 |
+|------|------|------|
+| 101~110 | Form 무기 아이템 | ✅ |
+| 201~210 | Body 파츠 아이템 | ✅ |
+| 301~310 | Head 파츠 아이템 | ✅ |
+| 401~405 | 전설 아이템 | ✅ |
+| 501~503 | 특수 신규 (1UP!, 피의 서약, 가짜 피 캡슐) | ✅ 메뉴 생성 |
+| 601~610 | 패밀리어 소환 신규 아이템 | ✅ 메뉴 생성 |
+
+### 2-6. 패밀리어 시스템 (FamiliarController.cs)
+
+| FamiliarMode | 설명 | 상태 |
+|--------------|------|------|
+| `Orbit` | 플레이어 공전 + 주기 공격 | ✅ 완전 구현 |
+| `Homing` | 가장 가까운 적 추격 + 자폭 | ✅ 완전 구현 |
+| `MouseFollow` | 마우스 커서 방향 이동 + 틱 데미지 | ⚠ 미구현 (Orbit 폴백) |
+| `Symmetric` | 방 중앙 기준 플레이어 대칭 이동 | ⚠ 미구현 (Orbit 폴백) |
+| `OrbitalShield` | 공전 + 투사체 차단 | ⚠ 미구현 (Orbit 폴백) |
+
+#### 패밀리어 프리팹 현황 (`Assets/Resources/Familiars/`)
+| 프리팹 | 색상 | 모드 | 사용 아이템 | 상태 |
+|--------|------|------|-------------|------|
+| `Familiar_Bee.prefab` | 노란 원 `#FFD900` | Orbit | 기본 Orbit 패밀리어 | ✅ |
+| `Familiar_KamikazeBee.prefab` | 빨간 원 `#FF3300` | Homing | 304번 (벌집) | ✅ |
+| `Familiar_FlyToy.prefab` | 올리브 그린 | Orbit | 605번 (똥파리) | ✅ |
+| `Familiar_Tamagotchi.prefab` | — | Orbit | 601번 | ❌ 미생성 |
+| `Familiar_SpiderToy.prefab` | — | MouseFollow | 602번 | ❌ 미생성 |
+| `Familiar_Yoyo.prefab` | — | Symmetric | 603번 | ❌ 미생성 |
+| `Familiar_HoloPrism.prefab` | — | OrbitalShield | 604번 | ❌ 미생성 |
+| `Familiar_BandageBall.prefab` | — | Orbit | 606번 | ❌ 미생성 |
+| `Familiar_GuardKeyring.prefab` | — | Orbit | 607번 | ❌ 미생성 |
+| `Familiar_PiggyBank.prefab` | — | Homing | 608번 | ❌ 미생성 |
+| `Familiar_BigFan.prefab` | — | OrbitalShield | 609번 | ❌ 미생성 |
+| `Familiar_BullDog.prefab` | — | Orbit | 610번 | ❌ 미생성 |
+
+> ❌ 프리팹 없으면 `SpawnFamiliarAction`이 경고 출력 후 소환 건너뜀.
+> 임시 테스트: `_familiarResourcePath`를 `Familiars/Familiar_Bee`로 변경 또는 Unity MCP로 프리팹 생성.
 
 ---
 
@@ -122,6 +167,9 @@
 - [ ] **TargetBodyPart 기획 확정** — 현재 Form 아이템은 `ArmRight`(테스트값), Modifier 아이템은 `Head`(기본값)
 - [ ] **게임 클리어 화면** — `StageManager.OnAllStagesComplete` 이벤트를 구독하는 UI 없음
 - [ ] **특수 공격 시스템** — 아래 표 참조
+- [ ] **패밀리어 미구현 모드 3종 구현** — MouseFollow / Symmetric / OrbitalShield (현재 Orbit 폴백)
+- [ ] **패밀리어 프리팹 9종 제작** — Tamagotchi, SpiderToy, Yoyo, HoloPrism, BandageBall, GuardKeyring, PiggyBank, BigFan, BullDog
+- [ ] **601~610 아이템 미구현 기능** — GrowOnKill(610), FriendlyFire(610), EvolutionSystem(606), SplitOnHit(604) 등
 
 ### 미구현 특수 공격 시스템
 
@@ -166,6 +214,8 @@
 | 306 ST_STUN vs ST_FREEZE 불일치 | 기획 확인 전까지 ST_STUN으로 처리됨 | 중간 |
 | CombatFeedback GlitchRoutine | MissingReferenceException 방어 코드 적용 완료, 재발 시 확인 필요 | 낮음 |
 | 캡슐 스폰 — `_openParticlePrefab` null | 파티클 없이 동작은 하지만 착지 연출이 밋밋함 | 낮음 |
+| 패밀리어 프리팹 9종 미생성 | 601~610 중 FlyToy(605)만 프리팹 존재, 나머지는 소환 불가 | 중간 |
+| **Familiar_FlyToy.prefab 스프라이트 미할당** | `SpriteRenderer.sprite = null` — 패밀리어가 소환되지만 보이지 않음. Unity에서 프리팹 열어 Sprite 슬롯에 이미지 할당 필요 | **높음** |
 
 ---
 
@@ -175,35 +225,57 @@
 Assets/
 ├── Editor/
 │   ├── ItemCSVImporter.cs              ← CSV → ItemData 에셋 변환 도구
-│   └── ItemDataTMAGenerator.cs         ← T-M-A 블록 에셋 생성 보조 도구
+│   ├── ItemDataTMAGenerator.cs         ← T-M-A 블록 에셋 생성 보조 도구
+│   ├── TMAPipelineAssigner.cs          ← T-M-A 일괄 할당 + 신규 아이템 생성 도구
+│   │                                          메뉴: Tools > Assign TMA Effects to All Items
+│   │                                          메뉴: Tools > Create New Items (501-503)
+│   │                                          메뉴: Tools > Create Familiar Items (601-610)
+│   │                                          메뉴: Tools > TMA Debug > ...
+│   └── FloorMaterialSetup.cs           ← Floor01 텍스처 세트 → 머티리얼 생성 + Floor 오브젝트 적용
+│                                          메뉴: Tools > Setup Floor01 Material
+│                                          ① Floor01_N.png NormalMap 타입 자동 설정
+│                                          ② URP/Lit 머티리얼 생성 (Assets/Graphic/Materials/Floor01.mat)
+│                                          ③ 씬의 'Floor' MeshRenderer에 머티리얼 교체 (Undo 지원)
 ├── MCPForUnity/                        ← [개발 도구] Claude Code ↔ Unity MCP 브릿지 플러그인
 ├── Screenshots/                        ← 플레이테스트 참고 스크린샷 (5장)
 ├── Prefabs/
 │   ├── GachaCapsule.prefab             ← 캡슐 낙하 비주얼 (교체 예정)
 │   └── Obstacle.prefab                 ← 장애물 (Rigidbody + NavMeshObstacle + ObstacleController)
 ├── Resources/
+│   ├── Familiars/
+│   │   ├── Familiar_Bee.prefab         ← ✅ Orbit 패밀리어 (노란 원, 공전+공격)
+│   │   ├── Familiar_KamikazeBee.prefab ← ✅ Homing 패밀리어 (빨간 원, 추격+자폭, 304용)
+│   │   └── Familiar_FlyToy.prefab      ← ✅ Orbit 패밀리어 (올리브 그린, 605용)
+│   │       [❌ 미생성: Tamagotchi/SpiderToy/Yoyo/HoloPrism/BandageBall
+│   │                   GuardKeyring/PiggyBank/BigFan/BullDog]
 │   ├── ItemTable.csv                   ← ✅ 생성됨 (35개 아이템)
 │   ├── ItemDatabase.asset              ← ✅ 자동 생성됨
-│   └── Items/                          ← ✅ 35개 .asset 파일
+│   └── Items/                          ← ✅ 에셋 파일 (101~405, 501~503, 601~610)
 ├── Scripts/
+│   ├── Debug/
+│   │   └── DebugItemEquipper.cs        ← [개발 전용] F1~F8 키로 아이템 즉시 장착
+│   │                                      씬 오브젝트 "DebugItemEquipper"에 부착됨
+│   │                                      배포 전 비활성화 필요
 │   ├── Enemy/
 │   │   ├── EnemyBase.cs                ← 적 FSM, 넉백, LaunchFromCapsule, ApplyExternalStun
 │   │   └── ObstacleController.cs       ← 장애물 물리 산개 + NavMeshObstacle Carving
 │   ├── Item/
 │   │   ├── ItemData.cs                 ← ScriptableObject, StatType enum, PartScale/PartColor
 │   │   ├── ItemDatabase.cs             ← 전체 아이템 목록 컨테이너
+│   │   ├── FamiliarController.cs       ← 패밀리어 행동 (Orbit/Homing 구현,
+│   │   │                                  MouseFollow/Symmetric/OrbitalShield 폴백)
 │   │   ├── CoinPickup.cs               ← 코인 자석, CollectionRange 적용
 │   │   ├── RewardSlotUI.cs             ← 보상 슬롯 단일 UI
 │   │   ├── WeaponNameBuilder.cs        ← Keyword → 무기 이름 조합
 │   │   └── Effects/                    ← T-M-A 이펙트 파이프라인
 │   │       ├── Core/
-│   │       │   ├── IItemEffect.cs          ← 인터페이스 + ItemEffectRole enum
-│   │       │   ├── ItemEffectBase.cs       ← 추상 베이스 (ICD 강제)
-│   │       │   ├── ItemEffectContext.cs     ← 파이프라인 데이터 컨테이너
-│   │       │   ├── PlayerEventManager.cs   ← 이벤트 허브 (싱글턴)
-│   │       │   └── ItemEffectRunner.cs     ← 파이프라인 오케스트레이터
+│   │       │   ├── IItemEffect.cs
+│   │       │   ├── ItemEffectBase.cs
+│   │       │   ├── ItemEffectContext.cs
+│   │       │   ├── PlayerEventManager.cs
+│   │       │   └── ItemEffectRunner.cs
 │   │       ├── Triggers/
-│   │       │   ├── TriggerBase.cs          ← Trigger 추상 베이스
+│   │       │   ├── TriggerBase.cs
 │   │       │   ├── OnAttackTrigger.cs
 │   │       │   ├── OnMeleeHitTrigger.cs
 │   │       │   ├── OnTakeDamageTrigger.cs
@@ -211,43 +283,45 @@ Assets/
 │   │       │   ├── OnDashTrigger.cs
 │   │       │   ├── OnTimerTrigger.cs
 │   │       │   ├── PassiveTrigger.cs
-│   │       │   ├── OnFatalDamageTrigger.cs ← ✅ NEW 사망 가로채기
-│   │       │   └── OnRoomClearTrigger.cs   ← ✅ NEW 웨이브 클리어
+│   │       │   ├── OnFatalDamageTrigger.cs
+│   │       │   └── OnRoomClearTrigger.cs
 │   │       ├── Modifiers/
-│   │       │   ├── ModifierBase.cs         ← Modifier 추상 베이스
+│   │       │   ├── ModifierBase.cs
 │   │       │   ├── StatModifier.cs
 │   │       │   ├── ChanceGateModifier.cs
 │   │       │   ├── AddTagModifier.cs
 │   │       │   ├── RadiusModifier.cs
-│   │       │   ├── BounceModifier.cs       ← ✅ NEW 반사 속성
-│   │       │   └── HomingModifier.cs       ← ✅ NEW 유도 속성
+│   │       │   ├── BounceModifier.cs
+│   │       │   └── HomingModifier.cs
 │   │       └── Actions/
-│   │           ├── ActionBase.cs           ← Action 추상 베이스
+│   │           ├── ActionBase.cs
 │   │           ├── DealDamageAction.cs
 │   │           ├── ApplyStatusAction.cs
 │   │           ├── HealSelfAction.cs
 │   │           ├── NullifyDamageAction.cs
-│   │           ├── ReviveAction.cs         ← ✅ NEW 부활
-│   │           ├── SpawnFamiliarAction.cs  ← ✅ NEW 패밀리어 소환
-│   │           └── DropPickupAction.cs     ← ✅ NEW 픽업 드롭
+│   │           ├── ReviveAction.cs
+│   │           ├── SpawnFamiliarAction.cs
+│   │           ├── DropPickupAction.cs
+│   │           └── BloodOathAction.cs  ← 방 클리어 시 HP→1 소모 + 스탯 영구 증가
 │   ├── Manager/
-│   │   ├── StageManager.cs             ← 스테이지/웨이브/보상 흐름, SpawnViaCapsule()
-│   │   ├── GachaCapsuleSpawner.cs      ← 캡슐 낙하 연출 + 적/장애물 산개 전담
-│   │   ├── RewardSystemManager.cs      ← 보상 UI 애니메이션 + 아이템 흡수
-│   │   ├── StatusEffectManager.cs      ← 6종 상태 이상 적용
-│   │   ├── CurrencyManager.cs          ← 코인 수집/관리
-│   │   ├── DifficultySelectManager.cs  ← 난이도 선택 UI + ObstacleBaseCount 프로퍼티
-│   │   ├── DifficultyData.cs           ← DifficultySettings (ObstacleBaseCount 포함)
-│   │   └── GameOverManager.cs          ← 게임 오버 처리
+│   │   ├── StageManager.cs
+│   │   ├── GachaCapsuleSpawner.cs
+│   │   ├── RewardSystemManager.cs
+│   │   ├── StatusEffectManager.cs
+│   │   ├── CurrencyManager.cs
+│   │   ├── DifficultySelectManager.cs
+│   │   ├── DifficultyData.cs
+│   │   └── GameOverManager.cs
 │   ├── Player/
-│   │   ├── PlayerStats.cs              ← 스탯, 아이템, 부활, 무적
-│   │   ├── PlayerMovement.cs           ← 이동 + 조준 (useGravity=false, FreezePositionY)
-│   │   ├── WeaponController.cs         ← 공격, 크리티컬, 사거리
-│   │   └── PlayerAppearance.cs         ← 스프라이트 장착, PartScale/Color, 이펙트
+│   │   ├── PlayerStats.cs              ← 스탯, 아이템, 부활, 무적,
+│   │   │                                  AddDynamicBonus(), SetHpDirect()
+│   │   ├── PlayerMovement.cs
+│   │   ├── WeaponController.cs
+│   │   └── PlayerAppearance.cs
 │   ├── Combat/
-│   │   ├── CombatFeedback.cs           ← 글리치 셰이더, 히트스탑
-│   │   ├── PlayerHitFeedback.cs        ← 플레이어 피격 피드백
-│   │   └── ItemEffectVFX.cs            ← T-M-A 전용 VFX (컬러 플래시, 파티클)
+│   │   ├── CombatFeedback.cs
+│   │   ├── PlayerHitFeedback.cs
+│   │   └── ItemEffectVFX.cs
 │   └── UI/
 │       ├── PlayerHealthUI.cs
 │       ├── EnemyHealthBar.cs
@@ -338,6 +412,30 @@ PlayerStats.TakeDamage() → HP ≤ 0
 ### ItemEffectContext 궤적 필드
 `BounceCount`, `BounceDecay`, `IsHoming`, `HomingStrength` — Modifier가 설정하고 향후 ProjectileAction 등이 소비. 현재는 필드만 존재하며, 이를 읽는 투사체 Action은 미구현.
 
+### FamiliarController 모드 구조
+```
+FamiliarMode enum:
+    Orbit          → 구현됨: XZ 공전 + 주기 공격
+    Homing         → 구현됨: 적 추격 + 자폭
+    MouseFollow    → 미구현, Orbit 폴백 (TODO: Mouse.current.position 월드 변환)
+    Symmetric      → 미구현, Orbit 폴백 (TODO: RoomCenter 좌표 + offset 반전)
+    OrbitalShield  → 미구현, Orbit 폴백 (TODO: Projectile 레이어 트리거 감지)
+
+SpawnFamiliarAction._familiarResourcePath가 null이거나 프리팹이 없으면
+Resources.Load() → null → 경고 로그 출력 후 소환 건너뜀.
+```
+
+### DebugItemEquipper 사용법
+```
+씬 오브젝트 "DebugItemEquipper" → DebugItemEquipper.cs 컴포넌트
+    _itemIDs: ["604", "605", "607", ...] — 테스트할 ItemID 배열
+    F1 → _itemIDs[0] 즉시 장착 (PlayerAppearance.EquipItem 호출)
+    F2 → _itemIDs[1] ... F8 → _itemIDs[7]
+
+주의: New Input System 사용 — Keyboard.current[Key.F1].wasPressedThisFrame
+배포 전 GameObject 비활성화 필요
+```
+
 ---
 
 ## 7. 작업 재개 시 첫 번째 할 일
@@ -345,12 +443,13 @@ PlayerStats.TakeDamage() → HP ≤ 0
 1. **이 문서 먼저 읽기**
 2. `Assets/Scripts/` 전체를 훑어 현재 컴파일 오류 없는지 확인
 3. 플레이 테스트: 난이도 선택 → 캡슐 낙하 → 적/장애물 산개 → 전투 → 보상 선택 → 파츠 색상/크기 변화 확인
-4. `GachaCapsuleSpawner._openParticlePrefab` 파티클 에셋 제작 및 연결
-5. 캡슐/장애물 아트 에셋 교체 (현재 기본 Capsule/Cube 메시)
-6. 스프라이트 에셋 준비 → `Icon`, `AppearanceSprite` 연결 (우선순위 높음)
-7. **T-M-A 블록 테스트**: ItemData .asset에 Effects 리스트 배치 → 인게임 발동 확인
-8. **ProjectileAction 구현** — BounceCount/IsHoming을 실제로 소비하는 투사체 Action (최우선)
-9. 특수 공격 시스템 구현 시작 (원하는 아이템 ID 선택)
+4. **패밀리어 아이템 테스트**: F1~F8로 601~610 장착 → 패밀리어 소환 확인 (605 FlyToy는 동작, 나머지는 프리팹 없어 경고)
+5. **패밀리어 프리팹 9종 제작** — 우선순위: 607(GuardKeyring/OnTakeDamage), 608(PiggyBank/OnAttack) 먼저 테스트
+6. **패밀리어 미구현 모드 구현** — MouseFollow(602) → Symmetric(603) → OrbitalShield(604, 609) 순서 권장
+7. `GachaCapsuleSpawner._openParticlePrefab` 파티클 에셋 제작 및 연결
+8. 캡슐/장애물 아트 에셋 교체 (현재 기본 Capsule/Cube 메시)
+9. 스프라이트 에셋 준비 → `Icon`, `AppearanceSprite` 연결 (우선순위 높음)
+10. **ProjectileAction 구현** — BounceCount/IsHoming을 실제로 소비하는 투사체 Action
 
 ---
 
@@ -381,8 +480,26 @@ PlayerStats.TakeDamage() → HP ≤ 0
 | 2026-02-26 | StageManager 웨이브 클리어 시 BroadcastRoomClear() 호출 추가 |
 | 2026-02-26 | ItemEffectVFX에 PlayReviveEffect() (금색 파티클) 추가 |
 | 2026-02-27 | git 병합 완료 — 로컬 작업(캡슐/장애물) + 원격 T-M-A 시스템 충돌 없이 통합 |
+| 2026-02-27 | Familiar_Bee.prefab / Familiar_KamikazeBee.prefab 생성 (Resources/Familiars/) |
+| 2026-02-27 | 304.asset SpawnFamiliarAction._familiarResourcePath = "Familiars/Familiar_KamikazeBee" 연결 |
+| 2026-02-27 | FamiliarController.cs 신규 (Orbit/Homing 2모드, Configure(context) 연동, PlayerStats 스케일) |
+| 2026-02-27 | SpawnFamiliarAction에 Configure(context) 호출 추가 — IsHoming/TargetEnemy 자동 전달 |
+| 2026-02-27 | BloodOathAction.cs 신규 (방 클리어 시 체력→1 + 비율 스탯 영구 증가) |
+| 2026-02-27 | PlayerStats.AddDynamicBonus() + SetHpDirect() 추가 |
+| 2026-02-27 | TMAPipelineAssigner에 "Create New Items (501-503)" 메뉴 추가 |
 | 2026-02-27 | MCPForUnity 플러그인 추가 (`Assets/MCPForUnity/`) — Claude Code ↔ Unity Editor 직접 연동 |
 | 2026-02-27 | 플레이테스트 스크린샷 5장 추가 (`Assets/Screenshots/`) — navmesh, 매니저, 시작 화면 등 |
+| 2026-02-27 | DebugItemEquipper.cs 신규 — F1~F8 키로 ItemID 즉시 장착 (New Input System 호환) |
+| 2026-02-27 | FamiliarController FamiliarMode enum 확장 — MouseFollow / Symmetric / OrbitalShield 추가 (Orbit 폴백, TODO 명시) |
+| 2026-02-27 | TMAPipelineAssigner ALL_IDS 확장 (501~503, 601~610 포함) |
+| 2026-02-27 | "Create Familiar Items (601-610)" 메뉴 추가 — 10종 패밀리어 아이템 ItemData 생성 |
+| 2026-02-27 | Familiar_FlyToy.prefab 생성 (올리브 그린, Orbit 모드, attackInterval=1s, 605번 전용) |
+| 2026-02-27 | 605번 소환 버그 수정 — Familiar_FlyToy.prefab 없어 Resources.Load null 반환하던 문제 해결 |
+| 2026-02-27 | T-M-A 파이프라인 디버그 로그 추가 — PassiveTrigger 발동 확인, SpawnFamiliarAction 실행/실패/위치 로그 |
+| 2026-02-27 | SpawnFamiliarAction Z축 보정 — 스폰 위치 Z값을 playerPos.z 고정으로 수정 (2D 스프라이트 뒤로 밀림 방지) |
+| 2026-02-27 | SpawnFamiliarAction SpriteRenderer.sprite null 경고 추가 — Familiar_FlyToy.prefab 스프라이트 미할당 버그 탐지 |
+| 2026-02-27 | FloorMaterialSetup.cs 신규 — Floor01 텍스처 3종으로 URP/Lit 머티리얼 생성 및 씬 Floor 오브젝트 자동 적용 |
+| 2026-02-27 | Floor01_N.png NormalMap 타입 자동 보장 로직 추가 (FloorMaterialSetup) |
 
 ---
 

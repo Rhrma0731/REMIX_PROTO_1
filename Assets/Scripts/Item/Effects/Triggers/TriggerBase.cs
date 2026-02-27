@@ -40,6 +40,7 @@ public abstract class TriggerBase : ItemEffectBase
     protected void FireTrigger(ItemEffectContext context)
     {
         context.TriggerTime = Time.time;
+        context.TriggerName = GetType().Name;
         _pipelineCallback?.Invoke(context);
     }
 
