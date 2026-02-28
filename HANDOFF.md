@@ -1,6 +1,6 @@
 # RE:MIX PROTO_1 — 작업 인수인계 가이드라인
 
-> 마지막 업데이트: 2026-02-28
+> 마지막 업데이트: 2026-03-01
 > 목적: 다음 세션에서 컨텍스트 없이도 즉시 작업을 이어받을 수 있도록 작성된 문서입니다.
 
 ---
@@ -40,6 +40,8 @@
 | **인게임 아이템 즉시 장착 디버그 도구** | ✅ | `DebugItemEquipper.cs` (F1~F8) |
 | **URP 포스트프로세싱 자동 세팅** | ✅ | `ScenePostProcessingSetup.cs` (Tools 메뉴) |
 | **Built-in → URP 머티리얼 일괄 변환** | ✅ | `ScenePostProcessingSetup.cs` (Tools 메뉴) |
+| **Global Volume 씬 배치** | ✅ | `PostProcess_CultVibes.asset` — Bloom/Vignette/ColorAdjustments Cult Vibe 프로파일 씬에 직접 배치 |
+| **배경 오브젝트 씬 배치** | ✅ | `claude remix.unity` — 배경 환경 오브젝트 추가 |
 
 ### 2-2. 상태 이상 (StatusEffectManager.cs)
 | Status_ID | 효과 | 상태 |
@@ -261,7 +263,11 @@ Assets/
 │   ├── UniversalRendererData.asset         ← URP 렌더러 데이터 (postProcessData GUID 수동 패치됨)
 │   └── PostProcess_CultVibes.asset         ← Global Volume 프로파일 (Bloom/Vignette/ColorAdjustments)
 ├── Graphic/
-│   └── M_Default_URP.mat                   ← URP/Lit 머티리얼 — DefaultMaterial 대체용 (수동 교체 필요)
+│   ├── M_Default_URP.mat                   ← URP/Lit 머티리얼 — DefaultMaterial 대체용 (수동 교체 필요)
+│   ├── 3D graphic/                         ← ✅ 신규 3D 그래픽 에셋 (배경용)
+│   ├── Golem_Weak_Mob_2_Walk_NE.png        ← ✅ 골렘 몬스터 스프라이트 (Walk NE 방향)
+│   ├── monster1.png                        ← ✅ 몬스터 스프라이트 (미배정)
+│   └── PROTOTYPE_1.png                     ← ✅ 프로토타입 참고 이미지
 ├── Resources/
 │   ├── Familiars/
 │   │   ├── Familiar_Bee.prefab         ← ✅ Orbit 패밀리어 (노란 원, 공전+공격)
@@ -535,6 +541,12 @@ Resources.Load() → null → 경고 로그 출력 후 소환 건너뜀.
 | 2026-02-28 | ConvertMaterialsToURP() — Built-in Standard/Unlit/Particle 셰이더 → URP 셰이더 일괄 변환 (UI/Sprites/Hidden 제외) |
 | 2026-02-28 | UniversalRendererData.asset — postProcessData GUID 수동 패치 (Bloom/Vignette 렌더링 안 되던 문제 해결) |
 | 2026-02-28 | SpawnExplosionAction.cs 신규 — 폭발 Action 모듈 (미구현 스켈레톤, 기획 연동 대기) |
+| 2026-03-01 | Global Volume 씬 직접 배치 — PostProcess_CultVibes.asset 프로파일 적용 (Bloom/Vignette/ColorAdjustments) |
+| 2026-03-01 | 배경 오브젝트 씬 배치 — claude remix.unity에 배경 환경 오브젝트 추가 |
+| 2026-03-01 | 몬스터 스프라이트 추가 — Golem_Weak_Mob_2_Walk_NE.png, monster1.png (Assets/Graphic/) |
+| 2026-03-01 | 3D 배경 그래픽 에셋 추가 — Assets/Graphic/3D graphic/ |
+| 2026-03-01 | NavMesh-Floor.asset 삭제 — 씬 로컬 폴더(Assets/claude remix/)로 이전 |
+| 2026-03-01 | DESIGN_PLAN.txt 추가 — 701~721 아이템 Phase 1 확장 설계 계획서 |
 
 ---
 
