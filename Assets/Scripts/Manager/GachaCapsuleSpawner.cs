@@ -144,7 +144,7 @@ public class GachaCapsuleSpawner : MonoBehaviour
         {
             for (int i = 0; i < obstacleCount; i++)
             {
-                GameObject obsPrefab = obstaclePrefabs[i % obstaclePrefabs.Count];
+                GameObject obsPrefab = obstaclePrefabs[UnityEngine.Random.Range(0, obstaclePrefabs.Count)];
 
                 // 착지점 주변 랜덤 위치에 스폰
                 Vector3 radialOffset = GetRandomRadialDirection() * UnityEngine.Random.Range(0f, _obstacleScatterRadius);
@@ -160,8 +160,15 @@ public class GachaCapsuleSpawner : MonoBehaviour
             }
         }
 
-        // ── 산개 착지 대기 ─────────────────────────────────
-        yield return new WaitForSeconds(_settleWait);
+        // ── 산개 착지 대기 (모든 장애물이 착지하면 즉시 진행, 타임아웃 _settleWait) ──
+        float settleTimeout = Time.time + _settleWait;
+        yield return new WaitUntil(() =>
+        {
+            if (Time.time >= settleTimeout) return true;
+            foreach (var obs in _activeObstacles)
+                if (obs != null && !obs.IsSettled) return false;
+            return true;
+        });
 
         onComplete?.Invoke(spawnedEnemies);
     }

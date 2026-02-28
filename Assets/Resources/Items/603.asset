@@ -13,12 +13,11 @@ MonoBehaviour:
   m_Name: 603
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 603
-  KR_Name: "\uC9DD\uD241 \uC694\uC694"
+  KR_Name: "\uC9DD\uAFCD \uC694\uC694"
   Keyword: Abel
   Description: "\uBC29 \uC911\uC559 \uAE30\uC900\uC73C\uB85C \uD50C\uB808\uC774\uC5B4\uC640
     \uC644\uBCBD\uD788 \uB300\uCE6D \uC774\uB3D9\uD558\uB294 \uC694\uC694 \uD328\uBC00\uB9AC\uC5B4
-    \uC18C\uD658.\n[\uBBF8\uAD6C\uD604] Symmetric \uBAA8\uB4DC \u2014 \uD604\uC7AC
-    Orbit \uD3F4\uBC31"
+    \uC18C\uD658."
   Category: 2
   Rarity: 1
   Priority: 0

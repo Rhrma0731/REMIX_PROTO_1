@@ -68,10 +68,13 @@ public abstract class EnemyBase : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _mainCamera = Camera.main;
 
+        if (_spriteRenderer == null)
+            _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
         SetupAgent();
         SetupRigidbody();
 
-        if (_flashMaterial != null)
+        if (_flashMaterial != null && _spriteRenderer != null)
         {
             _spriteRenderer.material = _flashMaterial;
         }
@@ -344,6 +347,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected void ApplyBillboard()
     {
+        if (_spriteRenderer == null) return;
         Transform camTransform = _mainCamera.transform;
         _spriteRenderer.transform.rotation = Quaternion.LookRotation(
             camTransform.forward,
@@ -353,7 +357,7 @@ public abstract class EnemyBase : MonoBehaviour
 
     protected void UpdateFacingDirection()
     {
-        if (_player == null) return;
+        if (_player == null || _spriteRenderer == null) return;
         _spriteRenderer.flipX = (_player.position - transform.position).x < 0f;
     }
 

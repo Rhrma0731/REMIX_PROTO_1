@@ -115,6 +115,15 @@ public class ItemEffectVFX : MonoBehaviour
         SpawnBurstParticle(target.position, REVIVE_COLOR, 8);
     }
 
+    /// <summary>SpawnExplosionAction 발동 시 주황 폭발 버스트.
+    /// 반경에 비례하여 파티클 수와 속도를 스케일한다.</summary>
+    public void PlayExplosionEffect(Vector3 center, float radius)
+    {
+        // 반경에 비례한 파티클 수 (최소 8, 최대 30)
+        int count = Mathf.Clamp(Mathf.RoundToInt(radius * 6), 8, 30);
+        SpawnExplosionParticle(center, DEFAULT_DAMAGE_COLOR, count, radius);
+    }
+
     // ── 컬러 플래시 (SpriteFlash 셰이더 활용) ──────────────────────
 
     private IEnumerator ColorFlashRoutine(SpriteRenderer sr, Color color)
@@ -195,6 +204,49 @@ public class ItemEffectVFX : MonoBehaviour
 
         ps.Play();
         Destroy(go, _particleLifetime + 0.1f);
+    }
+
+    /// <summary>폭발 파티클 — 반경에 맞춰 방사형으로 퍼지는 넓은 버스트</summary>
+    private void SpawnExplosionParticle(Vector3 position, Color color, int count, float radius)
+    {
+        GameObject go = new GameObject("TMA_ExplosionVFX");
+        go.transform.position = position;
+
+        ParticleSystem ps = go.AddComponent<ParticleSystem>();
+        var main = ps.main;
+        main.startColor = color;
+        main.startSize = _particleBaseSize * Mathf.Max(1f, radius * 0.5f);
+        main.startSpeed = _particleSpeed * Mathf.Max(1f, radius * 0.8f);
+        main.startLifetime = _particleLifetime * 1.5f;
+        main.simulationSpace = ParticleSystemSimulationSpace.World;
+        main.maxParticles = count;
+        main.loop = false;
+        main.playOnAwake = false;
+        main.gravityModifier = 0.15f;
+
+        var emission = ps.emission;
+        emission.enabled = true;
+        emission.rateOverTime = 0f;
+        emission.SetBursts(new ParticleSystem.Burst[]
+        {
+            new ParticleSystem.Burst(0f, (short)count)
+        });
+
+        var shape = ps.shape;
+        shape.shapeType = ParticleSystemShapeType.Sphere;
+        shape.radius = Mathf.Max(0.01f, radius * 0.1f);
+
+        var sizeOverLifetime = ps.sizeOverLifetime;
+        sizeOverLifetime.enabled = true;
+        sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.EaseInOut(0f, 1f, 1f, 0f));
+
+        var renderer = go.GetComponent<ParticleSystemRenderer>();
+        renderer.renderMode = ParticleSystemRenderMode.Billboard;
+        renderer.material = new Material(Shader.Find("Particles/Standard Unlit"));
+        renderer.material.SetColor("_Color", color);
+
+        ps.Play();
+        Destroy(go, _particleLifetime * 1.5f + 0.1f);
     }
 
     /// <summary>상승 파티클 (회복용 — 아래에서 위로 올라감)</summary>

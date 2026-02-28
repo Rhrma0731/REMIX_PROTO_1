@@ -13,12 +13,10 @@ MonoBehaviour:
   m_Name: 605
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 605
-  KR_Name: "\uB625\uD30C\uB9AC \uC7A5\uB09C\uAC10"
+  KR_Name: "\uB6B1\uD30C\uB9AC \uC7A5\uB09C\uAC10"
   Keyword: Angry Fly
   Description: "\uC801\uC758 \uC8FC\uC704\uB97C \uB9F4\uB3CC\uBA70 \uC9C0\uC18D \uD53C\uD574\uB97C
-    \uC8FC\uACE0 \uBC15\uCE58\uAE30\uD558\uB294 \uB625\uD30C\uB9AC \uC18C\uD658.\n[\uBBF8\uAD6C\uD604]
-    \uC801 \uC911\uC2EC \uACF5\uC804 \u2014 \uD604\uC7AC \uD50C\uB808\uC774\uC5B4
-    \uACF5\uC804 \uADFC\uC0AC"
+    \uC8FC\uACE0 \uBC15\uCE58\uAE30\uD558\uB294 \uB6B1\uD30C\uB9AC \uC18C\uD658."
   Category: 2
   Rarity: 0
   Priority: 0

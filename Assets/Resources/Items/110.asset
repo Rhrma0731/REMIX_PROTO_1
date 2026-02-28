@@ -28,7 +28,7 @@ MonoBehaviour:
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 0.697198, b: 0, a: 1}
+  PartColor: {r: 1, g: 1, b: 1, a: 1}
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 206
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 206
-  KR_Name: "\uAF80\uB3CC\uC774"
-  Keyword: "\uAF80\uB3CC\uC774"
+  KR_Name: "\uAFC8\uB3CC\uC774"
+  Keyword: "\uAFC8\uB3CC\uC774"
   Description: 
   Category: 1
   Rarity: 1
@@ -23,7 +23,7 @@ MonoBehaviour:
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 4
-    Value: 2
+    Value: 0
   PowerScore: 27
   Icon: {fileID: 0}
   TargetBodyPart: 0

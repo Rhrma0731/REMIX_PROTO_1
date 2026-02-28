@@ -1,36 +1,70 @@
-ItemID,KR_Name,조합 키워드,Category,Priority,Stat_Modifier,Value,Status_ID,Grade,PowerScore
-101,스틱키 핸드,끈끈이,Modifier,1,MoveSpeed,-0.3,ST_SLOW,Normal,8
-102,아폴로,아폴로,Modifier,1,AttackSpeed,0.1,,Normal,7
-103,30cm 자,자,Form,1,DetectionRange,1,,Normal,10
-104,뿅망치,망치,Form,2,KnockbackForce,1.5,,Normal,9
-105,쫀디기,쫀디기,Modifier,1,MaxHealth,50,,Normal,12
-106,노란 고무줄,고무줄,Modifier,1,DetectionRange,0.5,,Normal,8
-107,유리 구슬,구슬,Modifier,1,AttackDamage,5,,Normal,11
-108,태엽 장치,태엽,Modifier,1,MoveSpeed,1.5,,Normal,13
-109,플라스틱 링,링,Modifier,1,AttackSpeed,0.8,ST_STUN,Normal,10
-110,가짜 동전,동전,Modifier,1,,,,Normal,5
-201,8연발 화약총,화약,Modifier,2,AttackDamage,15,ST_BURN,Rare,28
-202,맥주 사탕,거품 섞인,Modifier,2,AttackSpeed,2,ST_SLOW,Rare,25
-203,페인트 사탕,페인트,Modifier,2,,,ST_GLITCH,Rare,22
-204,무지개 스프링,스프링,Form,3,DetectionRange,2.5,,Rare,30
-205,말하는 자석,자석,Modifier,2,DetectionRange,5,,Rare,20
-206,꾀돌이,꾀돌이,Modifier,2,MoveSpeed,2,,Rare,27
-207,칼라 풍선,풍선,Modifier,2,,,ST_STUN,Rare,24
-208,낚시 장난감,낚시,Modifier,2,KnockbackForce,-5,,Rare,23
-209,나무 새총,새총,Form,3,AttackDamage,2,,Rare,32
-210,월드컵 팽이,팽이,Form,3,AttackDamage,10,,Rare,35
-301,미니 게임기,게임기,Modifier,3,,,ST_GLITCH,Epic,45
-302,AA 건전지,전류 흐르는,Modifier,3,AttackDamage,1,ST_CHAIN,Epic,55
-303,스프링 펀치,펀치,Form,4,DetectionRange,5,ST_STUN,Epic,52
-304,돋보기,돋보기,Modifier,3,AttackDamage,30,ST_BURN,Epic,48
-305,방귀 쿠션,방귀,Modifier,3,,,ST_STUN,Epic,60
-306,강력 본드,본드,Modifier,3,MoveSpeed,-1,ST_STUN,Epic,58
-307,액체 괴물,액괴,Modifier,3,,,,Epic,45
-308,폭죽 세트,불꽃 튀는,Modifier,4,AttackDamage,4,ST_BURN,Epic,55
-309,미니 선풍기,선풍기,Modifier,4,AttackDamage,2,,Epic,50
-310,레이저 포인터,레이저,Modifier,4,AttackDamage,1.5,,Epic,65
-401,여왕의 눈알,여왕의,Special,5,AttackDamage,999,ST_DEATH,Legend,95
-402,무한동력 팽이,무한동력,Form,4,KnockbackForce,-15,,Legend,90
-403,황금 캡슐,황금,Modifier,5,,,,Legend,80
-404,무지개 액괴,무적의,Modifier,5,AttackDamage,1.3,,Legend,85
-405,궁극의 요요,요요,Form,5,AttackDamage,50,,Legend,100
+ItemID,KR_Name,Keyword,Description,Category,Rarity,Priority,Status_ID,StatType,StatValue,PowerScore,TargetBodyPart,TMA_Trigger,TMA_Modifier,TMA_Action,Notes
+101,스티키 핸드,뾰뾰이,,Modifier,Normal,1,ST_SLOW,MoveSpeed,-0.3,8,Head,OnAttack,Radius=3,DealDmg(×plr),
+102,아폴로,아폴로,,Modifier,Normal,1,,AttackSpeed,+0.1,7,Head,OnAttack,StatMod×0.4,DealDmg(×plr)×2,
+103,30cm 자,자,,Form,Normal,1,,Range,+1,10,ArmRight,OnAttack,StatMod×0.7,DealDmg(×plr),
+104,뭉망치,망치,,Form,Normal,2,,KnockbackForce,+1.5,9,ArmRight,OnAttack,AddTag(Fire),ApplyStatus(ST_BURN 80%),
+105,까디기,까디기,,Modifier,Normal,1,,MaxHealth,+50,12,Head,Passive,StatMod×0.3,DealDmg(×plr),
+106,노란 고무줄,고무줄,,Modifier,Normal,1,,Range,+0.5,8,Head,OnAttack,StatMod×1.5,DealDmg(×plr),
+107,유리 구슬,구슬,,Modifier,Normal,1,,AttackDamage,+5,11,Head,OnMeleeHit,,DealDmg(×plr),
+108,태엽 장치,태엽,,Modifier,Normal,1,,MoveSpeed,+1.5,13,Head,OnMeleeHit,Chance=60%,ApplyStatus(ST_STUN),
+109,플라스틱 링,링,,Modifier,Normal,1,ST_STUN,AttackSpeed,+0.8,10,Head,OnMeleeHit,,ApplyStatus(ST_BURN),⚠ Status_ID=ST_STUN이나 T-M-A 실제 효과는 ST_BURN — 기획 확인 필요
+110,가짜 동전,동전,,Modifier,Normal,1,,,0,5,Head,OnMeleeHit,StatMod×2,DealDmg(×plr),
+201,8연발 화약총,화약,,Modifier,Rare,2,ST_BURN,AttackDamage,+15,28,Head,OnAttack,StatMod×2.5,DealDmg(×plr),
+202,맥주 사탕,거품 섞인,,Modifier,Rare,2,ST_SLOW,AttackSpeed,+2,25,Head,OnAttack,,DealDmg(×plr)×2,
+203,페인트 사탕,페인트,,Modifier,Rare,2,ST_GLITCH,,0,22,Head,OnMeleeHit,Radius=2.5,DealDmg(×plr),
+204,무지개 스프링,스프링,,Form,Rare,3,,Range,+2.5,30,ArmRight,OnAttack,,DealDmg(×plr),
+205,말하는 자석,자석,,Modifier,Rare,2,,Range,+5,20,Head,OnTakeDmg,,DealDmg(×plr),
+206,꿈돌이,꿈돌이,,Modifier,Rare,2,,MoveSpeed,+2,27,Head,OnTakeDmg,Radius=3,DealDmg(base 10),usePlayerDamage=false — 고정 10 데미지
+207,칼라 풍선,풍선,,Modifier,Rare,2,ST_STUN,,0,24,Head,OnMeleeHit,Chance=40% + Radius=3.5,DealDmg(×plr),
+208,낚시 장난감,낚시,,Modifier,Rare,2,,KnockbackForce,-5,23,Head,OnTakeDmg,,NullifyDmg(CD=10s),피격 쿨다운 10초짜리 무효화
+209,나무 새총,새총,,Form,Rare,3,,AttackDamage,+2,32,ArmRight,OnDash,Radius=2,ApplyStatus(ST_SLOW),
+210,월드컵 팽이,팽이,,Form,Rare,3,,AttackDamage,+10,35,ArmRight,OnTimer(2s),,NullifyDmg,2초마다 피격 무효화
+301,미니 게임기,게임기,,Modifier,Epic,3,ST_GLITCH,,0,45,Head,OnTimer(1s),,ApplyStatus(ST_BURN),⚠ Status_ID=ST_GLITCH이나 실제 효과는 ST_BURN — 기획 확인 필요
+302,AA 건전지,전류 흐르는,,Modifier,Epic,3,ST_CHAIN,AttackDamage,+1,55,Head,OnDash,AddTag(Fire) + Radius=2,DealDmg(×plr),대시 시 불속성 범위 피해
+303,스프링 펀치,펀치,,Form,Epic,4,ST_STUN,Range,+5,52,ArmRight,OnDash,Bounce×3(감쇠0.8),DealDmg(×plr),바운스 3회 (충돌마다 80% 유지)
+304,돋보기,돋보기,,Modifier,Epic,3,ST_BURN,AttackDamage,+30,48,Head,OnTakeDmg,Homing(180° r=5),SpawnFamiliar(KamikazeBee max=3),피격 시 자폭 벌 최대 3마리 소환
+305,방귀 쿠션,방귀,,Modifier,Epic,3,ST_STUN,,0,60,Head,OnTimer(3s),,DealDmg(1 to self),3초마다 자신에게 1 고정 데미지
+306,강력 본드,본드,,Modifier,Epic,3,ST_STUN,MoveSpeed,-1,58,Head,OnTakeDmg,StatMod×3,DealDmg(×plr),피격 시 3배 반사 데미지
+307,액체 괴물,액괴,,Modifier,Epic,3,,,0,45,Head,OnMeleeHit,StatMod×1.5,DealDmg(×plr),
+308,폭죽 세트,불꽃 뿜는,,Modifier,Epic,4,ST_BURN,AttackDamage,+4,55,Head,OnTimer(10s),Radius=5,DealDmg(×plr),10초마다 반경 5 범위 피해
+309,미니 선풍기,선풍기,,Modifier,Epic,4,,AttackDamage,+2,50,Head,OnDash,Radius=4,ApplyStatus(ST_STUN),대시 시 반경 4 범위 스턴
+310,레이저 포인터,레이저,,Modifier,Epic,4,,AttackDamage,+1.5,65,Head,OnTakeDmg,Chance=30%,NullifyDmg,30% 확률 피격 무효화
+401,여왕의 눈알,여왕의,,Special,Legend,5,ST_DEATH,AttackDamage,+999,95,Head,OnMeleeHit,StatMod×2,DealDmg(×plr),
+402,무한동력 팽이,무한동력,,Form,Legend,4,,KnockbackForce,-15,90,ArmRight,Passive(지속),,HealSelf(0.5/s 고정),매 프레임 지속 회복
+403,황금 캡슐,황금,,Special,Legend,5,,,0,80,Head,OnTakeDmg,,NullifyDmg,피격 완전 무효화 (쿨다운 없음)
+404,무지개 액괴,무적의,,Special,Legend,5,,AttackDamage,+1.3,85,Head,OnKill,Chance=10%,DropPickup(×1),처치 시 10% 확률 아이템 드롭
+405,궁극의 요요,요요,,Form,Legend,5,,AttackDamage,+50,100,ArmRight,OnMeleeHit,AddTag(Electric),ApplyStatus(ST_CHAIN),
+501,100원짜리 동전,1UP,"죽는 순간 딱 한 번, 체력을 모두 회복하고 3초간 무적 상태가 된다.",Special,Rare,0,,,0,3,Head,OnFatalDmg(사용횟수=1),,Revive(100%HP + 3s 무적),1회용 부활
+502,피의 서약,Blood Oath,"방 클리어 시 현재 체력을 모두 소모해 1로 만들고, 소모한 체력 비율에 비례하여 공격력과 이동속도가 영구적으로 증가한다.",Special,Epic,0,,,0,3,Head,OnRoomClear,,BloodOath(공격력Scale=5 이동속도Scale=1),방 클리어마다 영구 성장
+503,가짜 피 캡슐,Martyr,"항상 장착된 것처럼 보이지만, 장착 즉시 공격력이 1 증가한다.",Modifier,Normal,0,,AttackDamage,+1,3,Head,(없음),,,T-M-A 이펙트 없음 — 패시브 스탯만
+601,다마고치 폼,7 Seals,"적을 쫓아 부딪히는 픽셀 폼을 소환한다.",Special,Normal,0,,,0,3,Head,Passive,,SpawnFamiliar(Tamagotchi max=1),[미구현] 10초마다 형태 변경(ShapeShift 모드 필요)
+602,깜깜이 거미 장난감,???'s Only Friend,"마우스 조준점을 따라다니며 적에게 틱 데미지를 주는 거미 패밀리어 소환.",Special,Normal,0,,,0,3,Head,Passive,,SpawnFamiliar(SpiderToy max=1),[미구현] MouseFollow 모드 — 현재 Orbit 폴백
+603,짝꿍 요요,Abel,"방 중앙 기준으로 플레이어와 완벽히 대칭 이동하는 요요 패밀리어 소환.",Special,Rare,0,,,0,3,Head,Passive,,SpawnFamiliar(Yoyo max=1),[미구현] Symmetric 모드 — 현재 Orbit 폴백
+604,홀로그램 스티커,Angelic Prism,"캐릭터 주위를 도는 홀로그램 궤도. 타격 판정 시 4갈래 증폭.",Special,Rare,0,,,0,3,Head,Passive,,SpawnFamiliar(HoloPrism max=1),[미구현] SplitProjectile 액션 — 현재 공전+공격만 동작
+605,뚱파리 장난감,Angry Fly,"적의 주위를 맴돌며 지속 피해를 주고 박치기하는 뚱파리 소환.",Special,Normal,0,,,0,3,Head,Passive,,SpawnFamiliar(FlyToy max=1),[미구현] 적 중심 공전 — 현재 플레이어 공전 근사
+606,일회용 밴드 뭉치,Ball of Bandages,"캐릭터 주위를 도는 방어막 겸 타격 폼. 획득 시마다 4단계 진화.",Special,Normal,0,,,0,3,Head,Passive,,SpawnFamiliar(BandageBall max=1),[미구현] 진화 시스템 — 현재 1단계 고정
+607,수호천사 열쇠고리,Best Bud,"피격 시 캐릭터 궤도를 아주 빠르게 돌며 데미지를 주는 열쇠고리 소환.",Special,Rare,0,,,0,3,Head,OnTakeDmg,,SpawnFamiliar(GuardKeyring max=3),피격마다 최대 3개까지 추가 소환
+608,뚱뚱한 돼지 저금통,Big Chubby,"공격하는 방향으로 무겁게 날아가 적을 관통하는 돼지 저금통 폼 소환.",Special,Rare,0,,,0,3,Head,OnAttack,,SpawnFamiliar(PiggyBank max=1),[미구현] 공격 방향 직진+관통 — 현재 Homing 근사
+609,여름철 왕부채,Big Fan,"캐릭터 궤도를 느리게 돌며 투사체를 막아주는 방패 패밀리어 소환.",Special,Normal,0,,,0,3,Head,Passive,,SpawnFamiliar(BigFan max=1),[미구현] OrbitalShield 모드(투사체 차단) — 현재 Orbit 폴백
+610,화난 불독 장난감,Blood Puppy,"적을 때릴수록 거대해지며 나중엔 플레이어까지 공격하는 불독 폼 소환.",Special,Rare,0,,,0,3,Head,Passive,,SpawnFamiliar(BullDog max=1),[미구현] GrowOnKill / FriendlyFire — 현재 Orbit 기본 동작
+701,맥주맛 사탕,<3,"체력 최대치가 1 증가한다.",Modifier,Normal,1,,MaxHealth,+1,5,Head,(없음),,,
+702,차카니,A Snack,"체력 최대치가 1 증가한다.",Modifier,Normal,1,,MaxHealth,+1,5,Head,(없음),,,
+703,달고나,Dessert,"체력 최대치가 1 증가한다.",Modifier,Normal,1,,MaxHealth,+1,5,Head,(없음),,,
+704,피자빵,Dinner,"체력 최대치가 1 증가한다.",Modifier,Normal,1,,MaxHealth,+1,5,Head,(없음),,,
+705,짝퉁 유희왕 카드 신,Black Lotus,"체력 최대치가 3 증가한다.",Modifier,Rare,2,,MaxHealth,+3,12,Head,(없음),,,
+706,참치마요 삼각김밥,BreakFast,"체력 최대치가 1 증가한다.",Modifier,Normal,1,,MaxHealth,+1,5,Head,(없음),,,
+707,배꼽티,Belly Button,"체력 최대치 +1. 사거리 +1.5.",Modifier,Normal,1,,MaxHealth,+1,8,Head,(없음),,,⚠ Range +1.5 다중 스탯 — .asset 직접 StatBonuses 추가 필요
+708,만원짜리 문상,A Dollar,"장착 즉시 코인 100개를 바닥에 떨어뜨린다.",Special,Rare,2,,,0,20,Head,Passive,,DropPickup(Coin×100),
+709,오락실 토큰 뭉치,A Quarter,"장착 즉시 코인 25개를 바닥에 떨어뜨린다.",Special,Normal,1,,,0,12,Head,Passive,,DropPickup(Coin×25),
+710,구겨진 동네 지도,Blue Map,"방 클리어 시 코인 5개가 생성된다.",Special,Normal,1,,,0,10,Head,OnRoomClear,,DropPickup(Coin×5),
+711,문방구 외상 장부,Contract from Below,"방 클리어 시 코인 2개가 생성된다.",Special,Normal,1,,,0,6,Head,OnRoomClear,,DropPickup(Coin×2),
+712,신발 주머니,Deep Pockets,"방 클리어 시 코인 5개가 생성된다.",Special,Normal,1,,,0,10,Head,OnRoomClear,,DropPickup(Coin×5),
+713,장난감 든 과자 상자,Crack Jacks,"체력 최대치 +1. 장착 즉시 코인 5개를 떨어뜨린다.",Special,Normal,1,,MaxHealth,+1,8,Head,Passive,,DropPickup(Coin×5),
+714,도금 십자가 목걸이,Ankh,"죽는 순간 딱 한 번 체력 10%를 회복하고 2초간 무적이 된다.",Special,Rare,2,,,0,20,Head,OnFatalDmg(사용횟수=1),,Revive(10%HP 2s무적),1회용 부활 — 501(1UP)과 달리 10% 회복
+715,드림캐쳐 열쇠고리,Dream Catcher,"방 클리어 시 체력을 1 회복한다.",Special,Normal,1,,,0,8,Head,OnRoomClear,,HealSelf(1),
+716,불량배 삥뜯기,Dark Bum,"적을 처치할 때 30% 확률로 체력을 1 회복한다.",Modifier,Rare,2,,,0,12,Head,OnKill,Chance=30%,HealSelf(1),
+717,거미줄 스프레이,Bursting Sack,"근접 공격 적중 시 대상에게 슬로우를 부여한다.",Modifier,Normal,1,ST_SLOW,,0,8,Head,OnMeleeHit,,ApplyStatus(ST_SLOW),
+718,끈끈이 쥐덫,Ball of Tar,"근접 공격 적중 시 대상에게 슬로우를 부여한다.",Modifier,Rare,2,ST_SLOW,,0,12,Head,OnMeleeHit,,ApplyStatus(ST_SLOW),717 강화 버전 — ICD 더 짧음
+719,버그난 다마고치,Broken Modem,"근접 공격 적중 시 15% 확률로 대상을 스턴 시킨다.",Modifier,Normal,1,ST_STUN,,0,10,Head,OnMeleeHit,Chance=15%,ApplyStatus(ST_STUN),
+720,공사장 라바콘,Cone Head,"피격 시 20% 확률로 데미지를 무효화한다.",Modifier,Rare,2,,,0,15,Head,OnTakeDmg,Chance=20%,NullifyDmg,
+721,바른생활 교과서,Book Of Virtues,"피격 시 데미지를 무효화한다 (쿨다운 10초).",Modifier,Rare,2,,,0,18,Head,OnTakeDmg,,NullifyDmg(ICD=10s),

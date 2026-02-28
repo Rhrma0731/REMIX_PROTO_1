@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: 601
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 601
-  KR_Name: "\uB2E4\uB9C8\uACE0\uCE58 \uD3AB"
+  KR_Name: "\uB2E4\uB9C8\uACE0\uCE58 \uD3FC"
   Keyword: 7 Seals
-  Description: "\uC801\uC744 \uCAD3\uC544 \uBD80\uB52A\uD788\uB294 \uD53D\uC140 \uD3AB\uC744
-    \uC18C\uD658\uD55C\uB2E4.\n[\uBBF8\uAD6C\uD604] 10\uCD08\uB9C8\uB2E4 \uD615\uD0DC
-    \uBCC0\uACBD (ShapeShift \uBAA8\uB4DC \uD544\uC694)"
+  Description: "\uC801\uC744 \uCAD3\uC544 \uBD80\uB52A\uD788\uB294 \uD53D\uC140 \uD3FC\uC744
+    \uC18C\uD658\uD55C\uB2E4."
   Category: 2
   Rarity: 0
   Priority: 0

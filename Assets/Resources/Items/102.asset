@@ -23,7 +23,7 @@ MonoBehaviour:
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 3
-    Value: 0.1
+    Value: 0
   PowerScore: 7
   Icon: {fileID: 0}
   TargetBodyPart: 0

@@ -1,6 +1,6 @@
 # RE:MIX PROTO_1 — 작업 인수인계 가이드라인
 
-> 마지막 업데이트: 2026-02-27 (2차)
+> 마지막 업데이트: 2026-02-28
 > 목적: 다음 세션에서 컨텍스트 없이도 즉시 작업을 이어받을 수 있도록 작성된 문서입니다.
 
 ---
@@ -38,6 +38,8 @@
 | 게임 오버 | ✅ | `GameOverManager.cs` |
 | 무기 이름 자동 조합 | ✅ | `WeaponNameBuilder.cs` |
 | **인게임 아이템 즉시 장착 디버그 도구** | ✅ | `DebugItemEquipper.cs` (F1~F8) |
+| **URP 포스트프로세싱 자동 세팅** | ✅ | `ScenePostProcessingSetup.cs` (Tools 메뉴) |
+| **Built-in → URP 머티리얼 일괄 변환** | ✅ | `ScenePostProcessingSetup.cs` (Tools 메뉴) |
 
 ### 2-2. 상태 이상 (StatusEffectManager.cs)
 | Status_ID | 효과 | 상태 |
@@ -125,6 +127,7 @@
 | 401~405 | 전설 아이템 | ✅ |
 | 501~503 | 특수 신규 (1UP!, 피의 서약, 가짜 피 캡슐) | ✅ 메뉴 생성 |
 | 601~610 | 패밀리어 소환 신규 아이템 | ✅ 메뉴 생성 |
+| 701~721 | 신규 아이템 (7계열) | ✅ 에셋 파일 생성됨 (미배정, 기획 필요) |
 
 ### 2-6. 패밀리어 시스템 (FamiliarController.cs)
 
@@ -216,6 +219,8 @@
 | 캡슐 스폰 — `_openParticlePrefab` null | 파티클 없이 동작은 하지만 착지 연출이 밋밋함 | 낮음 |
 | 패밀리어 프리팹 9종 미생성 | 601~610 중 FlyToy(605)만 프리팹 존재, 나머지는 소환 불가 | 중간 |
 | **Familiar_FlyToy.prefab 스프라이트 미할당** | `SpriteRenderer.sprite = null` — 패밀리어가 소환되지만 보이지 않음. Unity에서 프리팹 열어 Sprite 슬롯에 이미지 할당 필요 | **높음** |
+| **DefaultMaterial 핑크** | Unity 기본 DefaultMaterial은 Built-in RP 전용 — URP 전환 후 DefaultMaterial 사용 오브젝트가 핑크로 보임. `Assets/Graphic/M_Default_URP.mat` 생성 후 수동 교체 필요 | 중간 |
+| **URP postProcessData 연결 확인** | `UniversalRendererData.asset`의 `postProcessData` GUID가 `41439944...`으로 수동 패치됨. 씬을 재임포트하거나 URP 업그레이드 시 재확인 필요 | 낮음 |
 
 ---
 
@@ -231,16 +236,32 @@ Assets/
 │   │                                          메뉴: Tools > Create New Items (501-503)
 │   │                                          메뉴: Tools > Create Familiar Items (601-610)
 │   │                                          메뉴: Tools > TMA Debug > ...
-│   └── FloorMaterialSetup.cs           ← Floor01 텍스처 세트 → 머티리얼 생성 + Floor 오브젝트 적용
-│                                          메뉴: Tools > Setup Floor01 Material
-│                                          ① Floor01_N.png NormalMap 타입 자동 설정
-│                                          ② URP/Lit 머티리얼 생성 (Assets/Graphic/Materials/Floor01.mat)
-│                                          ③ 씬의 'Floor' MeshRenderer에 머티리얼 교체 (Undo 지원)
+│   ├── FloorMaterialSetup.cs           ← Floor01 텍스처 세트 → 머티리얼 생성 + Floor 오브젝트 적용
+│   │                                      메뉴: Tools > Setup Floor01 Material
+│   │                                      ① Floor01_N.png NormalMap 타입 자동 설정
+│   │                                      ② URP/Lit 머티리얼 생성 (Assets/Graphic/Materials/Floor01.mat)
+│   │                                      ③ 씬의 'Floor' MeshRenderer에 머티리얼 교체 (Undo 지원)
+│   └── ScenePostProcessingSetup.cs     ← URP 포스트프로세싱 + 라이팅 자동 세팅
+│                                          메뉴: Tools > Setup Post Processing & Lighting (Cult Vibe)
+│                                          메뉴: Tools > Convert Built-in Materials to URP (Fix Pink)
+│                                          ① URP 파이프라인 에셋 확인/생성 및 GraphicsSettings 연결
+│                                          ② Global Volume 생성 (Bloom/Vignette/ColorAdjustments)
+│                                          ③ Main Camera renderPostProcessing = true
+│                                          ④ Directional Light 없을 때만 생성 (청보라, intensity=0.5)
 ├── MCPForUnity/                        ← [개발 도구] Claude Code ↔ Unity MCP 브릿지 플러그인
 ├── Screenshots/                        ← 플레이테스트 참고 스크린샷 (5장)
 ├── Prefabs/
 │   ├── GachaCapsule.prefab             ← 캡슐 낙하 비주얼 (교체 예정)
-│   └── Obstacle.prefab                 ← 장애물 (Rigidbody + NavMeshObstacle + ObstacleController)
+│   ├── Obstacle_A.prefab               ← 장애물 타입 A (Rigidbody + NavMeshObstacle + ObstacleController)
+│   ├── Obstacle_B.prefab               ← 장애물 타입 B
+│   └── Obstacle_C.prefab               ← 장애물 타입 C
+│   [Obstacle.prefab 삭제됨 → 3종으로 분리]
+├── Settings/
+│   ├── UniversalRenderPipelineAsset.asset  ← URP 파이프라인 에셋 (GraphicsSettings에 연결됨)
+│   ├── UniversalRendererData.asset         ← URP 렌더러 데이터 (postProcessData GUID 수동 패치됨)
+│   └── PostProcess_CultVibes.asset         ← Global Volume 프로파일 (Bloom/Vignette/ColorAdjustments)
+├── Graphic/
+│   └── M_Default_URP.mat                   ← URP/Lit 머티리얼 — DefaultMaterial 대체용 (수동 교체 필요)
 ├── Resources/
 │   ├── Familiars/
 │   │   ├── Familiar_Bee.prefab         ← ✅ Orbit 패밀리어 (노란 원, 공전+공격)
@@ -250,7 +271,7 @@ Assets/
 │   │                   GuardKeyring/PiggyBank/BigFan/BullDog]
 │   ├── ItemTable.csv                   ← ✅ 생성됨 (35개 아이템)
 │   ├── ItemDatabase.asset              ← ✅ 자동 생성됨
-│   └── Items/                          ← ✅ 에셋 파일 (101~405, 501~503, 601~610)
+│   └── Items/                          ← ✅ 에셋 파일 (101~405, 501~503, 601~610, 701~721)
 ├── Scripts/
 │   ├── Debug/
 │   │   └── DebugItemEquipper.cs        ← [개발 전용] F1~F8 키로 아이템 즉시 장착
@@ -350,8 +371,8 @@ StageManager.StageTransitionThenSpawn()
             → 캡슐 낙하 (SmoothStep, 0.7초)
             → 착지 → Destroy(capsule) → ParticleSystem 재생
             → EnemyBase.LaunchFromCapsule() × N  ← 적 산개
-            → ObstacleController.Launch() × N    ← 장애물 산개
-            → WaitForSeconds(1.2초)
+            → ObstacleController.Launch() × N    ← 장애물 산개 (3종 중 랜덤 선택)
+            → WaitUntil(모든 obs.IsSettled) + _settleWait 타임아웃
             → onComplete(spawnedEnemies) 콜백
     → 사망 콜백 등록 (_activeEnemies)
 ```
@@ -359,7 +380,7 @@ StageManager.StageTransitionThenSpawn()
 ### ObstacleController 착지 후 NavMesh Carving
 - `Awake()`: `carving=true`, `enabled=false` (물리 정지, carving 비활성)
 - `Launch()`: Rigidbody 활성화 → AddForce → `SettleRoutine()` 시작
-- `SettleRoutine()` 완료 후: isKinematic=true, `navObstacle.enabled=true` → NavMesh에 구멍 뚫림
+- `SettleRoutine()` 완료 후: isKinematic=true, `navObstacle.enabled=true`, `IsSettled=true` → NavMesh에 구멍 뚫림
 - **웨이브 클리어 시 `ClearObstacles()`로 전부 Destroy → 다음 웨이브에 재생성**
 
 ### 난이도별 장애물 수
@@ -500,6 +521,20 @@ Resources.Load() → null → 경고 로그 출력 후 소환 건너뜀.
 | 2026-02-27 | SpawnFamiliarAction SpriteRenderer.sprite null 경고 추가 — Familiar_FlyToy.prefab 스프라이트 미할당 버그 탐지 |
 | 2026-02-27 | FloorMaterialSetup.cs 신규 — Floor01 텍스처 3종으로 URP/Lit 머티리얼 생성 및 씬 Floor 오브젝트 자동 적용 |
 | 2026-02-27 | Floor01_N.png NormalMap 타입 자동 보장 로직 추가 (FloorMaterialSetup) |
+| 2026-02-28 | GachaCapsuleSpawner 장애물 프리팹 선택을 순차(i % N)에서 무작위(Random.Range)로 변경 |
+| 2026-02-28 | Obstacle.prefab 삭제 → Obstacle_A / Obstacle_B / Obstacle_C 3종으로 분리 (GachaCapsuleSpawner 다형 스폰) |
+| 2026-02-28 | ObstacleController.IsSettled 프로퍼티 추가 — SettleRoutine 완료 시 true 설정 |
+| 2026-02-28 | GachaCapsuleSpawner 착지 대기를 고정 WaitForSeconds → WaitUntil(IsSettled) + 타임아웃으로 변경 (불필요한 딜레이 제거) |
+| 2026-02-28 | EnemyBase.Awake() — _spriteRenderer null이면 GetComponentInChildren 자동 탐색 추가 (StickyHand 등 Inspector 미연결 해결) |
+| 2026-02-28 | EnemyBase ApplyBillboard / UpdateFacingDirection — _spriteRenderer null 가드 추가 |
+| 2026-02-28 | ScenePostProcessingSetup.cs 신규 에디터 스크립트 (Tools > Setup Post Processing & Lighting / Convert Built-in Materials to URP) |
+| 2026-02-28 | EnsureURPPipelineAsset() — URP 파이프라인 에셋 없을 시 자동 생성 및 GraphicsSettings/QualitySettings 연결 |
+| 2026-02-28 | SetupGlobalVolume() — Bloom(보라 틴트)/Vignette(다크 퍼플)/ColorAdjustments(콜드 블루 필터) Cult Vibe 세팅 |
+| 2026-02-28 | SetupCamera() — UniversalAdditionalCameraData.renderPostProcessing = true 자동 활성화 |
+| 2026-02-28 | SetupDirectionalLight() — Directional Light 없을 때만 생성 (청보라 #6170b8, intensity=0.5) |
+| 2026-02-28 | ConvertMaterialsToURP() — Built-in Standard/Unlit/Particle 셰이더 → URP 셰이더 일괄 변환 (UI/Sprites/Hidden 제외) |
+| 2026-02-28 | UniversalRendererData.asset — postProcessData GUID 수동 패치 (Bloom/Vignette 렌더링 안 되던 문제 해결) |
+| 2026-02-28 | SpawnExplosionAction.cs 신규 — 폭발 Action 모듈 (미구현 스켈레톤, 기획 연동 대기) |
 
 ---
 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: 105
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 105
-  KR_Name: "\uCAC0\uB514\uAE30"
-  Keyword: "\uCAC0\uB514\uAE30"
+  KR_Name: "\uAE4C\uB514\uAE30"
+  Keyword: "\uAE4C\uB514\uAE30"
   Description: 
   Category: 1
   Rarity: 0
@@ -23,7 +23,7 @@ MonoBehaviour:
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 1
-    Value: 50
+    Value: 0
   PowerScore: 12
   Icon: {fileID: 0}
   TargetBodyPart: 0

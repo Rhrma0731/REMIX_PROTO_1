@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 308
   KR_Name: "\uD3ED\uC8FD \uC138\uD2B8"
-  Keyword: "\uBD88\uAF43 \uD280\uB294"
+  Keyword: "\uBD88\uAF43 \uBFDC\uB294"
   Description: 
   Category: 1
   Rarity: 2
@@ -23,7 +23,7 @@ MonoBehaviour:
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 2
-    Value: 4
+    Value: 0
   PowerScore: 55
   Icon: {fileID: 0}
   TargetBodyPart: 0

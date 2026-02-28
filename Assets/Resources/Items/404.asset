@@ -16,14 +16,14 @@ MonoBehaviour:
   KR_Name: "\uBB34\uC9C0\uAC1C \uC561\uAD34"
   Keyword: "\uBB34\uC801\uC758"
   Description: 
-  Category: 1
+  Category: 2
   Rarity: 3
   Priority: 5
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 2
-    Value: 1.3
+    Value: 0
   PowerScore: 85
   Icon: {fileID: 0}
   TargetBodyPart: 0

@@ -13,6 +13,8 @@ public class ObstacleController : MonoBehaviour
     [SerializeField] private float _bounceDamping = 0.3f;
     [SerializeField] private int _bounceCount = 1;
 
+    public bool IsSettled { get; private set; }
+
     private Rigidbody _rb;
     private NavMeshObstacle _navObstacle;
     private float _groundY;
@@ -87,5 +89,6 @@ public class ObstacleController : MonoBehaviour
 
         // 착지 완료 → NavMesh Carving 시작
         _navObstacle.enabled = true;
+        IsSettled = true;
     }
 }

@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 937800f1fa7c1934bb59b795a16362cb, type: 3}
+  m_Name: 710
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  ItemID: 710
+  KR_Name: "\uAD6C\uACA8\uC9C4 \uB3D9\uB124 \uC9C0\uB3C4"
+  Keyword: Blue Map
+  Description: "\uBC29 \uD074\uB9AC\uC5B4 \uC2DC \uCF54\uC778 5\uAC1C\uAC00 \uC0DD\uC131\uB41C\uB2E4."
+  Category: 2
+  Rarity: 0
+  Priority: 1
+  Status_ID: 
+  StatusTriggerChance: 1
+  StatBonuses: []
+  PowerScore: 10
+  Icon: {fileID: 0}
+  TargetBodyPart: 0
+  AppearanceSprite: {fileID: 0}
+  SortingOrderOffset: 1
+  PartScale: {x: 1, y: 1}
+  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  FormWeaponSprite: {fileID: 0}
+  FormHitRadius: 0
+  PedestalSprite: {fileID: 0}
+  Effects: []
+  references:
+    version: 2
+    RefIds: []

@@ -23,14 +23,14 @@ MonoBehaviour:
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 6
-    Value: -15
+    Value: 0
   PowerScore: 90
   Icon: {fileID: 0}
   TargetBodyPart: 3
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
-  PartScale: {x: 2, y: 2}
-  PartColor: {r: 1, g: 0.85, b: 0.1, a: 1}
+  PartScale: {x: 1, y: 1}
+  PartColor: {r: 1, g: 1, b: 1, a: 1}
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
