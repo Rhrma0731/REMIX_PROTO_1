@@ -1,6 +1,6 @@
 # RE:MIX PROTO_1 — 작업 인수인계 가이드라인
 
-> 마지막 업데이트: 2026-03-01
+> 마지막 업데이트: 2026-03-01 (애니메이션 시스템 추가)
 > 목적: 다음 세션에서 컨텍스트 없이도 즉시 작업을 이어받을 수 있도록 작성된 문서입니다.
 
 ---
@@ -42,6 +42,7 @@
 | **Built-in → URP 머티리얼 일괄 변환** | ✅ | `ScenePostProcessingSetup.cs` (Tools 메뉴) |
 | **Global Volume 씬 배치** | ✅ | `PostProcess_CultVibes.asset` — Bloom/Vignette/ColorAdjustments Cult Vibe 프로파일 씬에 직접 배치 |
 | **배경 오브젝트 씬 배치** | ✅ | `claude remix.unity` — 배경 환경 오브젝트 추가 |
+| **플레이어 방향별 걷기 애니메이션** | ✅ | `PlayerAnimationController.cs`, `Player_Animator.controller` |
 
 ### 2-2. 상태 이상 (StatusEffectManager.cs)
 | Status_ID | 효과 | 상태 |
@@ -238,6 +239,11 @@ Assets/
 │   │                                          메뉴: Tools > Create New Items (501-503)
 │   │                                          메뉴: Tools > Create Familiar Items (601-610)
 │   │                                          메뉴: Tools > TMA Debug > ...
+│   ├── PlayerAnimatorSetup.cs          ← 플레이어 애니메이션 자동 생성 툴
+│   │                                      메뉴: Tools > Setup Player Animator
+│   │                                      ① 3종 .anim 클립 생성 (front/side/back, 8fps, Loop)
+│   │                                      ② Player_Animator.controller 생성 (WalkState int, 3-state)
+│   │                                      ③ GlitchDuck에 Animator + PlayerAnimationController 추가
 │   ├── FloorMaterialSetup.cs           ← Floor01 텍스처 세트 → 머티리얼 생성 + Floor 오브젝트 적용
 │   │                                      메뉴: Tools > Setup Floor01 Material
 │   │                                      ① Floor01_N.png NormalMap 타입 자동 설정
@@ -262,12 +268,22 @@ Assets/
 │   ├── UniversalRenderPipelineAsset.asset  ← URP 파이프라인 에셋 (GraphicsSettings에 연결됨)
 │   ├── UniversalRendererData.asset         ← URP 렌더러 데이터 (postProcessData GUID 수동 패치됨)
 │   └── PostProcess_CultVibes.asset         ← Global Volume 프로파일 (Bloom/Vignette/ColorAdjustments)
+├── Animations/                             ← ✅ 플레이어 애니메이션 에셋
+│   ├── Player_front_Walk.anim              ← 정면 걷기 (8fps, Loop, walk_front.png 8프레임)
+│   ├── Player_side_Walk.anim               ← 측면 걷기 (8fps, Loop, walk_side-Sheet.png 8프레임)
+│   ├── Player_back_Walk.anim               ← 후면 걷기 (8fps, Loop, walk_back-Sheet.png 8프레임)
+│   └── Player_Animator.controller          ← WalkState int 파라미터, 3-state 즉시 전환
 ├── Graphic/
 │   ├── M_Default_URP.mat                   ← URP/Lit 머티리얼 — DefaultMaterial 대체용 (수동 교체 필요)
 │   ├── 3D graphic/                         ← ✅ 신규 3D 그래픽 에셋 (배경용)
-│   ├── Golem_Weak_Mob_2_Walk_NE.png        ← ✅ 골렘 몬스터 스프라이트 (Walk NE 방향)
-│   ├── monster1.png                        ← ✅ 몬스터 스프라이트 (미배정)
-│   └── PROTOTYPE_1.png                     ← ✅ 프로토타입 참고 이미지
+│   └── 2D graphic/                         ← ✅ 2D 스프라이트 에셋 모음
+│       ├── walk_front.png                  ← 정면 걷기 스프라이트 시트 (8프레임)
+│       ├── walk_side-Sheet.png             ← 측면 걷기 스프라이트 시트 (8프레임, 오른쪽 방향 기준)
+│       ├── walk_back-Sheet.png             ← 후면 걷기 스프라이트 시트 (8프레임)
+│       ├── Golem_Weak_Mob_2_Walk_NE.png    ← 골렘 몬스터 스프라이트 (Walk NE 방향)
+│       ├── monster1.png                    ← 몬스터 스프라이트 (미배정)
+│       ├── StickyHand_Sprite.png           ← StickyHand 적 스프라이트
+│       └── PROTOTYPE_1.png                 ← 프로토타입 참고 이미지
 ├── Resources/
 │   ├── Familiars/
 │   │   ├── Familiar_Bee.prefab         ← ✅ Orbit 패밀리어 (노란 원, 공전+공격)
@@ -342,7 +358,10 @@ Assets/
 │   ├── Player/
 │   │   ├── PlayerStats.cs              ← 스탯, 아이템, 부활, 무적,
 │   │   │                                  AddDynamicBonus(), SetHpDirect()
-│   │   ├── PlayerMovement.cs
+│   │   ├── PlayerMovement.cs           ← MoveDirection 프로퍼티 공개 (PlayerAnimationController 참조)
+│   │   ├── PlayerAnimationController.cs← 방향별 애니메이션 전환 + flipX 제어
+│   │   │                                  WalkState: 0=front, 1=side, 2=back
+│   │   │                                  정지 시 animator.speed=0 (프레임 동결)
 │   │   ├── WeaponController.cs
 │   │   └── PlayerAppearance.cs
 │   ├── Combat/
@@ -541,6 +560,12 @@ Resources.Load() → null → 경고 로그 출력 후 소환 건너뜀.
 | 2026-02-28 | ConvertMaterialsToURP() — Built-in Standard/Unlit/Particle 셰이더 → URP 셰이더 일괄 변환 (UI/Sprites/Hidden 제외) |
 | 2026-02-28 | UniversalRendererData.asset — postProcessData GUID 수동 패치 (Bloom/Vignette 렌더링 안 되던 문제 해결) |
 | 2026-02-28 | SpawnExplosionAction.cs 신규 — 폭발 Action 모듈 (미구현 스켈레톤, 기획 연동 대기) |
+| 2026-03-01 | 플레이어 방향별 걷기 애니메이션 시스템 구현 — front/side/back 3종 클립 (8fps, Loop) |
+| 2026-03-01 | Player_Animator.controller 생성 — WalkState int 파라미터, 3-state 즉시 전환 |
+| 2026-03-01 | PlayerAnimationController.cs 신규 — 이동 방향 판별 + WalkState 제어 + Body flipX |
+| 2026-03-01 | PlayerMovement.cs — MoveDirection 프로퍼티 공개 |
+| 2026-03-01 | PlayerAnimatorSetup.cs 신규 에디터 툴 (Tools > Setup Player Animator) |
+| 2026-03-01 | Assets/Graphic/2D graphic/ 폴더로 2D 스프라이트 정리 (walk_front/side/back + 기존 스프라이트) |
 | 2026-03-01 | Global Volume 씬 직접 배치 — PostProcess_CultVibes.asset 프로파일 적용 (Bloom/Vignette/ColorAdjustments) |
 | 2026-03-01 | 배경 오브젝트 씬 배치 — claude remix.unity에 배경 환경 오브젝트 추가 |
 | 2026-03-01 | 몬스터 스프라이트 추가 — Golem_Weak_Mob_2_Walk_NE.png, monster1.png (Assets/Graphic/) |
