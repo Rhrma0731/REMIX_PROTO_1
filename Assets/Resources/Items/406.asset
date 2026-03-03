@@ -10,41 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 937800f1fa7c1934bb59b795a16362cb, type: 3}
-  m_Name: 508
+  m_Name: 406
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  ItemID: 508
-  KR_Name: "\uAD6C\uC2AC \uC8FC\uBA38\uB2C8 "
-  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
-  Description: "\uC8FC\uBA38\uB2C8\uAC00 \uAC00\uBCBC\uC6CC\uC838 \uACF5\uC18D\uACFC
-    \uC774\uC18D\uC774 \uC18C\uD3ED \uCF8C\uC801\uD558\uAC8C \uC624\uB984."
+  ItemID: 406
+  KR_Name: "\uB048\uC801\uC774 "
+  Keyword: "\uC0C1\uD0DC \uC774\uC0C1 \uBD80\uC5EC"
+  Description: "\uD0C0\uACA9 \uC2DC 10% \uD655\uB960\uB85C \uC801\uC744 \uCABC\uADF8\uB77C\uB728\uB9AC\uB4EF
+    \uC774\uC18D\uC744 \uAE4E\uC74C(ST_SLOW)\r\n"
   Category: 2
-  Rarity: 0
-  Priority: 0
-  Status_ID: 
+  Rarity: 2
+  Priority: 3
+  Status_ID: ST_SLOW
   StatusTriggerChance: 1
-  StatBonuses:
-  - Type: 3
-    Value: 20
-  - Type: 4
-    Value: 1
-  PowerScore: 3
+  StatBonuses: []
+  PowerScore: 5
   Icon: {fileID: 0}
   TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 0.5158559, g: 0.24056602, b: 1, a: 1}
+  PartColor: {r: 0.6367924, g: 1, b: 0.67096126, a: 1}
   PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994928
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994928
-      type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _continuous: 0
+    RefIds: []

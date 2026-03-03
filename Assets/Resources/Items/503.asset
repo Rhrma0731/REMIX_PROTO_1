@@ -13,29 +13,38 @@ MonoBehaviour:
   m_Name: 503
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 503
-  KR_Name: "\uB4F1\uC9DD \uC2A4\uB9E4\uC2F1 \uC8FC\uAC71 "
+  KR_Name: "\uAD6C\uC2AC \uC8FC\uBA38\uB2C8 "
   Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
-  Description: "\uC774\uB3D9\uC18D\uB3C4 \uC99D\uAC00"
-  Category: 1
+  Description: "\uC8FC\uBA38\uB2C8\uAC00 \uAC00\uBCBC\uC6CC\uC838 \uACF5\uC18D\uACFC
+    \uC774\uC18D\uC774 \uC18C\uD3ED \uCF8C\uC801\uD558\uAC8C \uC624\uB984."
+  Category: 2
   Rarity: 0
   Priority: 0
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
+  - Type: 3
+    Value: 20
   - Type: 4
-    Value: 2
-  PowerScore: 2
+    Value: 1
+  PowerScore: 3
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 0.6037736, g: 0.31043077, b: 0.31043077, a: 1}
+  PartColor: {r: 0.5158559, g: 0.24056602, b: 1, a: 1}
   PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects: []
+  Effects:
+  - rid: 8060512650618994928
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 8060512650618994928
+      type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
+      data:
+        _internalCooldown: 0.1
+        _continuous: 0

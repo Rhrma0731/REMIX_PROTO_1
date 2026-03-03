@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 103
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 103
-  KR_Name: "\uBC30\uAF3D\uD2F0"
+  KR_Name: "\uB9C1\uB358\uC9C0\uAE30"
   Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
   Description: "\uCCB4\uB825\uC774 \uC624\uB974\uACE0 \uBB34\uAE30 \uACF5\uACA9 \uC0AC\uAC70\uB9AC\uAC00
     \uB298\uC5B4\uB0A8."
@@ -28,16 +28,16 @@ MonoBehaviour:
   - Type: 5
     Value: 1.5
   PowerScore: 2
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 60905b208d325d34386981dad09b9729, type: 3}
   TargetBodyPart: 3
-  AppearanceSprite: {fileID: 0}
+  AppearanceSprite: {fileID: 21300000, guid: 60905b208d325d34386981dad09b9729, type: 3}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 0.49056602, g: 0.28924882, b: 0.28924882, a: 1}
+  PartColor: {r: 0.92420423, g: 1, b: 0.5424528, a: 1}
   PlayerRootScale: 1
-  FormWeaponSprite: {fileID: 0}
+  FormWeaponSprite: {fileID: 21300000, guid: 60905b208d325d34386981dad09b9729, type: 3}
   FormHitRadius: 0
-  PedestalSprite: {fileID: 0}
+  PedestalSprite: {fileID: 21300000, guid: 60905b208d325d34386981dad09b9729, type: 3}
   Effects: []
   references:
     version: 2

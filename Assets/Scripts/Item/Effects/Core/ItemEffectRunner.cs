@@ -104,16 +104,18 @@ public class ActiveItemPipeline
     /// </summary>
     public void Initialize()
     {
-        // Trigger에 파이프라인 실행 콜백 등록
+        // Modifier/Action을 먼저 초기화 — PassiveTrigger가 Initialize() 시점에 즉시
+        // FireTrigger()를 호출하므로, Action의 _initialized 플래그가 true여야 Execute()가 통과됨
+        foreach (var m in _modifiers) m.Initialize(_baseContext);
+        foreach (var a in _actions) a.Initialize(_baseContext);
+
+        // Trigger는 마지막에 초기화 (PassiveTrigger가 즉시 발동해도 안전)
         foreach (var t in _triggers)
         {
             if (t is TriggerBase trigger)
                 trigger.SetPipelineCallback(ExecutePipeline);
             t.Initialize(_baseContext);
         }
-
-        foreach (var m in _modifiers) m.Initialize(_baseContext);
-        foreach (var a in _actions) a.Initialize(_baseContext);
     }
 
     /// <summary>

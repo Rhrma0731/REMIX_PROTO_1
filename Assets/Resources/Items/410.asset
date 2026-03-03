@@ -10,45 +10,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 937800f1fa7c1934bb59b795a16362cb, type: 3}
-  m_Name: 602
+  m_Name: 410
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  ItemID: 602
-  KR_Name: "\uD3ED\uC8FD \uB85C\uCF13 "
-  Keyword: "\uD328\uBC00\uB9AC\uC5B4 \uC18C\uD658"
-  Description: "\uD3ED\uD314\uD558\uB294 \uB4DC\uB860\uC744 \uC3DC\uB2E4"
+  ItemID: 410
+  KR_Name: "\uC2DD\uB2F9 \uC774\uC464\uC2DC\uAC1C "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uC774\uBE68 \uC464\uC2DC\uAE30. \uD0C0\uACA9 \uC18D\uB3C4\uAC00
+    \uD6C5\uD6C5 \uBE68\uB77C\uC9C0\uACE0 \uD06C\uB9AC\uD2F0\uCEEC\uC774 \uC3E0\uC3E0\uD558\uAC8C
+    \uC798 \uD130\uC9D0."
   Category: 2
-  Rarity: 2
+  Rarity: 1
   Priority: 0
   Status_ID: 
   StatusTriggerChance: 1
-  StatBonuses: []
-  PowerScore: 4
+  StatBonuses:
+  - Type: 7
+    Value: 0.2
+  - Type: 3
+    Value: 20
+  PowerScore: 3
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 0.745283, g: 0.49157864, b: 0.32694018, a: 1}
   PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
   Effects:
-  - rid: 8060512650618994938
-  - rid: 8060512650618994939
+  - rid: 8060512650618994922
   references:
     version: 2
     RefIds:
-    - rid: 8060512650618994938
+    - rid: 8060512650618994922
       type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
         _continuous: 0
-    - rid: 8060512650618994939
-      type: {class: SpawnFamiliarAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _familiarPrefab: {fileID: 672119349857368900, guid: e99252d4bcfab00439f266381e29504b, type: 3}
-        _familiarResourcePath: Familiars/Familiar_KamikazeBee
-        _spawnDistance: 0.5
-        _maxInstances: 1

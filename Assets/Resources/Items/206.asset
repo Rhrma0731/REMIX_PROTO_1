@@ -26,16 +26,16 @@ MonoBehaviour:
   - Type: 3
     Value: 1
   PowerScore: 3
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 273c2a32e46dc974cadac09841a296dc, type: 3}
   TargetBodyPart: 0
-  AppearanceSprite: {fileID: 0}
+  AppearanceSprite: {fileID: 21300000, guid: 273c2a32e46dc974cadac09841a296dc, type: 3}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 0, g: 0, b: 0, a: 1}
   PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
-  PedestalSprite: {fileID: 0}
+  PedestalSprite: {fileID: 21300000, guid: 273c2a32e46dc974cadac09841a296dc, type: 3}
   Effects:
   - rid: 4535118306255568958
   - rid: 4535118306255568959

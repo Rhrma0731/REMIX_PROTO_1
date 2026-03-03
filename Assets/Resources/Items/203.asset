@@ -25,16 +25,16 @@ MonoBehaviour:
   - Type: 3
     Value: 2
   PowerScore: 3
-  Icon: {fileID: 0}
+  Icon: {fileID: 21300000, guid: 1ae4b50bc33980743b6e8d5c046823fd, type: 3}
   TargetBodyPart: 0
-  AppearanceSprite: {fileID: 0}
+  AppearanceSprite: {fileID: 21300000, guid: 1ae4b50bc33980743b6e8d5c046823fd, type: 3}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 0.7216981, g: 0.91309583, b: 1, a: 1}
   PlayerRootScale: 1
-  FormWeaponSprite: {fileID: 0}
+  FormWeaponSprite: {fileID: 21300000, guid: 1ae4b50bc33980743b6e8d5c046823fd, type: 3}
   FormHitRadius: 0
-  PedestalSprite: {fileID: 0}
+  PedestalSprite: {fileID: 21300000, guid: 1ae4b50bc33980743b6e8d5c046823fd, type: 3}
   Effects: []
   references:
     version: 2

@@ -13,24 +13,19 @@ MonoBehaviour:
   m_Name: 504
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 504
-  KR_Name: "\uBC18\uC9DD\uC774\uB294 \uC9F1\uB3CC "
-  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
-  Description: "\uBB34\uAC70\uC6CC\uC11C \uC774\uB3D9 \uC18D\uB3C4\uB294 \uC870\uAE08
-    \uB290\uB824\uC9C0\uC9C0\uB9CC \uACF5\uACA9\uB825\uACFC \uACF5\uC18D\uC774 \uC54C\uCC28\uAC8C
-    \uC0C1\uC2B9\uD568."
+  KR_Name: "\uC2F8\uAD6C\uB824 \uC368\uD074\uB80C\uC988"
+  Keyword: Ball of Bandages
+  Description: "\uC0AC\uAC70\uB9AC\uAC00 \uD30D \uB298\uACE0 10% \uD655\uB960\uB85C
+    \uB80C\uC988 \uBD88\uBE5B\uC73C\uB85C \uC801\uC744 \uAD73\uD600\uBC84\uB9BC(ST_STUN)."
   Category: 2
-  Rarity: 1
-  Priority: 0
-  Status_ID: 
+  Rarity: 2
+  Priority: 2
+  Status_ID: ST_STUN
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 3
+  - Type: 5
     Value: 2
-  - Type: 4
-    Value: -1
-  - Type: 2
-    Value: 10
-  PowerScore: 3
+  PowerScore: 5
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
