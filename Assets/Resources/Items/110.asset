@@ -13,56 +13,31 @@ MonoBehaviour:
   m_Name: 110
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 110
-  KR_Name: "\uAC00\uC9DC \uB3D9\uC804"
-  Keyword: "\uB3D9\uC804"
-  Description: 
+  KR_Name: "\uB9C8\uBC95\uC0AC \uB9DD\uD1A0 "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uCCB4\uB825 \uC99D\uAC00 \uBC0F \uACF5\uACA9\uB825 \uC99D\uAC00."
   Category: 1
-  Rarity: 0
+  Rarity: 1
   Priority: 1
   Status_ID: 
   StatusTriggerChance: 1
-  StatBonuses: []
-  PowerScore: 5
+  StatBonuses:
+  - Type: 1
+    Value: 50
+  - Type: 2
+    Value: 10
+  PowerScore: 3
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 0.44591188, g: 0, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994849
-  - rid: 8060512650618994850
-  - rid: 8060512650618994851
-  - rid: 8060512650618994896
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994849
-      type: {class: OnMeleeHitTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994850
-      type: {class: StatModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _damageMultiplier: 2
-        _areaRadiusAdd: 0
-    - rid: 8060512650618994851
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994896
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

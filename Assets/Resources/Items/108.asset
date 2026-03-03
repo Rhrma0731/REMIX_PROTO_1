@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: 108
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 108
-  KR_Name: "\uD0DC\uC5FD \uC7A5\uCE58"
-  Keyword: "\uD0DC\uC5FD"
-  Description: 
+  KR_Name: "\uBD88\uB7C9 \uD280\uAE40\uAE30\uB984"
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uCCB4\uB825\uC774 \uC624\uB974\uC9C0\uB9CC \uB6B1\uB6B1\uD574\uC838\uC11C
+    \uC774\uC18D\uC774 \uB290\uB824\uC9D0.\r\n"
   Category: 1
   Rarity: 0
   Priority: 1
@@ -23,46 +24,21 @@ MonoBehaviour:
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 4
-    Value: 0
-  PowerScore: 13
+    Value: -1.5
+  - Type: 1
+    Value: 100
+  PowerScore: 2
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
-  PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartScale: {x: 1.5, y: 1.5}
+  PartColor: {r: 1, g: 0.9925177, b: 0.7311321, a: 1}
+  PlayerRootScale: 1.5
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994827
-  - rid: 8060512650618994828
-  - rid: 8060512650618994829
-  - rid: 8060512650618994888
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994827
-      type: {class: OnMeleeHitTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994828
-      type: {class: ChanceGateModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _chance: 0.6
-    - rid: 8060512650618994829
-      type: {class: ApplyStatusAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _statusID: ST_STUN
-        _chance: 1
-    - rid: 8060512650618994888
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

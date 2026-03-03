@@ -13,49 +13,32 @@ MonoBehaviour:
   m_Name: 301
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 301
-  KR_Name: "\uBBF8\uB2C8 \uAC8C\uC784\uAE30"
-  Keyword: "\uAC8C\uC784\uAE30"
-  Description: 
+  KR_Name: "\uC9C4\uC8FC \uBAA9\uAC78\uC774"
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uC0AC\uAC70\uB9AC\uAC00 \uAE38\uC5B4\uC9C0\uACE0 \uD06C\uB9AC\uD2F0\uCEEC
+    \uD655\uB960\uC774 10% \uC624\uB984"
   Category: 1
-  Rarity: 2
+  Rarity: 1
   Priority: 3
-  Status_ID: ST_GLITCH
-  StatusTriggerChance: 1
-  StatBonuses: []
-  PowerScore: 45
+  Status_ID: 
+  StatusTriggerChance: 0
+  StatBonuses:
+  - Type: 5
+    Value: 1.5
+  - Type: 7
+    Value: 0.1
+  PowerScore: 3
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994801
-  - rid: 8060512650618994802
-  - rid: 8060512650618994878
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994801
-      type: {class: OnTimerTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _interval: 1
-    - rid: 8060512650618994802
-      type: {class: ApplyStatusAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _statusID: ST_BURN
-        _chance: 1
-    - rid: 8060512650618994878
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

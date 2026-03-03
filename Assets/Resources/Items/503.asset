@@ -13,25 +13,25 @@ MonoBehaviour:
   m_Name: 503
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 503
-  KR_Name: "\uAC00\uC9DC \uD53C \uCEA1\uC290"
-  Keyword: Martyr
-  Description: "\uD56D\uC0C1 \uC7A5\uCC29\uB41C \uAC83\uCC98\uB7FC \uBCF4\uC774\uC9C0\uB9CC,
-    \uC7A5\uCC29 \uC989\uC2DC \uACF5\uACA9\uB825\uC774 1 \uC99D\uAC00\uD55C\uB2E4."
+  KR_Name: "\uB4F1\uC9DD \uC2A4\uB9E4\uC2F1 \uC8FC\uAC71 "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uC774\uB3D9\uC18D\uB3C4 \uC99D\uAC00"
   Category: 1
   Rarity: 0
   Priority: 0
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 2
-    Value: 0
-  PowerScore: 3
+  - Type: 4
+    Value: 2
+  PowerScore: 2
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 0.6037736, g: 0.31043077, b: 0.31043077, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}

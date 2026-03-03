@@ -87,6 +87,8 @@ public class ItemData : ScriptableObject
     public Vector2 PartScale = Vector2.one;
     [Tooltip("파츠 색상 틴트. 기본값 White = 색상 변화 없음")]
     public Color PartColor = Color.white;
+    [Tooltip("플레이어 루트 오브젝트 스케일 배율. 1.0 = 변화 없음, 0.7 = 30% 축소 (Collider 피격범위도 함께 축소됨)")]
+    public float PlayerRootScale = 1f;
 
     [Header("Form 무기 오버라이드")]
     [Tooltip("Form 아이템 장착 시 무기 스프라이트 변경")]

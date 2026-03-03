@@ -13,58 +13,33 @@ MonoBehaviour:
   m_Name: 303
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 303
-  KR_Name: "\uC2A4\uD504\uB9C1 \uD380\uCE58"
-  Keyword: "\uD380\uCE58"
-  Description: 
+  KR_Name: "\uB9D0\uB77C\uBE44\uD2C0\uC5B4\uC9C4 \uC824\uB9AC "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uBAB8\uC9D1\uC774 \uC791\uC544\uC838 \uD68C\uD53C\uAC00 \uC27D\uACE0
+    \uC774\uC18D/\uACF5\uC18D\uC774 \uC624\uB974\uC9C0\uB9CC \uAE61\uB51C\uC774 \uC0B4\uC9DD
+    \uAE4E\uC784."
   Category: 0
-  Rarity: 2
+  Rarity: 1
   Priority: 4
-  Status_ID: ST_STUN
-  StatusTriggerChance: 1
+  Status_ID: 
+  StatusTriggerChance: 0
   StatBonuses:
-  - Type: 5
-    Value: 0
-  PowerScore: 52
+  - Type: 3
+    Value: 2
+  - Type: 4
+    Value: 1.5
+  PowerScore: 3
   Icon: {fileID: 0}
-  TargetBodyPart: 3
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
-  PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartScale: {x: 0.7, y: 0.7}
+  PartColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 1}
+  PlayerRootScale: 0.7
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994776
-  - rid: 8060512650618994777
-  - rid: 8060512650618994778
-  - rid: 8060512650618994870
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994776
-      type: {class: OnDashTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994777
-      type: {class: BounceModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _bounceCount: 3
-        _damageDecayPerBounce: 0.8
-    - rid: 8060512650618994778
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994870
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

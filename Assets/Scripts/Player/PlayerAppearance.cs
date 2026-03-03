@@ -46,6 +46,7 @@ public class PlayerAppearance : MonoBehaviour
     private Dictionary<BodyPart, BodyPartSlot> _slotMap;
     private Dictionary<BodyPart, ItemData> _equippedItems;
     private List<ItemData> _allEquippedItems = new List<ItemData>();
+    private Vector3 _originalRootScale;
 
     [Header("Weapon Reference")]
     [SerializeField] private WeaponController _weaponController;
@@ -63,6 +64,7 @@ public class PlayerAppearance : MonoBehaviour
 
     private void Awake()
     {
+        _originalRootScale = transform.localScale;
         _slotMap = new Dictionary<BodyPart, BodyPartSlot>();
         _equippedItems = new Dictionary<BodyPart, ItemData>();
 
@@ -122,6 +124,10 @@ public class PlayerAppearance : MonoBehaviour
             slot.OriginalScale.x * item.PartScale.x,
             slot.OriginalScale.y * item.PartScale.y,
             slot.OriginalScale.z);
+
+        // Apply player root scale — Collider 피격범위도 함께 축소됨
+        if (!Mathf.Approximately(item.PlayerRootScale, 1f))
+            transform.localScale *= item.PlayerRootScale;
 
         // Apply color tint (White = no change)
         slot.Renderer.color = item.PartColor;
@@ -189,6 +195,8 @@ public class PlayerAppearance : MonoBehaviour
         }
         _equippedItems.Clear();
         _allEquippedItems.Clear();
+
+        transform.localScale = _originalRootScale;
 
         // T-M-A 이펙트 정리
         ItemEffectRunner.Instance?.ClearAll();

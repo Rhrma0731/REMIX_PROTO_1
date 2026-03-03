@@ -13,66 +13,29 @@ MonoBehaviour:
   m_Name: 102
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 102
-  KR_Name: "\uC544\uD3F4\uB85C"
-  Keyword: "\uC544\uD3F4\uB85C"
-  Description: 
+  KR_Name: "\uCC28\uCE74\uB2C8"
+  Keyword: "\uC2A4\uD0EF\uBCC0\uD654"
+  Description: "\uCCB4\uB825 \uC99D\uAC00"
   Category: 1
   Rarity: 0
   Priority: 1
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 3
-    Value: 0
-  PowerScore: 7
+  - Type: 1
+    Value: 50
+  PowerScore: 1
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 1, g: 0.31739217, b: 0, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994779
-  - rid: 8060512650618994780
-  - rid: 8060512650618994781
-  - rid: 8060512650618994782
-  - rid: 8060512650618994871
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994779
-      type: {class: OnAttackTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994780
-      type: {class: StatModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _damageMultiplier: 0.4
-        _areaRadiusAdd: 0
-    - rid: 8060512650618994781
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994782
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994871
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

@@ -10,20 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 937800f1fa7c1934bb59b795a16362cb, type: 3}
-  m_Name: 701
+  m_Name: 509
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  ItemID: 701
-  KR_Name: "\uB9E5\uC8FC\uB9DB \uC0AC\uD0D5"
-  Keyword: <3
-  Description: "\uCCB4\uB825 \uCD5C\uB300\uCE58\uAC00 1 \uC99D\uAC00\uD55C\uB2E4."
-  Category: 1
-  Rarity: 0
-  Priority: 1
-  Status_ID: 
+  ItemID: 509
+  KR_Name: "\uC2F8\uAD6C\uB824 \uC368\uD074\uB80C\uC988"
+  Keyword: Ball of Bandages
+  Description: "\uC0AC\uAC70\uB9AC\uAC00 \uD30D \uB298\uACE0 10% \uD655\uB960\uB85C
+    \uB80C\uC988 \uBD88\uBE5B\uC73C\uB85C \uC801\uC744 \uAD73\uD600\uBC84\uB9BC(ST_STUN)."
+  Category: 2
+  Rarity: 2
+  Priority: 2
+  Status_ID: ST_STUN
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 1
-    Value: 0
+  - Type: 5
+    Value: 2
   PowerScore: 5
   Icon: {fileID: 0}
   TargetBodyPart: 0
@@ -31,6 +32,7 @@ MonoBehaviour:
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}

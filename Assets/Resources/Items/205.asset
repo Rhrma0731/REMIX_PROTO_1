@@ -13,51 +13,48 @@ MonoBehaviour:
   m_Name: 205
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 205
-  KR_Name: "\uB9D0\uD558\uB294 \uC790\uC11D"
-  Keyword: "\uC790\uC11D"
-  Description: 
+  KR_Name: "\uC7A5\uB09C\uAC10 \uC790\uBB3C\uC1E0 \uC5F4\uC1E0 "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uCCB4\uB825\uACFC \uD06C\uB9AC\uD2F0\uCEEC \uD655\uB960\uC774 \uC624\uB974\uACE0
+    \uBC14\uB2E5\uC5D0 \uCF54\uC778 2\uAC1C\uB97C \uB5A8\uAD7C."
   Category: 1
   Rarity: 1
   Priority: 2
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 5
-    Value: 0
-  PowerScore: 20
+  - Type: 7
+    Value: 0.1
+  - Type: 2
+    Value: 10
+  PowerScore: 4
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 2
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 1, g: 0.52609485, b: 0, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
   Effects:
-  - rid: 8060512650618994765
-  - rid: 8060512650618994766
-  - rid: 8060512650618994866
+  - rid: 4535118306255568956
+  - rid: 4535118306255568957
   references:
     version: 2
     RefIds:
-    - rid: 8060512650618994765
-      type: {class: OnTakeDamageTrigger, ns: , asm: Assembly-CSharp}
+    - rid: 4535118306255568956
+      type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
-    - rid: 8060512650618994766
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
+        _continuous: 0
+    - rid: 4535118306255568957
+      type: {class: DropPickupAction, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994866
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+        _pickupPrefab: {fileID: 512007319366854141, guid: 0b34a3f12366a2647a8e1b6e111d403b, type: 3}
+        _pickupResourcePath: 
+        _dropCount: 2
+        _scatterRadius: 0.8
+        _dropHeightOffset: 0.5

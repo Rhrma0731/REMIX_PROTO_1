@@ -10,45 +10,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 937800f1fa7c1934bb59b795a16362cb, type: 3}
-  m_Name: 605
+  m_Name: 506
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  ItemID: 605
-  KR_Name: "\uB6B1\uD30C\uB9AC \uC7A5\uB09C\uAC10"
-  Keyword: Angry Fly
-  Description: "\uC801\uC758 \uC8FC\uC704\uB97C \uB9F4\uB3CC\uBA70 \uC9C0\uC18D \uD53C\uD574\uB97C
-    \uC8FC\uACE0 \uBC15\uCE58\uAE30\uD558\uB294 \uB6B1\uD30C\uB9AC \uC18C\uD658."
+  ItemID: 506
+  KR_Name: "\uCC22\uC5B4\uC9C4 \uC6B0\uC815 \uC0AC\uC9C4 "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uAC00\uC2B4 \uC544\uD508 \uAE30\uC5B5. \uD0C0\uACA9 \uC18D\uB3C4(\uACF5\uC18D)\uC640
+    \uBB34\uAE30 \uC0AC\uAC70\uB9AC\uAC00 \uB3D9\uC2DC\uC5D0 \uC0C1\uC2B9\uD568."
   Category: 2
-  Rarity: 0
+  Rarity: 2
   Priority: 0
   Status_ID: 
   StatusTriggerChance: 1
-  StatBonuses: []
-  PowerScore: 3
+  StatBonuses:
+  - Type: 5
+    Value: 1.5
+  - Type: 3
+    Value: 20
+  PowerScore: 5
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 0.3443396, g: 0.36421543, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
   Effects:
-  - rid: 8060512650618994928
-  - rid: 8060512650618994929
+  - rid: 8060512650618994924
   references:
     version: 2
     RefIds:
-    - rid: 8060512650618994928
+    - rid: 8060512650618994924
       type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
         _continuous: 0
-    - rid: 8060512650618994929
-      type: {class: SpawnFamiliarAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _familiarPrefab: {fileID: 0}
-        _familiarResourcePath: Familiars/Familiar_FlyToy
-        _spawnDistance: 0.5
-        _maxInstances: 1

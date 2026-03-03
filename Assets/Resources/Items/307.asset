@@ -13,56 +13,35 @@ MonoBehaviour:
   m_Name: 307
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 307
-  KR_Name: "\uC561\uCCB4 \uAD34\uBB3C"
-  Keyword: "\uC561\uAD34"
-  Description: 
+  KR_Name: "\uBCA0\uC9C0\uBC00 (\uB450\uC720) "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uAE61\uB51C\uACFC \uB109\uBC31\uC774 \uBC14\uB2E5\uC744 \uCE58\uC9C0\uB9CC,
+    \uC8FC\uBA39 \uBED7\uB294 \uC5F0\uC0AC \uC18D\uB3C4\uAC00 \uD504\uB808\uC784
+    \uB2E8\uC704\uB85C \uD3ED\uC8FC\uD558\uB294 \uCC30\uC9C4 \uD0C0\uACA9\uAC10"
   Category: 1
-  Rarity: 2
+  Rarity: 1
   Priority: 3
   Status_ID: 
   StatusTriggerChance: 1
-  StatBonuses: []
-  PowerScore: 45
+  StatBonuses:
+  - Type: 2
+    Value: -20
+  - Type: 3
+    Value: 5
+  - Type: 6
+    Value: -10
+  PowerScore: 3
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 1, g: 0.9474412, b: 0.7122642, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994757
-  - rid: 8060512650618994758
-  - rid: 8060512650618994759
-  - rid: 8060512650618994863
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994757
-      type: {class: OnMeleeHitTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994758
-      type: {class: StatModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _damageMultiplier: 1.5
-        _areaRadiusAdd: 0
-    - rid: 8060512650618994759
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994863
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

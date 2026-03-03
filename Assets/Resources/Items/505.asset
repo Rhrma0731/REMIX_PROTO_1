@@ -10,46 +10,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 937800f1fa7c1934bb59b795a16362cb, type: 3}
-  m_Name: 609
+  m_Name: 505
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  ItemID: 609
-  KR_Name: "\uC5EC\uB984\uCCA0 \uC655\uBD80\uCC44"
-  Keyword: Big Fan
-  Description: "\uCE90\uB9AD\uD130 \uADA4\uB3C4\uB97C \uB290\uB9AC\uAC8C \uB3CC\uBA70
-    \uD22C\uC0AC\uCCB4\uB97C \uB9C9\uC544\uC8FC\uB294 \uBC29\uD328 \uD328\uBC00\uB9AC\uC5B4
-    \uC18C\uD658."
+  ItemID: 505
+  KR_Name: "\uC2DD\uB2F9 \uC774\uC464\uC2DC\uAC1C "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uC774\uBE68 \uC464\uC2DC\uAE30. \uD0C0\uACA9 \uC18D\uB3C4\uAC00
+    \uD6C5\uD6C5 \uBE68\uB77C\uC9C0\uACE0 \uD06C\uB9AC\uD2F0\uCEEC\uC774 \uC3E0\uC3E0\uD558\uAC8C
+    \uC798 \uD130\uC9D0."
   Category: 2
-  Rarity: 0
+  Rarity: 1
   Priority: 0
   Status_ID: 
   StatusTriggerChance: 1
-  StatBonuses: []
+  StatBonuses:
+  - Type: 7
+    Value: 0.2
+  - Type: 3
+    Value: 20
   PowerScore: 3
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 0.745283, g: 0.49157864, b: 0.32694018, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
   Effects:
-  - rid: 8060512650618994936
-  - rid: 8060512650618994937
+  - rid: 8060512650618994922
   references:
     version: 2
     RefIds:
-    - rid: 8060512650618994936
+    - rid: 8060512650618994922
       type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
         _continuous: 0
-    - rid: 8060512650618994937
-      type: {class: SpawnFamiliarAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _familiarPrefab: {fileID: 0}
-        _familiarResourcePath: Familiars/Familiar_BigFan
-        _spawnDistance: 0.5
-        _maxInstances: 1

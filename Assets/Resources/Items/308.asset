@@ -13,58 +13,30 @@ MonoBehaviour:
   m_Name: 308
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 308
-  KR_Name: "\uD3ED\uC8FD \uC138\uD2B8"
-  Keyword: "\uBD88\uAF43 \uBFDC\uB294"
-  Description: 
+  KR_Name: "\uC678\uACC4\uC778 \uCC10\uB4DD\uC774 \uC7A5\uB09C\uAC10 "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uC2EC\uD50C \uC774\uC988 \uBCA0\uC2A4\uD2B8. \uAE61 \uACF5\uACA9\uB825\uC774
+    \uC815\uC9C1\uD558\uAC8C \uD655 \uC624\uB984.\r\n"
   Category: 1
   Rarity: 2
   Priority: 4
-  Status_ID: ST_BURN
-  StatusTriggerChance: 1
+  Status_ID: 
+  StatusTriggerChance: 0
   StatBonuses:
   - Type: 2
-    Value: 0
-  PowerScore: 55
+    Value: 30
+  PowerScore: 5
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 0.5518868, g: 1, b: 0.833202, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994846
-  - rid: 8060512650618994847
-  - rid: 8060512650618994848
-  - rid: 8060512650618994895
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994846
-      type: {class: OnTimerTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _interval: 10
-    - rid: 8060512650618994847
-      type: {class: RadiusModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _radius: 5
-    - rid: 8060512650618994848
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994895
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

@@ -13,51 +13,37 @@ MonoBehaviour:
   m_Name: 402
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 402
-  KR_Name: "\uBB34\uD55C\uB3D9\uB825 \uD33D\uC774"
-  Keyword: "\uBB34\uD55C\uB3D9\uB825"
-  Description: 
+  KR_Name: "\uCC9C\uC0AC \uB9C1 \uBA38\uB9AC\uB760 "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uCCB4\uB825, \uC774\uC18D, \uACF5\uACA9\uB825, \uACF5\uC18D \uB4F1
+    \uBAA8\uB4E0 \uC804\uD22C \uC2A4\uD0EF\uC774 \uACE8\uACE0\uB8E8 \uCAD9 \uC0C1\uC2B9\uD558\uB294
+    \uAFC0\uD15C."
   Category: 0
-  Rarity: 3
+  Rarity: 2
   Priority: 4
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 6
-    Value: 0
-  PowerScore: 90
+  - Type: 1
+    Value: 20
+  - Type: 3
+    Value: 10
+  - Type: 4
+    Value: 1
+  - Type: 5
+    Value: 1
+  PowerScore: 6
   Icon: {fileID: 0}
-  TargetBodyPart: 3
+  TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 1, g: 0.9312867, b: 0, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994840
-  - rid: 8060512650618994841
-  - rid: 8060512650618994893
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994840
-      type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _continuous: 1
-    - rid: 8060512650618994841
-      type: {class: HealSelfAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _healAmount: 0.5
-        _percentOfMax: 0
-    - rid: 8060512650618994893
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

@@ -203,7 +203,8 @@ public class WeaponController : MonoBehaviour
     {
         _isAttacking = false;
         _isRetracting = false;
-        _cooldownTimer = _attackCooldown;
+        float speed = PlayerStats.Instance != null ? PlayerStats.Instance.AttackSpeed : 1f;
+        _cooldownTimer = _attackCooldown / speed;
 
         _weaponVisual.transform.localScale = _baseLocalScale;
         _weaponVisual.transform.localPosition = _baseLocalPos;

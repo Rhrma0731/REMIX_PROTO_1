@@ -380,10 +380,10 @@ public class StageManager : MonoBehaviour
 
         // Filter by rarity range
         List<ItemData> filtered = _rewardPool.FindAll(item =>
-            item.Rarity >= minRarity && item.Rarity <= maxRarity);
+            item != null && item.Rarity >= minRarity && item.Rarity <= maxRarity);
 
         if (filtered.Count < count)
-            filtered = new List<ItemData>(_rewardPool);
+            filtered = _rewardPool.FindAll(item => item != null);
 
         // Try to find a combination within PowerScore range (max 50 attempts)
         for (int attempt = 0; attempt < 50; attempt++)

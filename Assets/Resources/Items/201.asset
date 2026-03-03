@@ -13,58 +13,46 @@ MonoBehaviour:
   m_Name: 201
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 201
-  KR_Name: "8\uC5F0\uBC1C \uD654\uC57D\uCD1D"
-  Keyword: "\uD654\uC57D"
-  Description: 
+  KR_Name: "\uC7A5\uB09C\uAC10 \uACFC\uC790\uC0C1\uC790"
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uCD5C\uB300 \uCCB4\uB825\uC744 \uC62C\uB9AC\uACE0 \uCF54\uC778 5\uAC1C\uB97C
+    \uBC14\uB2E5\uC5D0 \uBFCC\uB9BC.\r\n"
   Category: 1
-  Rarity: 1
+  Rarity: 0
   Priority: 2
-  Status_ID: ST_BURN
+  Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 2
-    Value: 0
-  PowerScore: 28
+  - Type: 1
+    Value: 30
+  PowerScore: 2
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
   Effects:
-  - rid: 8060512650618994832
-  - rid: 8060512650618994833
-  - rid: 8060512650618994834
-  - rid: 8060512650618994890
+  - rid: 4535118306255568955
+  - rid: 4535118306255568954
   references:
     version: 2
     RefIds:
-    - rid: 8060512650618994832
-      type: {class: OnAttackTrigger, ns: , asm: Assembly-CSharp}
+    - rid: 4535118306255568954
+      type: {class: DropPickupAction, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
-    - rid: 8060512650618994833
-      type: {class: StatModifier, ns: , asm: Assembly-CSharp}
+        _pickupPrefab: {fileID: 512007319366854141, guid: 0b34a3f12366a2647a8e1b6e111d403b, type: 3}
+        _pickupResourcePath: 
+        _dropCount: 5
+        _scatterRadius: 0.8
+        _dropHeightOffset: 0.5
+    - rid: 4535118306255568955
+      type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
-        _damageMultiplier: 2.5
-        _areaRadiusAdd: 0
-    - rid: 8060512650618994834
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994890
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+        _continuous: 0

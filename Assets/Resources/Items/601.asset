@@ -13,42 +13,44 @@ MonoBehaviour:
   m_Name: 601
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 601
-  KR_Name: "\uB2E4\uB9C8\uACE0\uCE58 \uD3FC"
-  Keyword: 7 Seals
-  Description: "\uC801\uC744 \uCAD3\uC544 \uBD80\uB52A\uD788\uB294 \uD53D\uC140 \uD3FC\uC744
-    \uC18C\uD658\uD55C\uB2E4."
+  KR_Name: "\uC5EC\uB984\uCCA0 \uC655\uBD80\uCC44"
+  Keyword: Big Fan
+  Description: "\uCE90\uB9AD\uD130 \uADA4\uB3C4\uB97C \uB290\uB9AC\uAC8C \uB3CC\uBA70
+    \uD22C\uC0AC\uCCB4\uB97C \uB9C9\uC544\uC8FC\uB294 \uBC29\uD328 \uD328\uBC00\uB9AC\uC5B4
+    \uC18C\uD658."
   Category: 2
-  Rarity: 0
+  Rarity: 1
   Priority: 0
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses: []
-  PowerScore: 3
+  PowerScore: 4
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
   Effects:
-  - rid: 8060512650618994920
-  - rid: 8060512650618994921
+  - rid: 8060512650618994936
+  - rid: 8060512650618994937
   references:
     version: 2
     RefIds:
-    - rid: 8060512650618994920
+    - rid: 8060512650618994936
       type: {class: PassiveTrigger, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
         _continuous: 0
-    - rid: 8060512650618994921
+    - rid: 8060512650618994937
       type: {class: SpawnFamiliarAction, ns: , asm: Assembly-CSharp}
       data:
         _internalCooldown: 0.1
-        _familiarPrefab: {fileID: 0}
-        _familiarResourcePath: Familiars/Familiar_Tamagotchi
+        _familiarPrefab: {fileID: 3781786752497384128, guid: 904ef2f5a229bce4086274fbb4305760, type: 3}
+        _familiarResourcePath: Familiars/Familiar_BigFan
         _spawnDistance: 0.5
         _maxInstances: 1

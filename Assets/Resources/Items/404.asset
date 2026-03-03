@@ -13,9 +13,11 @@ MonoBehaviour:
   m_Name: 404
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 404
-  KR_Name: "\uBB34\uC9C0\uAC1C \uC561\uAD34"
-  Keyword: "\uBB34\uC801\uC758"
-  Description: 
+  KR_Name: "\uD53C\uB85C \uC4F4 \uBE44\uBC00\uD3B8\uC9C0 "
+  Keyword: "\uACF5\uACA9 \uBC29\uC2DD \uBCC0\uD654"
+  Description: "\uAE61 \uACF5\uACA9\uB825\uACFC \uADFC\uC811 \uD0C0\uACA9 \uC18D\uB3C4\uAC00
+    \uB3D9\uC2DC\uC5D0 \uBBF8\uCE5C \uB4EF\uC774 \uC624\uB974\uB294 \uAD11\uC804\uC0AC
+    \uD15C."
   Category: 2
   Rarity: 3
   Priority: 5
@@ -23,49 +25,21 @@ MonoBehaviour:
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 2
-    Value: 0
-  PowerScore: 85
+    Value: 50
+  - Type: 3
+    Value: 100
+  PowerScore: 7
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 1, g: 0.36320752, b: 0.36320752, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994806
-  - rid: 8060512650618994807
-  - rid: 8060512650618994808
-  - rid: 8060512650618994880
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994806
-      type: {class: OnKillTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994807
-      type: {class: ChanceGateModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _chance: 0.1
-    - rid: 8060512650618994808
-      type: {class: DropPickupAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _pickupPrefab: {fileID: 0}
-        _pickupResourcePath: 
-        _dropCount: 1
-        _scatterRadius: 0.8
-        _dropHeightOffset: 0.5
-    - rid: 8060512650618994880
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

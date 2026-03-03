@@ -1,6 +1,6 @@
 # RE:MIX PROTO_1 — 작업 인수인계 가이드라인
 
-> 마지막 업데이트: 2026-03-01 (애니메이션 시스템 추가)
+> 마지막 업데이트: 2026-03-03 (스탯 버그 수정, PlayerRootScale, TMA 인스펙터 에디터)
 > 목적: 다음 세션에서 컨텍스트 없이도 즉시 작업을 이어받을 수 있도록 작성된 문서입니다.
 
 ---
@@ -54,7 +54,19 @@
 | ST_DEATH | 즉사 (99999 피해) — StatusTriggerChance로 확률 제어 | ✅ |
 | ST_CHAIN | 주 타격 후 반경 3.5m 내 최대 3개 적에게 공격력 50% 연쇄 피해 | ✅ |
 
-### 2-3. T-M-A 이펙트 파이프라인
+### 2-3. T-M-A 이펙트 파이프라인 인스펙터 에디터
+
+`Assets/Editor/ItemDataEditor.cs` — `[CustomEditor(typeof(ItemData))]`
+
+Inspector에서 ItemData 에셋 선택 시 하단에 T-M-A 파이프라인 섹션 표시:
+- **＋ Trigger / ＋ Modifier / ＋ Action** 버튼 → 드롭다운으로 타입 선택 후 추가
+- **▶ 클릭** → 블록 펼쳐서 필드 값 직접 편집
+- **✕** → 블록 삭제 / **드래그** → 순서 변경
+- 새 클래스 추가 시 리플렉션으로 자동 감지되어 드롭다운에 즉시 반영
+
+역할별 배경색: 파란색=Trigger, 노란색=Modifier, 초록색=Action
+
+### 2-4. T-M-A 이펙트 파이프라인
 
 아이작 스타일의 수백 가지 아이템 효과를 조합할 수 있는 모듈형 시스템.
 `ItemData.Effects` 리스트에 `[SerializeReference]`로 블록을 배치하면 자동 작동.
@@ -120,6 +132,10 @@
 | **ItemDatabase 자동 로드** | ✅ StageManager Awake에서 Resources.Load로 자동 연결 |
 | **PlayerStats.AddDynamicBonus()** | ✅ 런타임 스탯 영구 증가 (스택 가능) |
 | **PlayerStats.SetHpDirect()** | ✅ 사망 판정 우회 HP 강제 설정 |
+| **PlayerRootScale (ItemData)** | ✅ 플레이어 루트 오브젝트 스케일 배율 — Collider 피격범위 함께 축소 |
+| **AttackSpeed → WeaponController 연결** | ✅ EndAttack() 쿨다운 = _attackCooldown / PlayerStats.AttackSpeed |
+| **PickRandomRewards null 안전** | ✅ FindAll 람다에 item != null 체크 추가 |
+| **TMA 인스펙터 에디터** | ✅ ItemDataEditor.cs — Effects 리스트를 Inspector에서 추가·삭제·재정렬 |
 
 ### 2-5. 아이템 ID 범위 체계
 | 범위 | 분류 | 상태 |

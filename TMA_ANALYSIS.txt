@@ -1,0 +1,498 @@
+================================================================================
+  RE:MIX PROTO_1 — T-M-A 시스템 코드 레벨 상세 분석
+  작성일: 2026-03-03
+================================================================================
+
+■ 분석 범위
+  - Triggers/  : 9개 클래스
+  - Modifiers/ : 6개 클래스
+  - Core 인프라 : ItemEffectBase, ItemEffectContext, PlayerEventManager
+
+================================================================================
+  사전 정보: 공통 안전장치 (ItemEffectBase)
+================================================================================
+
+모든 Trigger / Modifier / Action이 상속하는 베이스 클래스에
+두 가지 무한 루프 방지 장치가 내장되어 있다.
+
+┌──────────────────────┬────────────────────────────────────────────────────────┐
+│ 항목                 │ 내용                                                   │
+├──────────────────────┼────────────────────────────────────────────────────────┤
+│ ICD                  │ Execute() 내부에서 Mathf.Max(0.1f, _internalCooldown)  │
+│ (InternalCooldown)   │ 강제 적용. 0으로 설정해도 최솟값 0.1초 보장.           │
+│                      │ 무한 루프 방지 1차선.                                  │
+├──────────────────────┼────────────────────────────────────────────────────────┤
+│ PipelineDepth        │ ItemEffectContext.PipelineDepth, MAX = 3.              │
+│                      │ Action이 새 이벤트를 방송해 파이프라인이 재귀 실행될   │
+│                      │ 때 깊이 3 초과 시 차단. 무한 루프 방지 2차선.          │
+├──────────────────────┼────────────────────────────────────────────────────────┤
+│ SerializeField(공통) │ _internalCooldown (float, default=0.1f)               │
+└──────────────────────┴────────────────────────────────────────────────────────┘
+
+
+================================================================================
+  1. TRIGGER 클래스 상세 분석
+================================================================================
+
+--------------------------------------------------------------------------------
+  OnAttackTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnAttackTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnAttack (Action)
+  발동 조건    : 조건 없음. 이벤트 수신 즉시 발동.
+  컨텍스트 설정: ctx.Damage = Player.AttackDamage
+  SerializeField: 없음 (공통 ICD만)
+
+  [주의]
+  "공격 시도" 시점에 발동. 적중 여부와 무관 — 허공에 쳐도 발동한다.
+  실제 적중 시에만 발동하려면 OnMeleeHitTrigger를 사용할 것.
+
+--------------------------------------------------------------------------------
+  OnMeleeHitTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnMeleeHitTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnDealDamage (Action<EnemyBase, float>)
+  발동 조건    : 조건 없음. 단, 이벤트 자체가 WeaponController에서
+                 실제 피해 적용 직후에만 방송됨.
+  컨텍스트 설정:
+    - ctx.TargetEnemy     = enemy
+    - ctx.Damage          = damage (실제 가한 피해량)
+    - ctx.TargetPosition  = enemy.transform.position
+    - ctx.HitDirection    = (적 위치 - 플레이어 위치).normalized
+  SerializeField: 없음
+
+  [주의]
+  OnAttackTrigger와 달리 TargetEnemy / HitDirection이 채워진 상태로
+  파이프라인에 진입. 상태이상 적용, 넉백 방향 계산 등에 유리.
+
+--------------------------------------------------------------------------------
+  OnTakeDamageTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnTakeDamageTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnTakeDamage (Action<float>)
+  발동 조건    : 조건 없음.
+  컨텍스트 설정: ctx.Damage = damage (플레이어가 받은 피해량)
+  SerializeField: 없음
+
+  [주의]
+  자해 피해(DealDamageAction의 self=true 등)도 이 트리거를 발동시킨다.
+  자해 + OnTakeDamageTrigger 조합 시 반사 루프 위험.
+  → ICD 및 PipelineDepth가 막아주지만 설계 시 의도적으로 회피할 것.
+
+--------------------------------------------------------------------------------
+  OnKillTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnKillTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnKillEnemy (Action<EnemyBase>)
+  발동 조건    : 조건 없음.
+  컨텍스트 설정:
+    - ctx.TargetEnemy    = enemy
+    - ctx.TargetPosition = enemy.transform.position
+                          (드롭/폭발 중심점으로 활용 가능)
+  SerializeField: 없음
+
+--------------------------------------------------------------------------------
+  OnDashTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnDashTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnDash (Action)
+  발동 조건    : 조건 없음.
+  컨텍스트 설정: ctx.Damage = Player.AttackDamage
+  SerializeField: 없음
+
+  [현황 — 완전 비활성]
+  PlayerMovement에 대시 기능이 구현되어 있지 않아
+  BroadcastDash()가 호출되는 곳이 없다.
+  대시 기능 구현 후 PlayerMovement에서 BroadcastDash()를 호출하면
+  이 트리거가 자동으로 동작한다.
+
+--------------------------------------------------------------------------------
+  OnTimerTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnTimerTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnSecondTick (Action)
+  발동 조건    : 내부 float _timer 누적 (_timer += 1f)
+                 _timer >= _interval 이면 발동 후 _timer -= _interval
+                 (초과분을 보존하므로 드리프트 없음)
+  컨텍스트 설정: ctx.Damage = Player.AttackDamage
+  SerializeField:
+    - _interval  (float, default=3f) — Tooltip: "발동 간격(초). 예: 3이면 3초마다 발동"
+
+  [구조적 한계]
+  OnSecondTick은 1초 단위 이벤트.
+  _interval=0.5f로 설정해도 실제 발동 최소 단위는 1초.
+  1초 미만 주기가 필요하면 별도의 MonoBehaviour Update 기반 트리거 필요.
+
+--------------------------------------------------------------------------------
+  PassiveTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/PassiveTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnSecondTick (_continuous=true 일 때만)
+  발동 조건    : Initialize() 호출 시 무조건 1회 즉시 발동.
+                 _continuous=true 면 이후 매초 추가 발동.
+  컨텍스트 설정: 없음 (캐시된 기본 컨텍스트 Clone)
+  SerializeField:
+    - _continuous  (bool, default=false)
+                   Tooltip: "true면 매초 파이프라인을 재실행. false면 장착 시 1회만 발동"
+
+  [주의]
+  _continuous=true + SpawnFamiliarAction 조합 시 매초 소환 시도.
+  SpawnFamiliarAction 내부 인스턴스 제한(_maxInstances)이 중복 소환을 막아준다.
+
+--------------------------------------------------------------------------------
+  OnFatalDamageTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnFatalDamageTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnFatalDamage (Action)
+  발동 조건    : _maxUses > 0 && _usesRemaining <= 0 이면 차단.
+                 _maxUses == 0 이면 무제한 발동.
+  컨텍스트 설정: ctx.TargetPosition = Player.transform.position
+  SerializeField:
+    - _maxUses  (int, default=1)
+                Tooltip: "최대 발동 횟수. 0이면 무제한"
+  런타임 프로퍼티 (읽기 전용):
+    - UsesRemaining — 남은 발동 횟수 확인용
+
+  [핵심 메커니즘 — 부활 가로채기]
+  T-M-A 파이프라인은 동기(synchronous) 실행.
+  PlayerStats.TakeDamage()에서 HP가 0 이하가 된 직후,
+  _isDead 설정 전에 BroadcastFatalDamage()를 호출.
+  → 이 트리거 → ReviveAction이 HP를 회복
+  → BroadcastFatalDamage() 리턴 시점에 이미 HP > 0
+  → PlayerStats가 사망 판정을 스킵.
+
+--------------------------------------------------------------------------------
+  OnRoomClearTrigger
+  파일: Assets/Scripts/Item/Effects/Triggers/OnRoomClearTrigger.cs
+--------------------------------------------------------------------------------
+
+  구독 이벤트  : PlayerEventManager.OnRoomClear (Action)
+  발동 조건    : 조건 없음.
+  컨텍스트 설정: ctx.TargetPosition = Player.transform.position
+  SerializeField: 없음
+
+  [방송 경로]
+  StageManager → 웨이브 클리어 확인 → BroadcastRoomClear() 호출.
+
+
+================================================================================
+  2. MODIFIER 클래스 상세 분석
+================================================================================
+
+--------------------------------------------------------------------------------
+  StatModifier
+  파일: Assets/Scripts/Item/Effects/Modifiers/StatModifier.cs
+--------------------------------------------------------------------------------
+
+  변형 필드:
+    context.DamageMultiplier  *= _damageMultiplier  (곱연산)
+    context.AreaRadius        += _areaRadiusAdd      (덧셈)
+
+  특수 로직: 없음
+
+  SerializeField:
+    - _damageMultiplier  (float, default=1f)
+                         Tooltip: "데미지에 곱해지는 배율. 1.0=변화없음 / 0.5=절반 / 2.0=두배"
+    - _areaRadiusAdd     (float, default=0f)
+                         Tooltip: "효과 범위 추가값. 0=변화없음"
+
+  [주의]
+  DamageMultiplier는 곱산 누적이므로 StatModifier 여러 개가 직렬 연결되면
+  모두 곱해진다. (예: 1.5 × 2.0 = 3.0배)
+  RadiusModifier(덮어쓰기)와 혼용 시 순서가 결과를 결정한다.
+
+--------------------------------------------------------------------------------
+  ChanceGateModifier
+  파일: Assets/Scripts/Item/Effects/Modifiers/ChanceGateModifier.cs
+--------------------------------------------------------------------------------
+
+  변형 필드 (확률 실패 시):
+    context.DamageMultiplier  = 0f   (피해 무력화)
+    context.StatusChance      = 0f   (상태이상 무력화)
+
+  특수 로직:
+    Random.value > _chance 조건으로 확률 판정.
+    파이프라인을 완전히 중단하지 않고, 값을 0으로 만들어
+    후속 Action이 실질적인 효과를 내지 못하게 하는 방식.
+
+  SerializeField:
+    - _chance  (float, Range[0,1], default=1f)
+               Tooltip: "통과 확률 (0~1). 0.3 = 30% 확률로 발동"
+
+  [구조적 한계 — 중요]
+  DamageMultiplier / StatusChance와 무관하게 동작하는 Action
+  (예: DropPickupAction, HealSelfAction)은 확률 실패 시에도 실행된다.
+  이를 막으려면 해당 Action 내부에서
+    if (context.DamageMultiplier == 0f) return;
+  같은 gate 체크를 별도로 구현해야 한다.
+
+--------------------------------------------------------------------------------
+  AddTagModifier
+  파일: Assets/Scripts/Item/Effects/Modifiers/AddTagModifier.cs
+--------------------------------------------------------------------------------
+
+  변형 필드:
+    context.ElementTag  = _tag               (속성 태그 문자열 설정)
+    context.StatusID    = (자동 매핑 결과)   (상태이상 ID 설정)
+
+  특수 로직 — 하드코딩 태그→StatusID 매핑:
+    "Fire"     → ST_BURN
+    "Electric" → ST_STUN
+    "Poison"   → ST_SLOW   ← ST_POISON 미정의, ST_SLOW로 폴백
+    "Ice"      → ST_SLOW   ← ST_FREEZE 미정의, ST_SLOW로 폴백
+    그 외       → StatusID = null (매핑 없음)
+
+  SerializeField:
+    - _tag  (string, default="Fire")
+            Tooltip: "부여할 속성 태그 (Fire, Electric, Poison, Ice 등)"
+
+  [구조적 한계 1]
+  Ice와 Poison이 동일하게 ST_SLOW로 매핑됨.
+  ST_FREEZE / ST_POISON을 만들려면 StatusEffectManager 확장 후
+  이 매핑에 추가해야 한다.
+
+  [구조적 한계 2]
+  ST_CHAIN / ST_GLITCH / ST_DEATH는 이 Modifier로 부여 불가.
+  (매핑 목록에 없음)
+  ApplyStatusAction에서 StatusID를 직접 문자열로 지정하거나
+  매핑 목록을 확장해야 한다.
+
+  [구조적 한계 3]
+  매핑에 없는 태그 사용 시 StatusID가 null로 유지됨.
+  ApplyStatusAction에서 null 체크 필요.
+
+--------------------------------------------------------------------------------
+  RadiusModifier
+  파일: Assets/Scripts/Item/Effects/Modifiers/RadiusModifier.cs
+--------------------------------------------------------------------------------
+
+  변형 필드:
+    context.AreaRadius  = _radius   (덮어쓰기, += 아님!)
+
+  특수 로직: 없음
+
+  SerializeField:
+    - _radius  (float, default=2f)
+               Tooltip: "광역 효과 범위"
+
+  [주의 — StatModifier와 혼용 시]
+  StatModifier.AreaRadiusAdd 는 += (덧셈).
+  RadiusModifier          는 =  (덮어쓰기).
+  파이프라인에서 StatModifier가 먼저 실행되고 RadiusModifier가 나중에 오면
+  StatModifier의 AreaRadiusAdd 값이 사라진다.
+  의도에 따라 두 Modifier의 순서를 명시적으로 관리할 것.
+
+--------------------------------------------------------------------------------
+  BounceModifier
+  파일: Assets/Scripts/Item/Effects/Modifiers/BounceModifier.cs
+--------------------------------------------------------------------------------
+
+  변형 필드:
+    context.BounceCount  += _bounceCount             (누적 가산)
+    context.BounceDecay  *= _damageDecayPerBounce    (곱산 감쇄)
+
+  특수 로직:
+    BounceCount는 += 이므로 여러 아이템에 BounceModifier가 있으면
+    반사 횟수가 중첩된다.
+    BounceDecay는 *= 이므로 여러 BounceModifier가 직렬 연결되면
+    감쇄율도 중첩된다 (0.7 × 0.5 = 0.35).
+
+  SerializeField:
+    - _bounceCount           (int, default=2)
+                             Tooltip: "최대 반사 횟수"
+    - _damageDecayPerBounce  (float, Range[0.1, 1], default=1f)
+                             Tooltip: "반사할 때마다 데미지에 곱해지는 감쇄 배율.
+                                       1.0=감쇄없음 / 0.7=30% 감소"
+
+  [현황 — 완전 미사용]
+  BounceCount / BounceDecay를 실제로 읽어 반사 처리하는
+  ProjectileAction이 구현되어 있지 않다.
+  컨텍스트 필드에 값만 설정되고 소비되지 않음.
+
+--------------------------------------------------------------------------------
+  HomingModifier
+  파일: Assets/Scripts/Item/Effects/Modifiers/HomingModifier.cs
+--------------------------------------------------------------------------------
+
+  변형 필드:
+    context.IsHoming       = true
+    context.HomingStrength = _homingStrength
+
+  특수 로직:
+    Physics.OverlapSphere(origin, _detectionRadius) 로
+    EnemyBase 컴포넌트 + !IsDead 필터링.
+    sqrMagnitude 비교로 가장 가까운 적 탐지 (sqrt 생략 최적화).
+    → context.TargetEnemy에 자동 설정.
+    TargetEnemy가 이미 있으면 탐색을 건너뜀.
+
+  SerializeField:
+    - _homingStrength   (float, default=180f)
+                        Tooltip: "유도 강도 (도/초). 값이 클수록 빠르게 방향 전환"
+                        가이드: 90=느림 / 180=보통 / 360+=강함
+    - _detectionRadius  (float, default=5f)
+                        Tooltip: "유도 탐지 반경. 이 범위 안에 적이 없으면 직진"
+
+  [현황]
+  IsHoming / HomingStrength를 읽는 ProjectileAction이 미구현.
+  단, TargetEnemy 자동 설정은 현재 SpawnFamiliarAction (Homing 모드 패밀리어)에서
+  간접 활용 중 (Configure(context) 연동).
+
+  [주의]
+  OnMeleeHitTrigger + HomingModifier 조합 시,
+  트리거가 이미 TargetEnemy를 설정했으므로
+  HomingModifier의 자동 탐색이 건너뛰어짐.
+  → 실제 피격 대상이 유도 타겟으로 유지됨 (의도된 동작).
+
+
+================================================================================
+  3. ItemEffectContext 전체 필드 참조표
+================================================================================
+
+┌─────────────────────┬───────────┬──────────────────────────────────────────┐
+│ 필드                │ 기본값    │ 설정/사용 주체                           │
+├─────────────────────┼───────────┼──────────────────────────────────────────┤
+│ Player              │ (ref)     │ Initialize 시 설정                       │
+│ EventManager        │ (ref)     │ Initialize 시 설정                       │
+│ Weapon              │ (ref)     │ Initialize 시 설정                       │
+│ SourceItem          │ (ref)     │ Initialize 시 설정                       │
+├─────────────────────┼───────────┼──────────────────────────────────────────┤
+│ TargetEnemy         │ null      │ Trigger 설정 / HomingModifier 자동 탐색  │
+│ TargetPosition      │ zero      │ Trigger 설정                             │
+│ HitDirection        │ zero      │ OnMeleeHitTrigger 설정                   │
+├─────────────────────┼───────────┼──────────────────────────────────────────┤
+│ Damage              │ 0f        │ Trigger 설정                             │
+│ DamageMultiplier    │ 1f        │ StatModifier 곱산 / ChanceGate 실패시 0 │
+│ StatusID            │ null      │ AddTagModifier 자동 매핑                 │
+│ StatusChance        │ 1f        │ ChanceGate 실패시 0                      │
+│ AreaRadius          │ 0f        │ StatModifier += / RadiusModifier =       │
+│ IsCritical          │ false     │ (미사용, 향후 크리티컬 시스템 예약)      │
+│ ElementTag          │ null      │ AddTagModifier 설정                      │
+├─────────────────────┼───────────┼──────────────────────────────────────────┤
+│ BounceCount         │ 0         │ BounceModifier += (ProjectileAction 미구현) │
+│ BounceDecay         │ 1f        │ BounceModifier *= (ProjectileAction 미구현) │
+│ IsHoming            │ false     │ HomingModifier = true (ProjectileAction 미구현) │
+│ HomingStrength      │ 0f        │ HomingModifier 설정                      │
+├─────────────────────┼───────────┼──────────────────────────────────────────┤
+│ PipelineDepth       │ 0         │ ItemEffectRunner 자동 관리 (MAX=3)       │
+│ TriggerTime         │ 0f        │ FireTrigger()에서 Time.time 자동 기록    │
+│ TriggerName         │ null      │ FireTrigger()에서 클래스명 자동 기록     │
+└─────────────────────┴───────────┴──────────────────────────────────────────┘
+
+
+================================================================================
+  4. PlayerEventManager 이벤트 전체 목록
+================================================================================
+
+┌──────────────────────┬───────────────────────────────┬─────────────────────┐
+│ 이벤트               │ 시그니처                      │ 구독 Trigger        │
+├──────────────────────┼───────────────────────────────┼─────────────────────┤
+│ OnAttack             │ Action                        │ OnAttackTrigger     │
+│ OnDealDamage         │ Action<EnemyBase, float>      │ OnMeleeHitTrigger   │
+│ OnKillEnemy          │ Action<EnemyBase>             │ OnKillTrigger       │
+│ OnTakeDamage         │ Action<float>                 │ OnTakeDamageTrigger │
+│ OnDash               │ Action                        │ OnDashTrigger       │
+│ OnHeal               │ Action<float>                 │ (미구독 — 미사용)   │
+│ OnSecondTick         │ Action                        │ OnTimerTrigger      │
+│                      │                               │ PassiveTrigger      │
+│ OnFatalDamage        │ Action                        │ OnFatalDamageTrigger│
+│ OnRoomClear          │ Action                        │ OnRoomClearTrigger  │
+│ OnItemEquipped       │ Action<ItemData>              │ (미구독 — 미사용)   │
+└──────────────────────┴───────────────────────────────┴─────────────────────┘
+
+OnHeal, OnItemEquipped 는 이벤트만 존재하고 구독하는 Trigger가 없다.
+→ OnHealTrigger, OnItemEquippedTrigger 추가 시 즉시 활용 가능.
+
+
+================================================================================
+  5. 현재 동작하는 조합 예시 (즉시 사용 가능)
+================================================================================
+
+  [a] 25% 확률 화상
+      OnMeleeHitTrigger
+      → ChanceGateModifier(chance=0.25)
+      → AddTagModifier("Fire")
+      → ApplyStatusAction
+
+  [b] 처치 시 10% 확률 아이템 드롭
+      OnKillTrigger
+      → ChanceGateModifier(chance=0.1)
+      → DropPickupAction
+      ※ ChanceGate 경고 참조 — DropPickupAction이 DamageMultiplier를
+        체크하지 않으면 확률 실패 시에도 드롭됨.
+
+  [c] 1회 부활
+      OnFatalDamageTrigger(maxUses=1)
+      → ReviveAction
+
+  [d] 방 클리어 시 체력 회복
+      OnRoomClearTrigger
+      → HealSelfAction
+
+  [e] 3초마다 광역 화염 데미지
+      OnTimerTrigger(interval=3)
+      → RadiusModifier(radius=3.0)
+      → AddTagModifier("Fire")
+      → DealDamageAction(AoE)
+      → ApplyStatusAction
+
+  [f] 장착 즉시 1회 피해 (패시브 공격)
+      PassiveTrigger(continuous=false)
+      → StatModifier(damageMultiplier=2.0)
+      → DealDamageAction
+
+
+================================================================================
+  6. 현재 조합 한계 및 확장 필요 영역
+================================================================================
+
+┌──────────────────────┬────────────────────────────────┬─────────────────────┐
+│ 한계                 │ 원인                           │ 필요한 확장         │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ 반사/바운스 공격     │ BounceModifier 값 소비하는     │ ProjectileAction    │
+│                      │ ProjectileAction 미구현        │ 구현                │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ 유도 미사일          │ HomingModifier 값 소비하는     │ ProjectileAction    │
+│                      │ ProjectileAction 미구현        │ 구현                │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ 대시 발동 아이템     │ PlayerMovement에 대시 없음     │ 대시 기능 구현 후   │
+│                      │ → BroadcastDash() 미호출       │ BroadcastDash() 추가│
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ Ice 동결             │ ST_FREEZE 미정의               │ StatusEffectManager │
+│ Poison 독 도트       │ ST_POISON 미정의               │ 확장 + 매핑 추가    │
+│                      │ 둘 다 ST_SLOW 폴백 중          │                     │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ HP 임계값 발동       │ OnHealthThresholdTrigger       │ 신규 Trigger 추가   │
+│ (예: HP 30% 이하 시) │ 미구현                         │                     │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ ChanceGate +         │ DamageMultiplier=0로 무력화해도│ 해당 Action 내부에  │
+│ Heal/Drop 조합       │ Damage와 무관한 Action은 실행  │ DamageMultiplier    │
+│                      │                                │ gate 체크 추가      │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ RadiusModifier +     │ RadiusModifier가 나중 실행 시  │ 파이프라인 내 순서를│
+│ StatModifier 혼용    │ StatModifier의 AreaRadiusAdd   │ 기획 문서에 명시    │
+│                      │ 값을 덮어씀                    │                     │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ 1초 미만 주기 트리거 │ OnSecondTick 최소 단위 1초     │ Update 기반         │
+│                      │ OnTimerTrigger/PassiveTrigger  │ OnSubSecondTrigger  │
+│                      │ 모두 영향받음                  │ 별도 구현           │
+├──────────────────────┼────────────────────────────────┼─────────────────────┤
+│ 회복/아이템 장착     │ OnHeal / OnItemEquipped 이벤트 │ 대응 Trigger 클래스 │
+│ 발동 아이템          │ 는 존재하나 구독 Trigger 없음  │ 추가만 하면 됨      │
+└──────────────────────┴────────────────────────────────┴─────────────────────┘
+
+
+================================================================================
+  작성: Claude Code (claude-sonnet-4-6)
+  참조 파일:
+    Assets/Scripts/Item/Effects/Triggers/*.cs   (9개)
+    Assets/Scripts/Item/Effects/Modifiers/*.cs  (6개)
+    Assets/Scripts/Item/Effects/Core/*.cs       (5개)
+================================================================================

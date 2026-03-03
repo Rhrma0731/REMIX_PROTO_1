@@ -13,41 +13,28 @@ MonoBehaviour:
   m_Name: 501
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 501
-  KR_Name: "100\uC6D0\uC9DC\uB9AC \uB3D9\uC804"
-  Keyword: 1UP
-  Description: "\uC8FD\uB294 \uC21C\uAC04 \uB531 \uD55C \uBC88, \uCCB4\uB825\uC744
-    \uBAA8\uB450 \uD68C\uBCF5\uD558\uACE0 3\uCD08\uAC04 \uBB34\uC801 \uC0C1\uD0DC\uAC00
-    \uB41C\uB2E4."
+  KR_Name: "\uB048\uC801\uC774 "
+  Keyword: "\uC0C1\uD0DC \uC774\uC0C1 \uBD80\uC5EC"
+  Description: "\uD0C0\uACA9 \uC2DC 10% \uD655\uB960\uB85C \uC801\uC744 \uCABC\uADF8\uB77C\uB728\uB9AC\uB4EF
+    \uC774\uC18D\uC744 \uAE4E\uC74C(ST_SLOW)\r\n"
   Category: 2
-  Rarity: 1
-  Priority: 0
-  Status_ID: 
+  Rarity: 2
+  Priority: 3
+  Status_ID: ST_SLOW
   StatusTriggerChance: 1
   StatBonuses: []
-  PowerScore: 3
+  PowerScore: 5
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 0.6367924, g: 1, b: 0.67096126, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994903
-  - rid: 8060512650618994904
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994903
-      type: {class: OnFatalDamageTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _maxUses: 1
-    - rid: 8060512650618994904
-      type: {class: ReviveAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _healPercent: 100
-        _invincibleDuration: 3
+    RefIds: []

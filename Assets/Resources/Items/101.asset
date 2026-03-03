@@ -13,57 +13,29 @@ MonoBehaviour:
   m_Name: 101
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 101
-  KR_Name: "\uC2A4\uD2F0\uD0A4 \uD578\uB4DC"
-  Keyword: "\uBFB0\uBFB0\uC774"
-  Description: 
+  KR_Name: "\uB9E5\uC8FC\uB9DB \uC0AC\uD0D5"
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uCCB4\uB825\uC99D\uAC00"
   Category: 1
   Rarity: 0
   Priority: 1
-  Status_ID: ST_SLOW
+  Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 4
-    Value: 0
-  PowerScore: 8
+  - Type: 1
+    Value: 50
+  PowerScore: 1
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 2
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 1, g: 0.7112604, b: 0, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994791
-  - rid: 8060512650618994792
-  - rid: 8060512650618994793
-  - rid: 8060512650618994875
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994791
-      type: {class: OnAttackTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994792
-      type: {class: RadiusModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _radius: 3
-    - rid: 8060512650618994793
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994875
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

@@ -13,56 +13,32 @@ MonoBehaviour:
   m_Name: 309
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 309
-  KR_Name: "\uBBF8\uB2C8 \uC120\uD48D\uAE30"
-  Keyword: "\uC120\uD48D\uAE30"
-  Description: 
+  KR_Name: "\uBD88\uB7C9 \uC2A4\uD14C\uB85C\uC774\uB4DC \uCEA1\uC290 "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uC57D\uBB3C \uB3C4\uD551! \uAE61\uB51C \uC624\uB974\uACE0 \uADFC\uC811
+    \uD0C0\uACA9 \uC0AC\uAC70\uB9AC\uAC00 \uB300\uD3ED \uB298\uC5B4\uB0A8.\r\n"
   Category: 1
-  Rarity: 2
+  Rarity: 1
   Priority: 4
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 2
-    Value: 0
-  PowerScore: 50
+    Value: 10
+  - Type: 5
+    Value: 20
+  PowerScore: 3
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 2
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
-  PartScale: {x: 1, y: 1}
+  PartScale: {x: 1.2, y: 1.2}
   PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994822
-  - rid: 8060512650618994823
-  - rid: 8060512650618994824
-  - rid: 8060512650618994886
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994822
-      type: {class: OnDashTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994823
-      type: {class: RadiusModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _radius: 4
-    - rid: 8060512650618994824
-      type: {class: ApplyStatusAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _statusID: ST_STUN
-        _chance: 1
-    - rid: 8060512650618994886
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

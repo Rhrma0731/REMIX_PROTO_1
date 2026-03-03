@@ -13,54 +13,31 @@ MonoBehaviour:
   m_Name: 310
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 310
-  KR_Name: "\uB808\uC774\uC800 \uD3EC\uC778\uD130"
-  Keyword: "\uB808\uC774\uC800"
-  Description: 
+  KR_Name: "\uBD88\uB7C9 \uC824\uB9AC (\uC138\uD3EC \uBC30\uC591\uC561) "
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uCCB4\uB825 \uC99D\uAC00 \uBC0F \uACF5\uC18D\uC774 \uC99D\uAC00\uD568."
   Category: 1
-  Rarity: 2
+  Rarity: 1
   Priority: 4
   Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
-  - Type: 2
-    Value: 0
-  PowerScore: 65
+  - Type: 3
+    Value: 1
+  - Type: 1
+    Value: 30
+  PowerScore: 3
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994773
-  - rid: 8060512650618994774
-  - rid: 8060512650618994775
-  - rid: 8060512650618994869
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994773
-      type: {class: OnTakeDamageTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994774
-      type: {class: ChanceGateModifier, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _chance: 0.3
-    - rid: 8060512650618994775
-      type: {class: NullifyDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994869
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []

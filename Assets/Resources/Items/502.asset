@@ -13,41 +13,27 @@ MonoBehaviour:
   m_Name: 502
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 502
-  KR_Name: "\uD53C\uC758 \uC11C\uC57D"
-  Keyword: Blood Oath
-  Description: "\uBC29 \uD074\uB9AC\uC5B4 \uC2DC \uD604\uC7AC \uCCB4\uB825\uC744
-    \uBAA8\uB450 \uC18C\uBAA8\uD574 1\uB85C \uB9CC\uB4E4\uACE0, \uC18C\uBAA8\uD55C
-    \uCCB4\uB825 \uBE44\uC728\uC5D0 \uBE44\uB840\uD558\uC5EC \uACF5\uACA9\uB825\uACFC
-    \uC774\uB3D9\uC18D\uB3C4\uAC00 \uC601\uAD6C\uC801\uC73C\uB85C \uC99D\uAC00\uD55C\uB2E4."
+  KR_Name: "\uB9E4\uC6B4\uB9DB \uB5A1\uAF2C\uCE58 "
+  Keyword: "\uC0C1\uD0DC \uC774\uC0C1 \uBD80\uC5EC"
+  Description: "10%\uD655\uB960\uB85C \uD654\uC0C1 \uBD80\uC5EC"
   Category: 2
   Rarity: 2
   Priority: 0
-  Status_ID: 
+  Status_ID: ST_BURN
   StatusTriggerChance: 1
   StatBonuses: []
-  PowerScore: 3
+  PowerScore: 5
   Icon: {fileID: 0}
-  TargetBodyPart: 0
+  TargetBodyPart: 1
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
-  PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PartColor: {r: 1, g: 0.3066038, b: 0.3066038, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994905
-  - rid: 8060512650618994906
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994905
-      type: {class: OnRoomClearTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994906
-      type: {class: BloodOathAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _attackDamageScale: 5
-        _moveSpeedScale: 1
+    RefIds: []

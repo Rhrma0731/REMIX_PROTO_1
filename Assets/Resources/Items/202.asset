@@ -13,59 +13,32 @@ MonoBehaviour:
   m_Name: 202
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   ItemID: 202
-  KR_Name: "\uB9E5\uC8FC \uC0AC\uD0D5"
-  Keyword: "\uAC70\uD488 \uC11E\uC778"
-  Description: 
+  KR_Name: "\uBE75\uC810 \uC2DC\uD5D8\uC9C0"
+  Keyword: "\uC2A4\uD0EF \uBCC0\uD654"
+  Description: "\uACF5\uACA9 \uC18D\uB3C4\uAC00 \uC624\uB974\uACE0 \uBAB9\uC744 \uD295\uACA8\uB0B4\uB294
+    \uBB3C\uB9AC \uB109\uBC31 \uC218\uCE58\uAC00 \uC624\uB984"
   Category: 1
   Rarity: 1
   Priority: 2
-  Status_ID: ST_SLOW
+  Status_ID: 
   StatusTriggerChance: 1
   StatBonuses:
   - Type: 3
-    Value: 0
-  PowerScore: 25
+    Value: 2
+  - Type: 6
+    Value: 5
+  PowerScore: 4
   Icon: {fileID: 0}
   TargetBodyPart: 0
   AppearanceSprite: {fileID: 0}
   SortingOrderOffset: 1
   PartScale: {x: 1, y: 1}
   PartColor: {r: 1, g: 1, b: 1, a: 1}
+  PlayerRootScale: 1
   FormWeaponSprite: {fileID: 0}
   FormHitRadius: 0
   PedestalSprite: {fileID: 0}
-  Effects:
-  - rid: 8060512650618994786
-  - rid: 8060512650618994787
-  - rid: 8060512650618994788
-  - rid: 8060512650618994873
+  Effects: []
   references:
     version: 2
-    RefIds:
-    - rid: 8060512650618994786
-      type: {class: OnAttackTrigger, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-    - rid: 8060512650618994787
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994788
-      type: {class: DealDamageAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _baseDamage: 10
-        _usePlayerDamage: 1
-        _targetSelf: 0
-    - rid: 8060512650618994873
-      type: {class: DebugVisualAction, ns: , asm: Assembly-CSharp}
-      data:
-        _internalCooldown: 0.1
-        _popupText: "T-M-A \uBC1C\uB3D9!"
-        _displayDuration: 1
-        _sphereSize: 0.4
-        _sphereColor: {r: 1, g: 0, b: 0, a: 1}
-        _textHeightOffset: 1.5
+    RefIds: []
